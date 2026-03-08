@@ -116,6 +116,16 @@ Kirigami.ApplicationWindow {
                 text: "Slugify String"
                 onTriggered: root.pageStack.replace(slugifyPage)
                 visible: text.toLowerCase().includes(searchField.text.toLowerCase())
+            },
+            Kirigami.Action {
+                text: "WiFi QR Code Generator"
+                onTriggered: root.pageStack.replace(wifiPage)
+                visible: text.toLowerCase().includes(searchField.text.toLowerCase())
+            },
+            Kirigami.Action {
+                text: "Cron Expression Parser"
+                onTriggered: root.pageStack.replace(cronPage)
+                visible: text.toLowerCase().includes(searchField.text.toLowerCase())
             }
         ]
     }
@@ -225,7 +235,8 @@ Kirigami.ApplicationWindow {
                     Layout.fillWidth: true
                     Layout.fillHeight: true
                 }
-                RowLayout {
+                Flow {
+                    Layout.fillWidth: true
                     spacing: Kirigami.Units.largeSpacing
                     Button {
                         text: "UPPERCASE"
@@ -234,6 +245,42 @@ Kirigami.ApplicationWindow {
                     Button {
                         text: "lowercase"
                         onClicked: caseInputField.text = caseInputField.text.toLowerCase()
+                    }
+                    Button {
+                        text: "camelCase"
+                        onClicked: {
+                            var words = caseInputField.text.toLowerCase().split(/[\s_-]+/);
+                            for (var i = 1; i < words.length; i++) {
+                                words[i] = words[i].charAt(0).toUpperCase() + words[i].slice(1);
+                            }
+                            caseInputField.text = words.join('');
+                        }
+                    }
+                    Button {
+                        text: "PascalCase"
+                        onClicked: {
+                            var words = caseInputField.text.toLowerCase().split(/[\s_-]+/);
+                            for (var i = 0; i < words.length; i++) {
+                                words[i] = words[i].charAt(0).toUpperCase() + words[i].slice(1);
+                            }
+                            caseInputField.text = words.join('');
+                        }
+                    }
+                    Button {
+                        text: "snake_case"
+                        onClicked: {
+                            caseInputField.text = caseInputField.text.match(/[A-Z]{2,}(?=[A-Z][a-z]+[0-9]*|\b)|[A-Z]?[a-z]+[0-9]*|[A-Z]|[0-9]+/g)
+                                .map(function(x) { return x.toLowerCase(); })
+                                .join('_');
+                        }
+                    }
+                    Button {
+                        text: "kebab-case"
+                        onClicked: {
+                            caseInputField.text = caseInputField.text.match(/[A-Z]{2,}(?=[A-Z][a-z]+[0-9]*|\b)|[A-Z]?[a-z]+[0-9]*|[A-Z]|[0-9]+/g)
+                                .map(function(x) { return x.toLowerCase(); })
+                                .join('-');
+                        }
                     }
                 }
             }
@@ -892,6 +939,99 @@ Kirigami.ApplicationWindow {
                                     .replace(/^-+|-+$/g, '')
                 }
                 Item { Layout.fillHeight: true }
+            }
+        }
+    }
+
+    Component {
+        id: wifiPage
+        Kirigami.Page {
+            title: "WiFi QR Code Generator"
+            ColumnLayout {
+                anchors.fill: parent
+                anchors.margins: Kirigami.Units.largeSpacing
+                spacing: Kirigami.Units.smallSpacing
+
+                Label { text: "SSID (Network Name):"; font.bold: true }
+                TextField { id: ssidInput; Layout.fillWidth: true }
+
+                Label { text: "Password:"; font.bold: true }
+                TextField { id: passwordInput; Layout.fillWidth: true; echoMode: TextField.Password }
+
+                Label { text: "Encryption:"; font.bold: true }
+                ComboBox {
+                    id: encryptionType
+                    model: ["WPA", "WEP", "None"]
+                    Layout.fillWidth: true
+                }
+
+                Label { text: "WiFi QR Code String:"; font.bold: true }
+                TextField {
+                    readOnly: true
+                    Layout.fillWidth: true
+                    text: "WIFI:S:" + ssidInput.text + ";T:" + (encryptionType.currentText === "None" ? "nopass" : encryptionType.currentText) + ";P:" + passwordInput.text + ";;"
+                }
+                
+                Kirigami.PlaceholderMessage {
+                    text: "String for QR code generated above"
+                    explanation: "You can paste this string into any QR code generator."
+                }
+                
+                Item { Layout.fillHeight: true }
+            }
+        }
+    }
+
+    Component {
+        id: cronPage
+        Kirigami.Page {
+            title: "Cron Expression Parser"
+            ColumnLayout {
+                anchors.fill: parent
+                anchors.margins: Kirigami.Units.largeSpacing
+                spacing: Kirigami.Units.largeSpacing
+
+                TextField {
+                    id: cronInput
+                    placeholderText: "* * * * *"
+                    text: "40 * * * *"
+                    Layout.fillWidth: true
+                    font.pixelSize: 24
+                    horizontalAlignment: Text.AlignHCenter
+                }
+
+                Label {
+                    text: "Cron Reference Guide"
+                    font.bold: true
+                    font.pixelSize: 18
+                }
+
+                TextArea {
+                    readOnly: true
+                    Layout.fillWidth: true
+                    Layout.fillHeight: true
+                    font.family: "monospace"
+                    text: "┌──────────── minute (0 - 59)\n" +
+                          "│ ┌────────── hour (0 - 23)\n" +
+                          "│ │ ┌──────── day of month (1 - 31)\n" +
+                          "│ │ │ ┌────── month (1 - 12)\n" +
+                          "│ │ │ │ ┌──── day of week (0 - 6, Sunday=0)\n" +
+                          "│ │ │ │ │\n" +
+                          "* * * * *"
+                }
+
+                GridLayout {
+                    columns: 2
+                    Layout.fillWidth: true
+                    Label { text: "*"; font.bold: true }
+                    Label { text: "Any value" }
+                    Label { text: ","; font.bold: true }
+                    Label { text: "Value list separator" }
+                    Label { text: "-"; font.bold: true }
+                    Label { text: "Range of values" }
+                    Label { text: "/"; font.bold: true }
+                    Label { text: "Step values" }
+                }
             }
         }
     }
