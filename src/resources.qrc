@@ -29,5 +29,6 @@
         <file>contents/ui/tools/JsonToXmlPage.qml</file>
         <file>contents/ui/tools/JsonToCsvPage.qml</file>
         <file>contents/ui/tools/TemperatureConverterPage.qml</file>
+        <file>contents/ui/tools/ListConverterPage.qml</file>
     </qresource>
 </RCC>
