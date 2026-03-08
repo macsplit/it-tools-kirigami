@@ -10,11 +10,18 @@ Kirigami.ApplicationWindow {
 
     title: "IT-Tools Kirigami"
     width: 900
-    height: 700
+    height: 500
+    minimumHeight: 400
 
     HashTool { id: hashTool }
     BaseTool { id: baseTool }
     ConversionTool { id: conversionTool }
+
+    // Force window size on startup
+    Component.onCompleted: {
+        root.height = 500;
+        root.width = 900;
+    }
 
     // Helper to check if any item in a category matches the search
     function isCategoryVisible(cat, filter) {
@@ -62,12 +69,13 @@ Kirigami.ApplicationWindow {
         id: drawer
         isMenu: false
         collapsible: true
-        collapsed: width < Kirigami.Units.gridUnit * 40
+        modal: false
+        width: Kirigami.Units.gridUnit * 8 // Even narrower sidebar
+        handleVisible: true
         
-        // Ensure the drawer has a background and visible width
         header: Kirigami.SearchField {
             id: searchField
-            placeholderText: "Search tools..."
+            placeholderText: "Search..."
             Layout.fillWidth: true
             Layout.margins: Kirigami.Units.smallSpacing
         }
@@ -76,7 +84,8 @@ Kirigami.ApplicationWindow {
             id: toolsList
             model: toolsModel
             clip: true
-            implicitWidth: Kirigami.Units.gridUnit * 15
+            topMargin: Kirigami.Units.gridUnit
+            bottomMargin: Kirigami.Units.gridUnit * 4
             
             section.property: "category"
             section.delegate: Kirigami.ListSectionHeader {
@@ -251,38 +260,41 @@ Kirigami.ApplicationWindow {
                         text: "camelCase"
                         onClicked: {
                             var words = caseInputField.text.toLowerCase().split(/[\s_-]+/);
+                            if (words.length === 0) return;
+                            var res = words[0];
                             for (var i = 1; i < words.length; i++) {
-                                words[i] = words[i].charAt(0).toUpperCase() + words[i].slice(1);
+                                if (words[i].length > 0)
+                                    res += words[i].charAt(0).toUpperCase() + words[i].slice(1);
                             }
-                            caseInputField.text = words.join('');
+                            caseInputField.text = res;
                         }
                     }
                     Button {
                         text: "PascalCase"
                         onClicked: {
                             var words = caseInputField.text.toLowerCase().split(/[\s_-]+/);
+                            var res = "";
                             for (var i = 0; i < words.length; i++) {
-                                words[i] = words[i].charAt(0).toUpperCase() + words[i].slice(1);
+                                if (words[i].length > 0)
+                                    res += words[i].charAt(0).toUpperCase() + words[i].slice(1);
                             }
-                            caseInputField.text = words.join('');
+                            caseInputField.text = res;
                         }
                     }
                     Button {
                         text: "snake_case"
                         onClicked: {
-                            var m = caseInputField.text.match(/[A-Z]{2,}(?=[A-Z][a-z]+[0-9]*|\b)|[A-Z]?[a-z]+[0-9]*|[A-Z]|[0-9]+/g);
-                            if (m) {
-                                caseInputField.text = m.map(function(x) { return x.toLowerCase(); }).join('_');
-                            }
+                            caseInputField.text = caseInputField.text.replace(/([a-z])([A-Z])/g, '$1_$2')
+                                                                      .replace(/[\s-]+/g, '_')
+                                                                      .toLowerCase();
                         }
                     }
                     Button {
                         text: "kebab-case"
                         onClicked: {
-                            var m = caseInputField.text.match(/[A-Z]{2,}(?=[A-Z][a-z]+[0-9]*|\b)|[A-Z]?[a-z]+[0-9]*|[A-Z]|[0-9]+/g);
-                            if (m) {
-                                caseInputField.text = m.map(function(x) { return x.toLowerCase(); }).join('-');
-                            }
+                            caseInputField.text = caseInputField.text.replace(/([a-z])([A-Z])/g, '$1-$2')
+                                                                      .replace(/[\s_]+/g, '-')
+                                                                      .toLowerCase();
                         }
                     }
                 }
@@ -1004,6 +1016,19 @@ Kirigami.ApplicationWindow {
                 }
 
                 Label {
+                    text: "Human Readable:"
+                    font.bold: true
+                }
+                
+                Label {
+                    Layout.fillWidth: true
+                    wrapMode: Text.WordWrap
+                    text: parseCron(cronInput.text)
+                    font.pixelSize: 18
+                    color: Kirigami.Theme.highlightColor
+                }
+
+                Label {
                     text: "Cron Reference Guide"
                     font.bold: true
                     font.pixelSize: 18
@@ -1035,6 +1060,41 @@ Kirigami.ApplicationWindow {
                     Label { text: "/"; font.bold: true }
                     Label { text: "Step values" }
                 }
+            }
+
+            function parseCron(cron) {
+                var parts = cron.trim().split(/\s+/);
+                if (parts.length < 5) return "Invalid cron expression (need at least 5 parts)";
+                
+                var min = parts[0];
+                var hour = parts[1];
+                var dom = parts[2];
+                var month = parts[3];
+                var dow = parts[4];
+
+                var desc = "At ";
+                
+                if (min === "*" && hour === "*") desc = "Every minute ";
+                else if (min.indexOf("/") !== -1 && hour === "*") desc = "Every " + min.split("/")[1] + " minutes ";
+                else {
+                    var hStr = (hour === "*" ? "every hour" : "hour " + hour);
+                    var mStr = (min === "*" ? "00" : (min.length < 2 ? "0" + min : min));
+                    desc += hStr + ":" + mStr + " ";
+                }
+
+                if (dom !== "*" || month !== "*" || dow !== "*") {
+                    desc += "on ";
+                    if (dom !== "*") desc += "day " + dom + " ";
+                    if (month !== "*" && month !== "?") desc += "of month " + month + " ";
+                    if (dow !== "*" && dow !== "?") {
+                        var days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+                        desc += "on " + (days[parseInt(dow)] || dow);
+                    }
+                } else {
+                    desc += "every day";
+                }
+
+                return desc;
             }
         }
     }
