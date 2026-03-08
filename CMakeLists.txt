@@ -20,6 +20,7 @@ add_executable(it-tools-kirigami
     src/main.cpp
     src/hashtool.h
     src/basetool.h
+    src/conversiontool.h
     src/resources.qrc
 )
 

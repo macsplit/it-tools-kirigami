@@ -9,125 +9,126 @@ Kirigami.ApplicationWindow {
     id: root
 
     title: "IT-Tools Kirigami"
-    width: 600
+    width: 900
     height: 700
 
     HashTool { id: hashTool }
     BaseTool { id: baseTool }
+    ConversionTool { id: conversionTool }
+
+    // Helper to check if any item in a category matches the search
+    function isCategoryVisible(cat, filter) {
+        if (!filter) return true;
+        for (var i = 0; i < toolsModel.count; i++) {
+            var item = toolsModel.get(i);
+            if (item.category === cat && item.name.toLowerCase().indexOf(filter.toLowerCase()) !== -1) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    ListModel {
+        id: toolsModel
+        // Crypto
+        ListElement { name: "Token Generator"; category: "Crypto"; pageId: "tokenGeneratorPage" }
+        ListElement { name: "Hash Text"; category: "Crypto"; pageId: "hashPage" }
+        // Converter
+        ListElement { name: "Base64 Converter"; category: "Converter"; pageId: "base64Page" }
+        ListElement { name: "Integer Base Converter"; category: "Converter"; pageId: "baseConverterPage" }
+        ListElement { name: "Color Converter"; category: "Converter"; pageId: "colorConverterPage" }
+        ListElement { name: "JSON to YAML"; category: "Converter"; pageId: "jsonYamlPage" }
+        // Web
+        ListElement { name: "URL Encoder/Decoder"; category: "Web"; pageId: "urlEncoderPage" }
+        ListElement { name: "HTML Entities"; category: "Web"; pageId: "htmlEntitiesPage" }
+        ListElement { name: "JWT Parser"; category: "Web"; pageId: "jwtPage" }
+        // Development
+        ListElement { name: "UUID Generator"; category: "Development"; pageId: "uuidPage" }
+        ListElement { name: "JSON Formatter"; category: "Development"; pageId: "jsonFormatterPage" }
+        ListElement { name: "Chmod Calculator"; category: "Development"; pageId: "chmodPage" }
+        ListElement { name: "Cron Expression Parser"; category: "Development"; pageId: "cronPage" }
+        // Network
+        ListElement { name: "MAC Address Generator"; category: "Network"; pageId: "macGeneratorPage" }
+        ListElement { name: "Random Port Generator"; category: "Network"; pageId: "portGeneratorPage" }
+        ListElement { name: "WiFi QR Code Generator"; category: "Network"; pageId: "wifiPage" }
+        // Text
+        ListElement { name: "Case Converter"; category: "Text"; pageId: "caseConverterPage" }
+        ListElement { name: "Lorem Ipsum"; category: "Text"; pageId: "loremIpsumPage" }
+        ListElement { name: "Text Statistics"; category: "Text"; pageId: "textStatisticsPage" }
+        ListElement { name: "Slugify String"; category: "Text"; pageId: "slugifyPage" }
+    }
 
     globalDrawer: Kirigami.GlobalDrawer {
-        isMenu: true
+        id: drawer
+        isMenu: false
+        collapsible: true
+        collapsed: width < Kirigami.Units.gridUnit * 40
+        
+        // Ensure the drawer has a background and visible width
         header: Kirigami.SearchField {
             id: searchField
-            focus: true
             placeholderText: "Search tools..."
+            Layout.fillWidth: true
+            Layout.margins: Kirigami.Units.smallSpacing
         }
 
-        actions: [
-            Kirigami.Action {
-                text: "Tools"
-                visible: searchField.text === ""
-            },
-            Kirigami.Action {
-                separator: true
-                visible: searchField.text === ""
-            },
-            Kirigami.Action {
-                text: "UUID Generator"
-                onTriggered: root.pageStack.replace(uuidPage)
-                visible: text.toLowerCase().includes(searchField.text.toLowerCase())
-            },
-            Kirigami.Action {
-                text: "Base64 Converter"
-                onTriggered: root.pageStack.replace(base64Page)
-                visible: text.toLowerCase().includes(searchField.text.toLowerCase())
-            },
-            Kirigami.Action {
-                text: "Case Converter"
-                onTriggered: root.pageStack.replace(caseConverterPage)
-                visible: text.toLowerCase().includes(searchField.text.toLowerCase())
-            },
-            Kirigami.Action {
-                text: "JSON Formatter"
-                onTriggered: root.pageStack.replace(jsonFormatterPage)
-                visible: text.toLowerCase().includes(searchField.text.toLowerCase())
-            },
-            Kirigami.Action {
-                text: "Token Generator"
-                onTriggered: root.pageStack.replace(tokenGeneratorPage)
-                visible: text.toLowerCase().includes(searchField.text.toLowerCase())
-            },
-            Kirigami.Action {
-                text: "Lorem Ipsum"
-                onTriggered: root.pageStack.replace(loremIpsumPage)
-                visible: text.toLowerCase().includes(searchField.text.toLowerCase())
-            },
-            Kirigami.Action {
-                text: "URL Encoder/Decoder"
-                onTriggered: root.pageStack.replace(urlEncoderPage)
-                visible: text.toLowerCase().includes(searchField.text.toLowerCase())
-            },
-            Kirigami.Action {
-                text: "HTML Entities"
-                onTriggered: root.pageStack.replace(htmlEntitiesPage)
-                visible: text.toLowerCase().includes(searchField.text.toLowerCase())
-            },
-            Kirigami.Action {
-                text: "Text Statistics"
-                onTriggered: root.pageStack.replace(textStatisticsPage)
-                visible: text.toLowerCase().includes(searchField.text.toLowerCase())
-            },
-            Kirigami.Action {
-                text: "Chmod Calculator"
-                onTriggered: root.pageStack.replace(chmodPage)
-                visible: text.toLowerCase().includes(searchField.text.toLowerCase())
-            },
-            Kirigami.Action {
-                text: "Hash Text"
-                onTriggered: root.pageStack.replace(hashPage)
-                visible: text.toLowerCase().includes(searchField.text.toLowerCase())
-            },
-            Kirigami.Action {
-                text: "JWT Parser"
-                onTriggered: root.pageStack.replace(jwtPage)
-                visible: text.toLowerCase().includes(searchField.text.toLowerCase())
-            },
-            Kirigami.Action {
-                text: "Integer Base Converter"
-                onTriggered: root.pageStack.replace(baseConverterPage)
-                visible: text.toLowerCase().includes(searchField.text.toLowerCase())
-            },
-            Kirigami.Action {
-                text: "MAC Address Generator"
-                onTriggered: root.pageStack.replace(macGeneratorPage)
-                visible: text.toLowerCase().includes(searchField.text.toLowerCase())
-            },
-            Kirigami.Action {
-                text: "Random Port Generator"
-                onTriggered: root.pageStack.replace(portGeneratorPage)
-                visible: text.toLowerCase().includes(searchField.text.toLowerCase())
-            },
-            Kirigami.Action {
-                text: "Color Converter"
-                onTriggered: root.pageStack.replace(colorConverterPage)
-                visible: text.toLowerCase().includes(searchField.text.toLowerCase())
-            },
-            Kirigami.Action {
-                text: "Slugify String"
-                onTriggered: root.pageStack.replace(slugifyPage)
-                visible: text.toLowerCase().includes(searchField.text.toLowerCase())
-            },
-            Kirigami.Action {
-                text: "WiFi QR Code Generator"
-                onTriggered: root.pageStack.replace(wifiPage)
-                visible: text.toLowerCase().includes(searchField.text.toLowerCase())
-            },
-            Kirigami.Action {
-                text: "Cron Expression Parser"
-                onTriggered: root.pageStack.replace(cronPage)
-                visible: text.toLowerCase().includes(searchField.text.toLowerCase())
+        contentItem: ListView {
+            id: toolsList
+            model: toolsModel
+            clip: true
+            implicitWidth: Kirigami.Units.gridUnit * 15
+            
+            section.property: "category"
+            section.delegate: Kirigami.ListSectionHeader {
+                width: toolsList.width
+                text: section
+                visible: root.isCategoryVisible(section, searchField.text)
+                height: visible ? implicitHeight : 0
             }
-        ]
+
+            delegate: Kirigami.BasicListItem {
+                width: toolsList.width
+                text: model.name
+                visible: model.name.toLowerCase().indexOf(searchField.text.toLowerCase()) !== -1
+                height: visible ? implicitHeight : 0
+                onClicked: {
+                    var target = root.findPage(model.pageId);
+                    if (target) {
+                        root.pageStack.replace(target);
+                    }
+                    if (drawer.modal) {
+                        drawer.close();
+                    }
+                }
+            }
+        }
+    }
+
+    // Helper to find the component by its id string
+    function findPage(id) {
+        var pages = {
+            "tokenGeneratorPage": tokenGeneratorPage,
+            "hashPage": hashPage,
+            "base64Page": base64Page,
+            "baseConverterPage": baseConverterPage,
+            "colorConverterPage": colorConverterPage,
+            "jsonYamlPage": jsonYamlPage,
+            "urlEncoderPage": urlEncoderPage,
+            "htmlEntitiesPage": htmlEntitiesPage,
+            "jwtPage": jwtPage,
+            "uuidPage": uuidPage,
+            "jsonFormatterPage": jsonFormatterPage,
+            "chmodPage": chmodPage,
+            "cronPage": cronPage,
+            "macGeneratorPage": macGeneratorPage,
+            "portGeneratorPage": portGeneratorPage,
+            "wifiPage": wifiPage,
+            "caseConverterPage": caseConverterPage,
+            "loremIpsumPage": loremIpsumPage,
+            "textStatisticsPage": textStatisticsPage,
+            "slugifyPage": slugifyPage
+        };
+        return pages[id];
     }
 
     pageStack.initialPage: welcomePage
@@ -140,7 +141,7 @@ Kirigami.ApplicationWindow {
                 anchors.centerIn: parent
                 width: parent.width - (Kirigami.Units.largeSpacing * 4)
                 text: "Welcome to IT-Tools"
-                explanation: "Select a tool from the drawer to get started."
+                explanation: "Select a tool from the sidebar to get started."
             }
         }
     }
@@ -269,17 +270,19 @@ Kirigami.ApplicationWindow {
                     Button {
                         text: "snake_case"
                         onClicked: {
-                            caseInputField.text = caseInputField.text.match(/[A-Z]{2,}(?=[A-Z][a-z]+[0-9]*|\b)|[A-Z]?[a-z]+[0-9]*|[A-Z]|[0-9]+/g)
-                                .map(function(x) { return x.toLowerCase(); })
-                                .join('_');
+                            var m = caseInputField.text.match(/[A-Z]{2,}(?=[A-Z][a-z]+[0-9]*|\b)|[A-Z]?[a-z]+[0-9]*|[A-Z]|[0-9]+/g);
+                            if (m) {
+                                caseInputField.text = m.map(function(x) { return x.toLowerCase(); }).join('_');
+                            }
                         }
                     }
                     Button {
                         text: "kebab-case"
                         onClicked: {
-                            caseInputField.text = caseInputField.text.match(/[A-Z]{2,}(?=[A-Z][a-z]+[0-9]*|\b)|[A-Z]?[a-z]+[0-9]*|[A-Z]|[0-9]+/g)
-                                .map(function(x) { return x.toLowerCase(); })
-                                .join('-');
+                            var m = caseInputField.text.match(/[A-Z]{2,}(?=[A-Z][a-z]+[0-9]*|\b)|[A-Z]?[a-z]+[0-9]*|[A-Z]|[0-9]+/g);
+                            if (m) {
+                                caseInputField.text = m.map(function(x) { return x.toLowerCase(); }).join('-');
+                            }
                         }
                     }
                 }
@@ -1031,6 +1034,32 @@ Kirigami.ApplicationWindow {
                     Label { text: "Range of values" }
                     Label { text: "/"; font.bold: true }
                     Label { text: "Step values" }
+                }
+            }
+        }
+    }
+
+    Component {
+        id: jsonYamlPage
+        Kirigami.Page {
+            title: "JSON to YAML"
+            ColumnLayout {
+                anchors.fill: parent
+                anchors.margins: Kirigami.Units.largeSpacing
+                TextArea {
+                    id: jsonYamlInput
+                    placeholderText: "Paste JSON here..."
+                    Layout.fillWidth: true
+                    Layout.fillHeight: true
+                    font.family: "monospace"
+                }
+                TextArea {
+                    placeholderText: "YAML output will appear here..."
+                    readOnly: true
+                    Layout.fillWidth: true
+                    Layout.fillHeight: true
+                    font.family: "monospace"
+                    text: conversionTool.jsonToYaml(jsonYamlInput.text)
                 }
             }
         }
