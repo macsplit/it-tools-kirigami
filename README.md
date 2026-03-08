@@ -1,6 +1,6 @@
 # IT-Tools Kirigami
 
-A Kirigami-based version of the popular `it-tools` collection. This application provides a set of handy developer tools in a convergent, cross-platform interface.
+A Kirigami-based version of the popular [it-tools](https://github.com/CorentinTh/it-tools) collection. This application provides a set of handy developer tools in a convergent, cross-platform interface.
 
 ## Tools Included
 
