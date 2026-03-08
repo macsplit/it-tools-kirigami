@@ -21,5 +21,9 @@
         <file>contents/ui/tools/WifiPage.qml</file>
         <file>contents/ui/tools/JsonYamlPage.qml</file>
         <file>contents/ui/tools/CronPage.qml</file>
+        <file>contents/ui/tools/UrlParserPage.qml</file>
+        <file>contents/ui/tools/XmlFormatterPage.qml</file>
+        <file>contents/ui/tools/StringObfuscatorPage.qml</file>
+        <file>contents/ui/tools/XmlToJsonPage.qml</file>
     </qresource>
 </RCC>

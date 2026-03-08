@@ -7,6 +7,9 @@
 #include <QJsonObject>
 #include <QJsonArray>
 #include <QVariant>
+#include <QDomDocument>
+#include <QDomNode>
+#include <QDomNamedNodeMap>
 
 class ConversionTool : public QObject
 {
@@ -23,7 +26,76 @@ public:
         return toYaml(doc.toVariant(), 0).trimmed();
     }
 
+    Q_INVOKABLE QString formatXml(const QString &xmlStr, int indent) {
+        if (xmlStr.trimmed().isEmpty()) return "";
+        QDomDocument doc;
+        QString errorMsg;
+        int errorLine, errorColumn;
+        if (!doc.setContent(xmlStr, &errorMsg, &errorLine, &errorColumn)) {
+            return QString("Invalid XML: %1 (Line: %2, Column: %3)").arg(errorMsg).arg(errorLine).arg(errorColumn);
+        }
+        return doc.toString(indent);
+    }
+
+    Q_INVOKABLE QString xmlToJson(const QString &xmlStr) {
+        if (xmlStr.trimmed().isEmpty()) return "";
+        QDomDocument doc;
+        if (!doc.setContent(xmlStr)) return "Invalid XML";
+        
+        QVariantMap root = domToVariant(doc.documentElement());
+        QJsonDocument jsonDoc = QJsonDocument::fromVariant(root);
+        return jsonDoc.toJson(QJsonDocument::Indented);
+    }
+
 private:
+    QVariantMap domToVariant(const QDomElement &element) {
+        QVariantMap res;
+        
+        // Attributes
+        QDomNamedNodeMap attrs = element.attributes();
+        for (int i = 0; i < attrs.length(); i++) {
+            QDomNode attr = attrs.item(i);
+            res["@" + attr.nodeName()] = attr.nodeValue();
+        }
+        
+        // Children
+        QDomNodeList children = element.childNodes();
+        for (int i = 0; i < children.length(); i++) {
+            QDomNode child = children.item(i);
+            if (child.isElement()) {
+                QDomElement childElem = child.toElement();
+                QString name = childElem.tagName();
+                QVariant val = domToVariant(childElem);
+                
+                if (res.contains(name)) {
+                    if (res[name].type() == QVariant::List) {
+                        QVariantList list = res[name].toList();
+                        list.append(val);
+                        res[name] = list;
+                    } else {
+                        QVariantList list;
+                        list.append(res[name]);
+                        list.append(val);
+                        res[name] = list;
+                    }
+                } else {
+                    res[name] = val;
+                }
+            } else if (child.isText()) {
+                QString text = child.toText().data().trimmed();
+                if (!text.isEmpty()) {
+                    if (res.isEmpty() && children.length() == 1) {
+                        // If only text, return as string (simplified)
+                        // But for consistency we return as map if we have attributes
+                    }
+                    res["#text"] = text;
+                }
+            }
+        }
+        
+        return res;
+    }
+
     QString toYaml(const QVariant &var, int indent) {
         QString res;
         QString pad = QString("  ").repeated(indent);

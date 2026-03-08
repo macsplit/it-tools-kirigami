@@ -17,6 +17,7 @@ Kirigami.ApplicationWindow {
     HashTool { id: hashTool }
     BaseTool { id: baseTool }
     ConversionTool { id: conversionTool }
+    UrlTool { id: urlTool }
 
     // Logic for filtering categories
     function isCategoryVisible(cat, filter) {
@@ -38,11 +39,14 @@ Kirigami.ApplicationWindow {
         ListElement { name: "Integer Base Converter"; category: "Converter"; file: "tools/BaseConverterPage.qml" }
         ListElement { name: "Color Converter"; category: "Converter"; file: "tools/ColorConverterPage.qml" }
         ListElement { name: "JSON to YAML"; category: "Converter"; file: "tools/JsonYamlPage.qml" }
+        ListElement { name: "XML to JSON"; category: "Converter"; file: "tools/XmlToJsonPage.qml" }
         ListElement { name: "URL Encoder/Decoder"; category: "Web"; file: "tools/UrlEncoderPage.qml" }
         ListElement { name: "HTML Entities"; category: "Web"; file: "tools/HtmlEntitiesPage.qml" }
         ListElement { name: "JWT Parser"; category: "Web"; file: "tools/JwtPage.qml" }
+        ListElement { name: "URL Parser"; category: "Web"; file: "tools/UrlParserPage.qml" }
         ListElement { name: "UUID Generator"; category: "Development"; file: "tools/UuidPage.qml" }
         ListElement { name: "JSON Formatter"; category: "Development"; file: "tools/JsonFormatterPage.qml" }
+        ListElement { name: "XML Formatter"; category: "Development"; file: "tools/XmlFormatterPage.qml" }
         ListElement { name: "Chmod Calculator"; category: "Development"; file: "tools/ChmodPage.qml" }
         ListElement { name: "Cron Expression Parser"; category: "Development"; file: "tools/CronPage.qml" }
         ListElement { name: "MAC Address Generator"; category: "Network"; file: "tools/MacGeneratorPage.qml" }
@@ -52,6 +56,7 @@ Kirigami.ApplicationWindow {
         ListElement { name: "Lorem Ipsum"; category: "Text"; file: "tools/LoremIpsumPage.qml" }
         ListElement { name: "Text Statistics"; category: "Text"; file: "tools/TextStatisticsPage.qml" }
         ListElement { name: "Slugify String"; category: "Text"; file: "tools/SlugifyPage.qml" }
+        ListElement { name: "String Obfuscator"; category: "Text"; file: "tools/StringObfuscatorPage.qml" }
     }
 
     globalDrawer: Kirigami.GlobalDrawer {

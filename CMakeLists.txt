@@ -16,7 +16,7 @@ include(KDECompilerSettings NO_POLICY_SCOPE)
 # Enable exceptions which are required by qrcodegen
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fexceptions")
 
-find_package(Qt5 5.15 REQUIRED COMPONENTS Core Quick QuickControls2 Widgets)
+find_package(Qt5 5.15 REQUIRED COMPONENTS Core Quick QuickControls2 Widgets Xml)
 find_package(KF5 REQUIRED COMPONENTS Kirigami2 CoreAddons)
 
 add_executable(it-tools-kirigami
@@ -25,6 +25,7 @@ add_executable(it-tools-kirigami
     src/basetool.h
     src/conversiontool.h
     src/qrcodetool.h
+    src/urltool.h
     src/qrcodegen.cpp
     src/resources.qrc
 )
@@ -34,6 +35,7 @@ target_link_libraries(it-tools-kirigami
     Qt5::Quick
     Qt5::QuickControls2
     Qt5::Widgets
+    Qt5::Xml
     KF5::Kirigami2
     KF5::CoreAddons
 )
