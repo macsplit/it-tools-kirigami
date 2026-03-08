@@ -3,6 +3,7 @@
 #include <QtQml>
 #include <QUrl>
 #include "hashtool.h"
+#include "basetool.h"
 
 int main(int argc, char *argv[])
 {
@@ -10,6 +11,7 @@ int main(int argc, char *argv[])
     QApplication app(argc, argv);
 
     qmlRegisterType<HashTool>("ittools.kirigami", 1, 0, "HashTool");
+    qmlRegisterType<BaseTool>("ittools.kirigami", 1, 0, "BaseTool");
 
     QQmlApplicationEngine engine;
     engine.load(QUrl(QStringLiteral("qrc:/contents/ui/main.qml")));

@@ -13,6 +13,7 @@ Kirigami.ApplicationWindow {
     height: 700
 
     HashTool { id: hashTool }
+    BaseTool { id: baseTool }
 
     globalDrawer: Kirigami.GlobalDrawer {
         isMenu: true
@@ -89,6 +90,31 @@ Kirigami.ApplicationWindow {
             Kirigami.Action {
                 text: "JWT Parser"
                 onTriggered: root.pageStack.replace(jwtPage)
+                visible: text.toLowerCase().includes(searchField.text.toLowerCase())
+            },
+            Kirigami.Action {
+                text: "Integer Base Converter"
+                onTriggered: root.pageStack.replace(baseConverterPage)
+                visible: text.toLowerCase().includes(searchField.text.toLowerCase())
+            },
+            Kirigami.Action {
+                text: "MAC Address Generator"
+                onTriggered: root.pageStack.replace(macGeneratorPage)
+                visible: text.toLowerCase().includes(searchField.text.toLowerCase())
+            },
+            Kirigami.Action {
+                text: "Random Port Generator"
+                onTriggered: root.pageStack.replace(portGeneratorPage)
+                visible: text.toLowerCase().includes(searchField.text.toLowerCase())
+            },
+            Kirigami.Action {
+                text: "Color Converter"
+                onTriggered: root.pageStack.replace(colorConverterPage)
+                visible: text.toLowerCase().includes(searchField.text.toLowerCase())
+            },
+            Kirigami.Action {
+                text: "Slugify String"
+                onTriggered: root.pageStack.replace(slugifyPage)
                 visible: text.toLowerCase().includes(searchField.text.toLowerCase())
             }
         ]
@@ -612,6 +638,260 @@ Kirigami.ApplicationWindow {
                 } catch (e) {
                     return "";
                 }
+            }
+        }
+    }
+
+    Component {
+        id: baseConverterPage
+        Kirigami.Page {
+            title: "Integer Base Converter"
+            ColumnLayout {
+                anchors.fill: parent
+                anchors.margins: Kirigami.Units.largeSpacing
+                spacing: Kirigami.Units.smallSpacing
+
+                Label { text: "Input number:"; font.bold: true }
+                TextField {
+                    id: baseInput
+                    text: "42"
+                    Layout.fillWidth: true
+                }
+                Label { text: "Input base:"; font.bold: true }
+                SpinBox {
+                    id: fromBase
+                    from: 2; to: 64; value: 10; editable: true
+                }
+
+                Label { text: "Binary (2):"; font.bold: true }
+                TextField { readOnly: true; Layout.fillWidth: true; text: baseTool.convert(baseInput.text, fromBase.value, 2) }
+                Label { text: "Octal (8):"; font.bold: true }
+                TextField { readOnly: true; Layout.fillWidth: true; text: baseTool.convert(baseInput.text, fromBase.value, 8) }
+                Label { text: "Decimal (10):"; font.bold: true }
+                TextField { readOnly: true; Layout.fillWidth: true; text: baseTool.convert(baseInput.text, fromBase.value, 10) }
+                Label { text: "Hexadecimal (16):"; font.bold: true }
+                TextField { readOnly: true; Layout.fillWidth: true; text: baseTool.convert(baseInput.text, fromBase.value, 16) }
+                
+                Item { Layout.fillHeight: true }
+            }
+        }
+    }
+
+    Component {
+        id: macGeneratorPage
+        Kirigami.Page {
+            title: "MAC Address Generator"
+            ColumnLayout {
+                anchors.fill: parent
+                anchors.margins: Kirigami.Units.largeSpacing
+                spacing: Kirigami.Units.smallSpacing
+
+                Label { text: "Generated MAC Address:"; font.bold: true }
+                TextField {
+                    id: macOutput
+                    readOnly: true
+                    Layout.fillWidth: true
+                }
+                Button {
+                    text: "Generate"
+                    onClicked: {
+                        var mac = "";
+                        for (var i = 0; i < 6; i++) {
+                            var val = Math.floor(Math.random() * 256);
+                            var hex = ("0" + val.toString(16)).slice(-2);
+                            mac += hex + (i < 5 ? ":" : "");
+                        }
+                        macOutput.text = mac.toUpperCase();
+                    }
+                    Layout.alignment: Qt.AlignLeft
+                }
+                Item { Layout.fillHeight: true }
+            }
+        }
+    }
+
+    Component {
+        id: portGeneratorPage
+        Kirigami.Page {
+            title: "Random Port Generator"
+            ColumnLayout {
+                anchors.fill: parent
+                anchors.margins: Kirigami.Units.largeSpacing
+                spacing: Kirigami.Units.smallSpacing
+
+                Label { text: "Generated Port:"; font.bold: true }
+                TextField {
+                    id: portOutput
+                    readOnly: true
+                    Layout.fillWidth: true
+                }
+                Button {
+                    text: "Generate"
+                    onClicked: {
+                        // 1024 - 65535
+                        portOutput.text = Math.floor(Math.random() * (65535 - 1024 + 1) + 1024).toString();
+                    }
+                    Layout.alignment: Qt.AlignLeft
+                }
+                Item { Layout.fillHeight: true }
+            }
+        }
+    }
+
+    Component {
+        id: colorConverterPage
+        Kirigami.Page {
+            title: "Color Converter"
+            ColumnLayout {
+                anchors.fill: parent
+                anchors.margins: Kirigami.Units.largeSpacing
+                spacing: Kirigami.Units.smallSpacing
+
+                Label { text: "Hex Color:"; font.bold: true }
+                TextField {
+                    id: hexInput
+                    text: "#1EA54C"
+                    Layout.fillWidth: true
+                    onTextChanged: if (activeFocus) updateFromHex(text)
+                }
+                Label { text: "RGB:"; font.bold: true }
+                TextField {
+                    id: rgbInput
+                    Layout.fillWidth: true
+                    onTextChanged: if (activeFocus) updateFromRgb(text)
+                }
+                Label { text: "HSL:"; font.bold: true }
+                TextField {
+                    id: hslInput
+                    Layout.fillWidth: true
+                    onTextChanged: if (activeFocus) updateFromHsl(text)
+                }
+                
+                Rectangle {
+                    Layout.fillWidth: true
+                    height: 100
+                    color: hexInput.text.match(/^#[0-9a-fA-F]{6}$/) ? hexInput.text : "transparent"
+                    border.color: "black"
+                }
+
+                Item { Layout.fillHeight: true }
+            }
+
+            function pad2(n) {
+                var s = n.toString(16);
+                return s.length < 2 ? "0" + s : s;
+            }
+
+            function updateFromHex(hex) {
+                if (!hex.match(/^#[0-9a-fA-F]{6}$/)) return;
+                var r = parseInt(hex.slice(1, 3), 16);
+                var g = parseInt(hex.slice(3, 5), 16);
+                var b = parseInt(hex.slice(5, 7), 16);
+                rgbInput.text = "rgb(" + r + ", " + g + ", " + b + ")";
+                
+                r /= 255; g /= 255; b /= 255;
+                var max = Math.max(r, g, b), min = Math.min(r, g, b);
+                var h, s, l = (max + min) / 2;
+                if (max === min) { h = s = 0; }
+                else {
+                    var d = max - min;
+                    s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+                    switch (max) {
+                        case r: h = (g - b) / d + (g < b ? 6 : 0); break;
+                        case g: h = (b - r) / d + 2; break;
+                        case b: h = (r - g) / d + 4; break;
+                    }
+                    h /= 6;
+                }
+                hslInput.text = "hsl(" + Math.round(h * 360) + ", " + Math.round(s * 100) + "%, " + Math.round(l * 100) + "%)";
+            }
+
+            function updateFromRgb(rgb) {
+                var m = rgb.match(/rgb\((\d+),\s*(\d+),\s*(\d+)\)/);
+                if (!m) return;
+                var r = parseInt(m[1]), g = parseInt(m[2]), b = parseInt(m[3]);
+                var hex = "#" + pad2(r) + pad2(g) + pad2(b);
+                hexInput.text = hex.toUpperCase();
+                
+                r /= 255; g /= 255; b /= 255;
+                var max = Math.max(r, g, b), min = Math.min(r, g, b);
+                var h, s, l = (max + min) / 2;
+                if (max === min) { h = s = 0; }
+                else {
+                    var d = max - min;
+                    s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+                    switch (max) {
+                        case r: h = (g - b) / d + (g < b ? 6 : 0); break;
+                        case g: h = (b - r) / d + 2; break;
+                        case b: h = (r - g) / d + 4; break;
+                    }
+                    h /= 6;
+                }
+                hslInput.text = "hsl(" + Math.round(h * 360) + ", " + Math.round(s * 100) + "%, " + Math.round(l * 100) + "%)";
+            }
+
+            function updateFromHsl(hsl) {
+                var m = hsl.match(/hsl\((\d+),\s*(\d+)%,\s*(\d+)%\)/);
+                if (!m) return;
+                var h = parseInt(m[1]) / 360;
+                var s = parseInt(m[2]) / 100;
+                var l = parseInt(m[3]) / 100;
+
+                var r, g, b;
+                if (s === 0) {
+                    r = g = b = l;
+                } else {
+                    var hue2rgb = function(p, q, t) {
+                        if (t < 0) t += 1;
+                        if (t > 1) t -= 1;
+                        if (t < 1/6) return p + (q - p) * 6 * t;
+                        if (t < 1/2) return q;
+                        if (t < 2/3) return p + (q - p) * (2/3 - t) * 6;
+                        return p;
+                    };
+                    var q = l < 0.5 ? l * (1 + s) : l + s - l * s;
+                    var p = 2 * l - q;
+                    r = hue2rgb(p, q, h + 1/3);
+                    g = hue2rgb(p, q, h);
+                    b = hue2rgb(p, q, h - 1/3);
+                }
+
+                var ri = Math.round(r * 255), gi = Math.round(g * 255), bi = Math.round(b * 255);
+                var hex = "#" + pad2(ri) + pad2(gi) + pad2(bi);
+                hexInput.text = hex.toUpperCase();
+                rgbInput.text = "rgb(" + ri + ", " + gi + ", " + bi + ")";
+            }
+            
+            Component.onCompleted: updateFromHex(hexInput.text)
+        }
+    }
+
+    Component {
+        id: slugifyPage
+        Kirigami.Page {
+            title: "Slugify String"
+            ColumnLayout {
+                anchors.fill: parent
+                anchors.margins: Kirigami.Units.largeSpacing
+                spacing: Kirigami.Units.smallSpacing
+
+                Label { text: "Input string:"; font.bold: true }
+                TextField {
+                    id: slugInput
+                    placeholderText: "Type something..."
+                    Layout.fillWidth: true
+                }
+                Label { text: "Slug:"; font.bold: true }
+                TextField {
+                    readOnly: true
+                    Layout.fillWidth: true
+                    text: slugInput.text.toLowerCase()
+                                    .trim()
+                                    .replace(/[^\w\s-]/g, '')
+                                    .replace(/[\s_-]+/g, '-')
+                                    .replace(/^-+|-+$/g, '')
+                }
+                Item { Layout.fillHeight: true }
             }
         }
     }

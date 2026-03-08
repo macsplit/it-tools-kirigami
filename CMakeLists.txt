@@ -19,6 +19,7 @@ find_package(KF5 REQUIRED COMPONENTS Kirigami2 CoreAddons)
 add_executable(it-tools-kirigami
     src/main.cpp
     src/hashtool.h
+    src/basetool.h
     src/resources.qrc
 )
 
