@@ -1,5 +1,25 @@
 <RCC>
     <qresource prefix="/">
         <file>contents/ui/main.qml</file>
+        <file>contents/ui/tools/UuidPage.qml</file>
+        <file>contents/ui/tools/Base64Page.qml</file>
+        <file>contents/ui/tools/CaseConverterPage.qml</file>
+        <file>contents/ui/tools/JsonFormatterPage.qml</file>
+        <file>contents/ui/tools/TokenGeneratorPage.qml</file>
+        <file>contents/ui/tools/LoremIpsumPage.qml</file>
+        <file>contents/ui/tools/UrlEncoderPage.qml</file>
+        <file>contents/ui/tools/HtmlEntitiesPage.qml</file>
+        <file>contents/ui/tools/TextStatisticsPage.qml</file>
+        <file>contents/ui/tools/ChmodPage.qml</file>
+        <file>contents/ui/tools/HashPage.qml</file>
+        <file>contents/ui/tools/JwtPage.qml</file>
+        <file>contents/ui/tools/BaseConverterPage.qml</file>
+        <file>contents/ui/tools/MacGeneratorPage.qml</file>
+        <file>contents/ui/tools/PortGeneratorPage.qml</file>
+        <file>contents/ui/tools/ColorConverterPage.qml</file>
+        <file>contents/ui/tools/SlugifyPage.qml</file>
+        <file>contents/ui/tools/WifiPage.qml</file>
+        <file>contents/ui/tools/JsonYamlPage.qml</file>
+        <file>contents/ui/tools/CronPage.qml</file>
     </qresource>
 </RCC>

@@ -5,6 +5,7 @@
 #include "hashtool.h"
 #include "basetool.h"
 #include "conversiontool.h"
+#include "qrcodetool.h"
 
 int main(int argc, char *argv[])
 {
@@ -16,6 +17,7 @@ int main(int argc, char *argv[])
     qmlRegisterType<ConversionTool>("ittools.kirigami", 1, 0, "ConversionTool");
 
     QQmlApplicationEngine engine;
+    engine.addImageProvider(QLatin1String("qrcode"), new QrCodeProvider);
     engine.load(QUrl(QStringLiteral("qrc:/contents/ui/main.qml")));
 
     if (engine.rootObjects().isEmpty()) {
