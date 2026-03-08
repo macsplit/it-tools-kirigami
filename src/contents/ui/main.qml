@@ -43,6 +43,7 @@ Kirigami.ApplicationWindow {
         ListElement { name: "JSON to CSV"; category: "Converter"; file: "tools/JsonToCsvPage.qml" }
         ListElement { name: "XML to JSON"; category: "Converter"; file: "tools/XmlToJsonPage.qml" }
         ListElement { name: "Text to Binary"; category: "Converter"; file: "tools/TextToBinaryPage.qml" }
+        ListElement { name: "Temperature Converter"; category: "Converter"; file: "tools/TemperatureConverterPage.qml" }
         ListElement { name: "URL Encoder/Decoder"; category: "Web"; file: "tools/UrlEncoderPage.qml" }
         ListElement { name: "HTML Entities"; category: "Web"; file: "tools/HtmlEntitiesPage.qml" }
         ListElement { name: "JWT Parser"; category: "Web"; file: "tools/JwtPage.qml" }
