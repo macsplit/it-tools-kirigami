@@ -26,5 +26,7 @@
         <file>contents/ui/tools/StringObfuscatorPage.qml</file>
         <file>contents/ui/tools/XmlToJsonPage.qml</file>
         <file>contents/ui/tools/TextToBinaryPage.qml</file>
+        <file>contents/ui/tools/JsonToXmlPage.qml</file>
+        <file>contents/ui/tools/JsonToCsvPage.qml</file>
     </qresource>
 </RCC>
