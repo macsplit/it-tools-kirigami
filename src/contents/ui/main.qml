@@ -40,6 +40,7 @@ Kirigami.ApplicationWindow {
         ListElement { name: "Color Converter"; category: "Converter"; file: "tools/ColorConverterPage.qml" }
         ListElement { name: "JSON to YAML"; category: "Converter"; file: "tools/JsonYamlPage.qml" }
         ListElement { name: "XML to JSON"; category: "Converter"; file: "tools/XmlToJsonPage.qml" }
+        ListElement { name: "Text to Binary"; category: "Converter"; file: "tools/TextToBinaryPage.qml" }
         ListElement { name: "URL Encoder/Decoder"; category: "Web"; file: "tools/UrlEncoderPage.qml" }
         ListElement { name: "HTML Entities"; category: "Web"; file: "tools/HtmlEntitiesPage.qml" }
         ListElement { name: "JWT Parser"; category: "Web"; file: "tools/JwtPage.qml" }

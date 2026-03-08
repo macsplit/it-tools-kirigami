@@ -25,5 +25,6 @@
         <file>contents/ui/tools/XmlFormatterPage.qml</file>
         <file>contents/ui/tools/StringObfuscatorPage.qml</file>
         <file>contents/ui/tools/XmlToJsonPage.qml</file>
+        <file>contents/ui/tools/TextToBinaryPage.qml</file>
     </qresource>
 </RCC>

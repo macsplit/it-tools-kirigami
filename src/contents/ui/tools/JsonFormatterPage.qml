@@ -3,16 +3,16 @@ import QtQuick.Controls 2.15
 import QtQuick.Layouts 1.15
 import org.kde.kirigami 2.19 as Kirigami
 
-Kirigami.Page {
-    title: "JSON Formatter"
+Kirigami.ScrollablePage {
+    title: "JSON Formatter / Minifier"
     ColumnLayout {
-        anchors.fill: parent
-        anchors.margins: Kirigami.Units.largeSpacing
+        width: parent.width
+        spacing: Kirigami.Units.largeSpacing
         TextArea {
             id: jsonInput
             placeholderText: "Paste JSON here..."
             Layout.fillWidth: true
-            Layout.fillHeight: true
+            Layout.preferredHeight: 300
             font.family: "monospace"
         }
         RowLayout {
