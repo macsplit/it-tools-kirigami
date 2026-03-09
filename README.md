@@ -1,6 +1,6 @@
 # Tools
 
-A Kirigami-based developer utility suite, providing a set of handy tools in a convergent, cross-platform interface.
+A Kirigami-based developer utility suite, providing a set of handy tools in a convergent, cross-platform interface, inspired by [IT-Tools](https://github.com/CorentinTh/it-tools).
 
 ![Screenshot](screenshot.png)
 
@@ -38,4 +38,4 @@ We welcome contributions! See [CONTRIBUTING.md](CONTRIBUTING.md) for details on 
 
 ## License
 
-Distributed under the MIT License. See `LICENSE` for more information.
+Distributed under the GPL 3 License. See `LICENSE` for more information.
