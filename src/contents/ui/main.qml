@@ -12,7 +12,7 @@ Kirigami.ApplicationWindow {
     
     // Use grid units for scaling-aware sizing
     width: Kirigami.Units.gridUnit * 45
-    height: Kirigami.Units.gridUnit * 30
+    height: Kirigami.Units.gridUnit * 22
     
     HashTool { id: hashTool }
     BaseTool { id: baseTool }
@@ -44,15 +44,19 @@ Kirigami.ApplicationWindow {
         ListElement { name: "JSON to XML"; category: "Converter"; file: "tools/JsonToXmlPage.qml" }
         ListElement { name: "JSON to CSV"; category: "Converter"; file: "tools/JsonToCsvPage.qml" }
         ListElement { name: "XML to JSON"; category: "Converter"; file: "tools/XmlToJsonPage.qml" }
+        ListElement { name: "CSV to JSON"; category: "Converter"; file: "tools/CsvToJsonPage.qml" }
         ListElement { name: "Text to Binary"; category: "Converter"; file: "tools/TextToBinaryPage.qml" }
         ListElement { name: "Temperature Converter"; category: "Converter"; file: "tools/TemperatureConverterPage.qml" }
         ListElement { name: "List Converter"; category: "Converter"; file: "tools/ListConverterPage.qml" }
+        ListElement { name: "Markdown to HTML"; category: "Converter"; file: "tools/MarkdownPage.qml" }
         ListElement { name: "IPv4 Converter"; category: "Network"; file: "tools/Ipv4ConverterPage.qml" }
         ListElement { name: "IPv4 Subnet Calculator"; category: "Network"; file: "tools/Ipv4SubnetPage.qml" }
+        ListElement { name: "WiFi QR Code Generator"; category: "Network"; file: "tools/WifiPage.qml" }
         ListElement { name: "URL Encoder/Decoder"; category: "Web"; file: "tools/UrlEncoderPage.qml" }
         ListElement { name: "HTML Entities"; category: "Web"; file: "tools/HtmlEntitiesPage.qml" }
         ListElement { name: "JWT Parser"; category: "Web"; file: "tools/JwtPage.qml" }
         ListElement { name: "URL Parser"; category: "Web"; file: "tools/UrlParserPage.qml" }
+        ListElement { name: "HTTP Status Codes"; category: "Web"; file: "tools/HttpStatusPage.qml" }
         ListElement { name: "UUID Generator"; category: "Development"; file: "tools/UuidPage.qml" }
         ListElement { name: "JSON Formatter"; category: "Development"; file: "tools/JsonFormatterPage.qml" }
         ListElement { name: "XML Formatter"; category: "Development"; file: "tools/XmlFormatterPage.qml" }
@@ -61,7 +65,6 @@ Kirigami.ApplicationWindow {
         ListElement { name: "Cron Expression Parser"; category: "Development"; file: "tools/CronPage.qml" }
         ListElement { name: "MAC Address Generator"; category: "Network"; file: "tools/MacGeneratorPage.qml" }
         ListElement { name: "Random Port Generator"; category: "Network"; file: "tools/PortGeneratorPage.qml" }
-        ListElement { name: "WiFi QR Code Generator"; category: "Network"; file: "tools/WifiPage.qml" }
         ListElement { name: "Case Converter"; category: "Text"; file: "tools/CaseConverterPage.qml" }
         ListElement { name: "Lorem Ipsum"; category: "Text"; file: "tools/LoremIpsumPage.qml" }
         ListElement { name: "Text Statistics"; category: "Text"; file: "tools/TextStatisticsPage.qml" }
@@ -74,14 +77,27 @@ Kirigami.ApplicationWindow {
         isMenu: false
         collapsible: true
         modal: false
-        width: Kirigami.Units.gridUnit * 8 // Adjusted width
+        width: Kirigami.Units.gridUnit * 8
         handleVisible: true
         
-        header: Kirigami.SearchField {
-            id: searchField
-            placeholderText: "Search..."
-            Layout.fillWidth: true
-            Layout.margins: Kirigami.Units.smallSpacing
+        // Use more appropriate sidebar icons by overriding the handle
+        handle: Kirigami.ActionToolButton {
+            action: Kirigami.Action {
+                icon.name: drawer.collapsed ? "sidebar-show" : "sidebar-hide"
+                onTriggered: drawer.collapsed = !drawer.collapsed
+            }
+        }
+        
+        header: ColumnLayout {
+            width: drawer.width
+            spacing: 0
+            Item { implicitHeight: Kirigami.Units.smallSpacing }
+            Kirigami.SearchField {
+                id: searchField
+                placeholderText: "Search..."
+                Layout.fillWidth: true
+                Layout.margins: Kirigami.Units.smallSpacing
+            }
         }
 
         contentItem: ListView {
@@ -89,7 +105,7 @@ Kirigami.ApplicationWindow {
             model: toolsModel
             clip: true
             topMargin: Kirigami.Units.gridUnit
-            bottomMargin: Kirigami.Units.gridUnit * 2
+            bottomMargin: Kirigami.Units.gridUnit * 4
             
             section.property: "category"
             section.delegate: Kirigami.ListSectionHeader {

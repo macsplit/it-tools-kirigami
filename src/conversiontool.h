@@ -11,6 +11,7 @@
 #include <QDomNode>
 #include <QDomNamedNodeMap>
 #include <QRegExp>
+#include <QTextDocument>
 
 class ConversionTool : public QObject
 {
@@ -131,6 +132,13 @@ public:
             }
         }
         return res.trimmed();
+    }
+
+    Q_INVOKABLE QString markdownToHtml(const QString &md) {
+        if (md.trimmed().isEmpty()) return "";
+        QTextDocument doc;
+        doc.setMarkdown(md);
+        return doc.toHtml();
     }
 
 private:

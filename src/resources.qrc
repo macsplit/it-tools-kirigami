@@ -34,6 +34,9 @@
         <file>contents/ui/tools/Ipv4ConverterPage.qml</file>
         <file>contents/ui/tools/Ipv4SubnetPage.qml</file>
         <file>contents/ui/tools/HmacPage.qml</file>
+        <file>contents/ui/tools/MarkdownPage.qml</file>
+        <file>contents/ui/tools/HttpStatusPage.qml</file>
+        <file>contents/ui/tools/CsvToJsonPage.qml</file>
         <file>icon.svg</file>
     </qresource>
 </RCC>
