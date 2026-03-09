@@ -26,6 +26,7 @@ add_executable(it-tools-kirigami
     src/conversiontool.h
     src/qrcodetool.h
     src/urltool.h
+    src/networktool.h
     src/qrcodegen.cpp
     src/resources.qrc
 )

@@ -18,6 +18,7 @@ Kirigami.ApplicationWindow {
     BaseTool { id: baseTool }
     ConversionTool { id: conversionTool }
     UrlTool { id: urlTool }
+    NetworkTool { id: networkTool }
 
     // Logic for filtering categories
     function isCategoryVisible(cat, filter) {
@@ -35,6 +36,7 @@ Kirigami.ApplicationWindow {
         id: toolsModel
         ListElement { name: "Token Generator"; category: "Crypto"; file: "tools/TokenGeneratorPage.qml" }
         ListElement { name: "Hash Text"; category: "Crypto"; file: "tools/HashPage.qml" }
+        ListElement { name: "HMAC Generator"; category: "Crypto"; file: "tools/HmacPage.qml" }
         ListElement { name: "Base64 Converter"; category: "Converter"; file: "tools/Base64Page.qml" }
         ListElement { name: "Integer Base Converter"; category: "Converter"; file: "tools/BaseConverterPage.qml" }
         ListElement { name: "Color Converter"; category: "Converter"; file: "tools/ColorConverterPage.qml" }
@@ -45,6 +47,8 @@ Kirigami.ApplicationWindow {
         ListElement { name: "Text to Binary"; category: "Converter"; file: "tools/TextToBinaryPage.qml" }
         ListElement { name: "Temperature Converter"; category: "Converter"; file: "tools/TemperatureConverterPage.qml" }
         ListElement { name: "List Converter"; category: "Converter"; file: "tools/ListConverterPage.qml" }
+        ListElement { name: "IPv4 Converter"; category: "Network"; file: "tools/Ipv4ConverterPage.qml" }
+        ListElement { name: "IPv4 Subnet Calculator"; category: "Network"; file: "tools/Ipv4SubnetPage.qml" }
         ListElement { name: "URL Encoder/Decoder"; category: "Web"; file: "tools/UrlEncoderPage.qml" }
         ListElement { name: "HTML Entities"; category: "Web"; file: "tools/HtmlEntitiesPage.qml" }
         ListElement { name: "JWT Parser"; category: "Web"; file: "tools/JwtPage.qml" }
@@ -52,6 +56,7 @@ Kirigami.ApplicationWindow {
         ListElement { name: "UUID Generator"; category: "Development"; file: "tools/UuidPage.qml" }
         ListElement { name: "JSON Formatter"; category: "Development"; file: "tools/JsonFormatterPage.qml" }
         ListElement { name: "XML Formatter"; category: "Development"; file: "tools/XmlFormatterPage.qml" }
+        ListElement { name: "SQL Prettify"; category: "Development"; file: "tools/SqlPrettifyPage.qml" }
         ListElement { name: "Chmod Calculator"; category: "Development"; file: "tools/ChmodPage.qml" }
         ListElement { name: "Cron Expression Parser"; category: "Development"; file: "tools/CronPage.qml" }
         ListElement { name: "MAC Address Generator"; category: "Network"; file: "tools/MacGeneratorPage.qml" }
@@ -69,7 +74,7 @@ Kirigami.ApplicationWindow {
         isMenu: false
         collapsible: true
         modal: false
-        width: Kirigami.Units.gridUnit * 12
+        width: Kirigami.Units.gridUnit * 8 // Adjusted width
         handleVisible: true
         
         header: Kirigami.SearchField {

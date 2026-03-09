@@ -29,13 +29,13 @@ Kirigami.ScrollablePage {
                 }
                 RowLayout {
                     Label { text: "Item Wrap:" }
-                    TextField { id: itemPrefix; placeholder: "Prefix"; Layout.preferredWidth: 80 }
-                    TextField { id: itemSuffix; placeholder: "Suffix"; Layout.preferredWidth: 80 }
+                    TextField { id: itemPrefix; placeholderText: "Prefix"; Layout.preferredWidth: 80 }
+                    TextField { id: itemSuffix; placeholderText: "Suffix"; Layout.preferredWidth: 80 }
                 }
                 RowLayout {
                     Label { text: "List Wrap:" }
-                    TextField { id: listPrefix; placeholder: "Prefix"; Layout.preferredWidth: 80 }
-                    TextField { id: listSuffix; placeholder: "Suffix"; Layout.preferredWidth: 80 }
+                    TextField { id: listPrefix; placeholderText: "Prefix"; Layout.preferredWidth: 80 }
+                    TextField { id: listSuffix; placeholderText: "Suffix"; Layout.preferredWidth: 80 }
                 }
             }
         }

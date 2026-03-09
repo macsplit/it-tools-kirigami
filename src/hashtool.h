@@ -4,6 +4,7 @@
 #include <QObject>
 #include <QString>
 #include <QCryptographicHash>
+#include <QMessageAuthenticationCode>
 
 class HashTool : public QObject
 {
@@ -21,6 +22,21 @@ public:
 
     Q_INVOKABLE static QString sha256(const QString &input) {
         return hash(input, QCryptographicHash::Sha256);
+    }
+
+    Q_INVOKABLE QString hmac(const QString &input, const QString &key, const QString &algo) {
+        if (input.isEmpty() || key.isEmpty()) return "";
+        
+        QCryptographicHash::Algorithm hashAlgo = QCryptographicHash::Sha256;
+        if (algo == "MD5") hashAlgo = QCryptographicHash::Md5;
+        else if (algo == "SHA1") hashAlgo = QCryptographicHash::Sha1;
+        else if (algo == "SHA256") hashAlgo = QCryptographicHash::Sha256;
+        else if (algo == "SHA512") hashAlgo = QCryptographicHash::Sha512;
+
+        QMessageAuthenticationCode code(hashAlgo);
+        code.setKey(key.toUtf8());
+        code.addData(input.toUtf8());
+        return QString(code.result().toHex());
     }
 
 private:

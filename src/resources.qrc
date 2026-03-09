@@ -30,5 +30,10 @@
         <file>contents/ui/tools/JsonToCsvPage.qml</file>
         <file>contents/ui/tools/TemperatureConverterPage.qml</file>
         <file>contents/ui/tools/ListConverterPage.qml</file>
+        <file>contents/ui/tools/SqlPrettifyPage.qml</file>
+        <file>contents/ui/tools/Ipv4ConverterPage.qml</file>
+        <file>contents/ui/tools/Ipv4SubnetPage.qml</file>
+        <file>contents/ui/tools/HmacPage.qml</file>
+        <file>icon.svg</file>
     </qresource>
 </RCC>

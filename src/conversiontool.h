@@ -10,6 +10,7 @@
 #include <QDomDocument>
 #include <QDomNode>
 #include <QDomNamedNodeMap>
+#include <QRegExp>
 
 class ConversionTool : public QObject
 {
@@ -45,6 +46,41 @@ public:
         QVariantMap root = domToVariant(doc.documentElement());
         QJsonDocument jsonDoc = QJsonDocument::fromVariant(root);
         return jsonDoc.toJson(QJsonDocument::Indented);
+    }
+
+    Q_INVOKABLE QString formatSql(const QString &sql) {
+        if (sql.trimmed().isEmpty()) return "";
+
+        QString input = sql.trimmed();
+        QString result;
+        QStringList keywords = {"SELECT", "FROM", "WHERE", "AND", "OR", "GROUP BY", "ORDER BY", "HAVING", "LIMIT", "INSERT INTO", "UPDATE", "DELETE FROM", "VALUES", "SET", "JOIN", "LEFT JOIN", "RIGHT JOIN", "INNER JOIN", "OUTER JOIN", "ON", "UNION"};
+
+        QString prepared = input;
+        for (const QString &kw : keywords) {
+            prepared.replace(QRegExp("\\b" + kw + "\\b", Qt::CaseInsensitive), "\n" + kw);
+        }
+
+        QStringList lines = prepared.split("\n", Qt::SkipEmptyParts);
+        for (QString line : lines) {
+            line = line.trimmed();
+            if (line.isEmpty()) continue;
+
+            bool isMainKw = false;
+            for (const QString &kw : keywords) {
+                if (line.startsWith(kw, Qt::CaseInsensitive)) {
+                    isMainKw = true;
+                    break;
+                }
+            }
+
+            if (isMainKw) {
+                result += "\n" + line;
+            } else {
+                result += " " + line;
+            }
+        }
+
+        return result.trimmed();
     }
 
     Q_INVOKABLE QString jsonToXml(const QString &jsonStr) {
