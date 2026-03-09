@@ -1,44 +1,41 @@
-# IT-Tools Kirigami
+# Tools
 
-A Kirigami-based version of the popular [it-tools](https://github.com/CorentinTh/it-tools) collection. This application provides a set of handy developer tools in a convergent, cross-platform interface.
+A Kirigami-based developer utility suite, providing a set of handy tools in a convergent, cross-platform interface.
+
+![Screenshot](screenshot.png)
 
 ## Tools Included
 
-- UUID Generator
-- Base64 Converter (Encode/Decode)
-- Case Converter (Uppercase/Lowercase)
-- JSON Formatter (Format/Minify)
-- Token Generator
-- Lorem Ipsum Generator
+- **Crypto**: Token Generator, Hash Text, HMAC Generator
+- **Converter**: Base64, Integer Base, Color, JSON to YAML/XML/CSV, XML to JSON, CSV to JSON, Text to Binary, Temperature, List, Markdown to HTML
+- **Network**: IPv4 Converter, IPv4 Subnet Calculator, WiFi QR Code, MAC Address Generator, Random Port Generator
+- **Web**: URL Encoder/Decoder, HTML Entities, JWT Parser, URL Parser, HTTP Status Codes
+- **Development**: UUID Generator, JSON Formatter, XML Formatter, SQL Prettify, Chmod Calculator, Cron Expression Parser
+- **Text**: Case Converter, Lorem Ipsum, Text Statistics, Slugify String, String Obfuscator
 
 ## Building and Running
 
 ### Prerequisites
 
+- Qt 5.15+ (with Quick, Controls 2, Layouts, SVG)
+- Kirigami 2.19+
 - CMake
-- Qt 5.15
-- KF5 (Kirigami2, I18n, CoreAddons)
-- Extra CMake Modules (ECM)
+- A C++17 compiler
 
-### Build
+### Build Steps
 
 ```bash
 mkdir build
 cd build
 cmake ..
 make
-```
-
-### Run
-
-```bash
 ./bin/it-tools-kirigami
 ```
 
-## Cross-Platform
+## Contributing
 
-Since it's built with Kirigami and Qt, it can be compiled for:
-- Linux (Desktop and Mobile)
-- Android
-- Windows
-- macOS
+We welcome contributions! See [CONTRIBUTING.md](CONTRIBUTING.md) for details on how to add new tools.
+
+## License
+
+Distributed under the MIT License. See `LICENSE` for more information.

@@ -8,7 +8,7 @@ import ittools.kirigami 1.0
 Kirigami.ApplicationWindow {
     id: root
 
-    title: "IT-Tools Kirigami"
+    title: "Tools"
     
     // Use grid units for scaling-aware sizing
     width: Kirigami.Units.gridUnit * 45

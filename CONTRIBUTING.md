@@ -1,4 +1,4 @@
-# Contributing to IT-Tools Kirigami
+# Contributing to Tools
 
 Thank you for your interest in adding more tools! This project is a modular Kirigami application designed to be easily extensible.
 
