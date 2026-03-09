@@ -12,7 +12,7 @@ Kirigami.ApplicationWindow {
     
     // Use grid units for scaling-aware sizing
     width: Kirigami.Units.gridUnit * 45
-    height: Kirigami.Units.gridUnit * 22
+    height: Kirigami.Units.gridUnit * 25
     
     HashTool { id: hashTool }
     BaseTool { id: baseTool }
@@ -77,21 +77,12 @@ Kirigami.ApplicationWindow {
         isMenu: false
         collapsible: true
         modal: false
-        width: Kirigami.Units.gridUnit * 8
+        width: Kirigami.Units.gridUnit * 10
         handleVisible: true
-        
-        // Use more appropriate sidebar icons by overriding the handle
-        handle: Kirigami.ActionToolButton {
-            action: Kirigami.Action {
-                icon.name: drawer.collapsed ? "sidebar-show" : "sidebar-hide"
-                onTriggered: drawer.collapsed = !drawer.collapsed
-            }
-        }
         
         header: ColumnLayout {
             width: drawer.width
             spacing: 0
-            Item { implicitHeight: Kirigami.Units.smallSpacing }
             Kirigami.SearchField {
                 id: searchField
                 placeholderText: "Search..."
@@ -104,7 +95,7 @@ Kirigami.ApplicationWindow {
             id: toolsList
             model: toolsModel
             clip: true
-            topMargin: Kirigami.Units.gridUnit
+            topMargin: Kirigami.Units.smallSpacing
             bottomMargin: Kirigami.Units.gridUnit * 4
             
             section.property: "category"
