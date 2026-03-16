@@ -47,4 +47,4 @@ install(TARGETS tools ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})
 install(FILES org.kde.tools.desktop DESTINATION ${KDE_INSTALL_APPDIR})
 
 # Install the application icon
-install(FILES src/icon.svg DESTINATION ${KDE_INSTALL_ICONDIR}/hicolor/scalable/apps RENAME tools.svg)
+install(FILES src/icon.svg DESTINATION ${KDE_INSTALL_ICONDIR}/hicolor/scalable/apps RENAME org.kde.tools.svg)

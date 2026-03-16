@@ -2,7 +2,7 @@
 Name=Tools
 Comment=A collection of handy developer tools
 Exec=tools
-Icon=tools
+Icon=org.kde.tools
 Type=Application
 Terminal=false
 Categories=Development;Qt;KDE;
