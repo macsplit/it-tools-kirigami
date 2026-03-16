@@ -126,7 +126,7 @@ Kirigami.ApplicationWindow {
         Kirigami.PlaceholderMessage {
             anchors.centerIn: parent
             width: parent.width - (Kirigami.Units.largeSpacing * 4)
-            text: "Welcome to IT-Tools"
+            text: "Welcome to Tools"
             explanation: "Select a tool from the sidebar to get started."
         }
     }

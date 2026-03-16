@@ -1,0 +1,9 @@
+[Desktop Entry]
+Name=Tools
+Comment=A collection of handy developer tools
+Exec=tools
+Icon=tools
+Type=Application
+Terminal=false
+Categories=Development;Qt;KDE;
+Keywords=tool;converter;crypto;network;json;uuid;
