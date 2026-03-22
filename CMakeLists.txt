@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.16)
-project(it-tools-kirigami VERSION 0.1.0 LANGUAGES CXX)
+project(tools VERSION 0.1.0 LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -19,7 +19,7 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fexceptions")
 find_package(Qt5 5.15 REQUIRED COMPONENTS Core Quick QuickControls2 Widgets Xml)
 find_package(KF5 REQUIRED COMPONENTS Kirigami2 CoreAddons)
 
-add_executable(it-tools-kirigami
+add_executable(tools
     src/main.cpp
     src/hashtool.h
     src/basetool.h
@@ -31,7 +31,7 @@ add_executable(it-tools-kirigami
     src/resources.qrc
 )
 
-target_link_libraries(it-tools-kirigami
+target_link_libraries(tools
     Qt5::Core
     Qt5::Quick
     Qt5::QuickControls2
@@ -41,4 +41,10 @@ target_link_libraries(it-tools-kirigami
     KF5::CoreAddons
 )
 
-install(TARGETS it-tools-kirigami ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})
+install(TARGETS tools ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})
+
+# Install the .desktop file
+install(FILES org.kde.tools.desktop DESTINATION ${KDE_INSTALL_APPDIR})
+
+# Install the application icon
+install(FILES src/icon.svg DESTINATION ${KDE_INSTALL_ICONDIR}/hicolor/scalable/apps RENAME org.kde.tools.svg)

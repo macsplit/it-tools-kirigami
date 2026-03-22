@@ -1,6 +1,6 @@
 # Tools
 
-A Kirigami-based developer utility suite, providing a set of handy tools in a convergent, cross-platform interface, inspired by [IT-Tools](https://github.com/CorentinTh/it-tools).
+A Kirigami-based developer utility suite, providing a set of handy tools, inspired by [IT-Tools](https://github.com/CorentinTh/it-tools).
 
 ![Screenshot](screenshot.png)
 
