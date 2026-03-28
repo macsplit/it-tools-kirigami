@@ -11,20 +11,20 @@ Kirigami.Page {
         spacing: Kirigami.Units.smallSpacing
 
         Label { text: "Hex Color:"; font.bold: true }
-        TextField {
+        AppTextField {
             id: hexInput
             text: "#1EA54C"
             Layout.fillWidth: true
             onTextChanged: if (activeFocus) updateFromHex(text)
         }
         Label { text: "RGB:"; font.bold: true }
-        TextField {
+        AppTextField {
             id: rgbInput
             Layout.fillWidth: true
             onTextChanged: if (activeFocus) updateFromRgb(text)
         }
         Label { text: "HSL:"; font.bold: true }
-        TextField {
+        AppTextField {
             id: hslInput
             Layout.fillWidth: true
             onTextChanged: if (activeFocus) updateFromHsl(text)

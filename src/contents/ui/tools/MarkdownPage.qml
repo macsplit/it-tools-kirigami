@@ -11,7 +11,7 @@ Kirigami.ScrollablePage {
         spacing: Kirigami.Units.largeSpacing
 
         Label { text: "Markdown Input:"; font.bold: true }
-        TextArea {
+        AppTextArea {
             id: mdInput
             placeholderText: "# Hello World\n\nThis is **markdown** content."
             Layout.fillWidth: true
@@ -21,7 +21,7 @@ Kirigami.ScrollablePage {
         }
 
         Label { text: "HTML Output:"; font.bold: true }
-        TextArea {
+        OutputArea {
             id: htmlOutput
             readOnly: true
             Layout.fillWidth: true

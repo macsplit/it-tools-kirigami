@@ -11,7 +11,7 @@ Kirigami.ScrollablePage {
         spacing: Kirigami.Units.largeSpacing
 
         Label { text: "Text to convert:"; font.bold: true }
-        TextArea {
+        AppTextArea {
             id: textInput
             placeholderText: "e.g. Hello world"
             Layout.fillWidth: true
@@ -19,7 +19,7 @@ Kirigami.ScrollablePage {
         }
 
         Label { text: "Binary representation:"; font.bold: true }
-        TextArea {
+        OutputArea {
             readOnly: true
             Layout.fillWidth: true
             Layout.preferredHeight: 100
@@ -28,7 +28,7 @@ Kirigami.ScrollablePage {
         }
 
         Label { text: "Binary to convert:"; font.bold: true }
-        TextArea {
+        AppTextArea {
             id: binaryInput
             placeholderText: "e.g. 01001000 01100101..."
             Layout.fillWidth: true
@@ -36,7 +36,7 @@ Kirigami.ScrollablePage {
         }
 
         Label { text: "Text representation:"; font.bold: true }
-        TextArea {
+        OutputArea {
             readOnly: true
             Layout.fillWidth: true
             Layout.preferredHeight: 100

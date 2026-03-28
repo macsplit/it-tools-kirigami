@@ -11,13 +11,13 @@ Kirigami.Page {
         spacing: Kirigami.Units.smallSpacing
 
         Label { text: "Input string:"; font.bold: true }
-        TextField {
+        AppTextField {
             id: slugInput
             placeholderText: "Type something..."
             Layout.fillWidth: true
         }
         Label { text: "Slug:"; font.bold: true }
-        TextField {
+        OutputField {
             readOnly: true
             Layout.fillWidth: true
             text: slugInput.text.toLowerCase()

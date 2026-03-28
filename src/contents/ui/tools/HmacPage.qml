@@ -11,7 +11,7 @@ Kirigami.ScrollablePage {
         spacing: Kirigami.Units.largeSpacing
 
         Label { text: "Plain text to compute the hash:"; font.bold: true }
-        TextArea {
+        AppTextArea {
             id: plainTextInput
             placeholderText: "Plain text..."
             Layout.fillWidth: true
@@ -19,7 +19,7 @@ Kirigami.ScrollablePage {
         }
 
         Label { text: "Secret key:"; font.bold: true }
-        TextField {
+        AppTextField {
             id: secretKeyInput
             placeholderText: "Enter the secret key..."
             Layout.fillWidth: true
@@ -38,7 +38,7 @@ Kirigami.ScrollablePage {
         }
 
         Label { text: "HMAC Result:"; font.bold: true }
-        TextArea {
+        OutputArea {
             readOnly: true
             Layout.fillWidth: true
             Layout.preferredHeight: 100

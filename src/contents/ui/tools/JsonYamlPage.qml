@@ -8,14 +8,14 @@ Kirigami.Page {
     ColumnLayout {
         anchors.fill: parent
         anchors.margins: Kirigami.Units.largeSpacing
-        TextArea {
+        AppTextArea {
             id: jsonYamlInput
             placeholderText: "Paste JSON here..."
             Layout.fillWidth: true
             Layout.fillHeight: true
             font.family: "monospace"
         }
-        TextArea {
+        OutputArea {
             placeholderText: "YAML output will appear here..."
             readOnly: true
             Layout.fillWidth: true

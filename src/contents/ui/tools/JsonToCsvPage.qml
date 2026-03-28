@@ -11,7 +11,7 @@ Kirigami.ScrollablePage {
         spacing: Kirigami.Units.largeSpacing
 
         Label { text: "Your JSON content (array of objects):"; font.bold: true }
-        TextArea {
+        AppTextArea {
             id: jsonInput
             placeholderText: "Paste your JSON here..."
             Layout.fillWidth: true
@@ -21,7 +21,7 @@ Kirigami.ScrollablePage {
         }
 
         Label { text: "Converted CSV:"; font.bold: true }
-        TextArea {
+        OutputArea {
             id: csvOutput
             readOnly: true
             Layout.fillWidth: true

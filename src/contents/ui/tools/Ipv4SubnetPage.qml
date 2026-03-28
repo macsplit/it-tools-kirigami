@@ -13,7 +13,7 @@ Kirigami.ScrollablePage {
         spacing: Kirigami.Units.largeSpacing
 
         Label { text: "CIDR Notation (IP/Mask):"; font.bold: true }
-        TextField {
+        AppTextField {
             id: cidrInput
             text: "192.168.0.1/24"
             Layout.fillWidth: true
@@ -23,43 +23,43 @@ Kirigami.ScrollablePage {
             Layout.fillWidth: true
             wideMode: true
 
-            TextField {
+            OutputField {
                 Kirigami.FormData.label: "Netmask:"
                 text: subnetData.netmask || ""
                 readOnly: true
                 Layout.fillWidth: true
             }
-            TextField {
+            OutputField {
                 Kirigami.FormData.label: "Network:"
                 text: subnetData.network || ""
                 readOnly: true
                 Layout.fillWidth: true
             }
-            TextField {
+            OutputField {
                 Kirigami.FormData.label: "Broadcast:"
                 text: subnetData.broadcast || ""
                 readOnly: true
                 Layout.fillWidth: true
             }
-            TextField {
+            OutputField {
                 Kirigami.FormData.label: "First IP:"
                 text: subnetData.first || ""
                 readOnly: true
                 Layout.fillWidth: true
             }
-            TextField {
+            OutputField {
                 Kirigami.FormData.label: "Last IP:"
                 text: subnetData.last || ""
                 readOnly: true
                 Layout.fillWidth: true
             }
-            TextField {
+            OutputField {
                 Kirigami.FormData.label: "Hosts:"
                 text: subnetData.size || ""
                 readOnly: true
                 Layout.fillWidth: true
             }
-            TextField {
+            OutputField {
                 Kirigami.FormData.label: "Mask Binary:"
                 text: subnetData.maskBinary || ""
                 readOnly: true

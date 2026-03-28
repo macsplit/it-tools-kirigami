@@ -11,7 +11,7 @@ Kirigami.ScrollablePage {
         spacing: Kirigami.Units.largeSpacing
 
         Label { text: "Your SQL query:"; font.bold: true }
-        TextArea {
+        AppTextArea {
             id: sqlInput
             placeholderText: "Paste your SQL query here..."
             Layout.fillWidth: true
@@ -21,7 +21,7 @@ Kirigami.ScrollablePage {
         }
 
         Label { text: "Prettified version:"; font.bold: true }
-        TextArea {
+        OutputArea {
             id: sqlOutput
             readOnly: true
             Layout.fillWidth: true

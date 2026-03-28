@@ -1,7 +1,26 @@
 <RCC>
     <qresource prefix="/">
         <file>contents/ui/main.qml</file>
+        <file>contents/ui/icons/home-symbolic.svg</file>
+        <file>contents/ui/icons/tool-symbolic.svg</file>
+        <file>contents/ui/icons/category-crypto-symbolic.svg</file>
+        <file>contents/ui/icons/category-converter-symbolic.svg</file>
+        <file>contents/ui/icons/category-network-symbolic.svg</file>
+        <file>contents/ui/icons/category-web-symbolic.svg</file>
+        <file>contents/ui/icons/category-development-symbolic.svg</file>
+        <file>contents/ui/icons/category-text-symbolic.svg</file>
+        <file>contents/ui/Dashboard.qml</file>
+        <file>contents/ui/mimetypes.json</file>
+        <file>contents/ui/tools.json</file>
+        <file>contents/ui/tools/OutputArea.qml</file>
+        <file>contents/ui/tools/OutputField.qml</file>
+        <file>contents/ui/tools/AppTextArea.qml</file>
+        <file>contents/ui/tools/AppTextField.qml</file>
+        <file>contents/ui/tools/MimeTypesPage.qml</file>
+        <file>contents/ui/tools/RomanNumeralPage.qml</file>
+        <file>contents/ui/tools/NatoAlphabetPage.qml</file>
         <file>contents/ui/tools/UuidPage.qml</file>
+        <file>contents/ui/tools/BasicAuthPage.qml</file>
         <file>contents/ui/tools/Base64Page.qml</file>
         <file>contents/ui/tools/CaseConverterPage.qml</file>
         <file>contents/ui/tools/JsonFormatterPage.qml</file>

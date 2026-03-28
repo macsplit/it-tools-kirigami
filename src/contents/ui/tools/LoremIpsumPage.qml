@@ -8,7 +8,7 @@ Kirigami.Page {
     ColumnLayout {
         anchors.fill: parent
         anchors.margins: Kirigami.Units.largeSpacing
-        TextArea {
+        OutputArea {
             id: loremOutput
             readOnly: true
             Layout.fillWidth: true

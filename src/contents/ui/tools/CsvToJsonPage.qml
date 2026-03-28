@@ -11,7 +11,7 @@ Kirigami.ScrollablePage {
         spacing: Kirigami.Units.largeSpacing
 
         Label { text: "CSV Input (first line as header):"; font.bold: true }
-        TextArea {
+        AppTextArea {
             id: csvInput
             placeholderText: "id,name,email\n1,John,john@example.com\n2,Jane,jane@example.com"
             Layout.fillWidth: true
@@ -21,7 +21,7 @@ Kirigami.ScrollablePage {
         }
 
         Label { text: "JSON Output:"; font.bold: true }
-        TextArea {
+        OutputArea {
             id: jsonOutput
             readOnly: true
             Layout.fillWidth: true

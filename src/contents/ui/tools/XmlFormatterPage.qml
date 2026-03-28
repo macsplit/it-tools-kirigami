@@ -17,7 +17,7 @@ Kirigami.ScrollablePage {
         }
 
         Label { text: "Your XML:"; font.bold: true }
-        TextArea {
+        AppTextArea {
             id: xmlInput
             placeholderText: "Paste your XML here..."
             Layout.fillWidth: true
@@ -27,7 +27,7 @@ Kirigami.ScrollablePage {
         }
 
         Label { text: "Formatted XML:"; font.bold: true }
-        TextArea {
+        OutputArea {
             id: xmlOutput
             readOnly: true
             Layout.fillWidth: true

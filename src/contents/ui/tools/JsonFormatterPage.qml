@@ -4,16 +4,25 @@ import QtQuick.Layouts 1.15
 import org.kde.kirigami 2.19 as Kirigami
 
 Kirigami.ScrollablePage {
+    function showError(message) {
+        var window = applicationWindow();
+        if (window && window.showMessage) {
+            window.showMessage(message);
+        }
+    }
+
     title: "JSON Formatter / Minifier"
     ColumnLayout {
         width: parent.width
         spacing: Kirigami.Units.largeSpacing
-        TextArea {
+        AppTextArea {
             id: jsonInput
             placeholderText: "Paste JSON here..."
             Layout.fillWidth: true
             Layout.preferredHeight: 300
             font.family: "monospace"
+            showPasteButton: true
+            showCopyButton: true
         }
         RowLayout {
             Button {
@@ -23,7 +32,7 @@ Kirigami.ScrollablePage {
                         var obj = JSON.parse(jsonInput.text);
                         jsonInput.text = JSON.stringify(obj, null, 4);
                     } catch (e) {
-                        root.showMessage("Invalid JSON format")
+                        showError("Invalid JSON format")
                     }
                 }
             }
@@ -34,7 +43,7 @@ Kirigami.ScrollablePage {
                         var obj = JSON.parse(jsonInput.text);
                         jsonInput.text = JSON.stringify(obj);
                     } catch (e) {
-                        root.showMessage("Invalid JSON format")
+                        showError("Invalid JSON format")
                     }
                 }
             }

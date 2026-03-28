@@ -59,7 +59,7 @@ This list is based on an audit of the popular `it-tools` web application, and in
 
 *   [ ] ASCII Text Drawer
 *   [ ] Base64 File Converter
-*   [ ] Basic Auth Generator
+*   [x] Basic Auth Generator
 *   [ ] Bcrypt
 *   [ ] Benchmark Builder
 *   [ ] BIP39 Generator
@@ -86,7 +86,7 @@ This list is based on an audit of the popular `it-tools` web application, and in
 *   [ ] Markdown to HTML
 *   [ ] Math Evaluator
 *   [ ] Meta Tag Generator
-*   [ ] MIME Types
+*   [x] MIME Types
 *   [ ] Numeronym Generator
 *   [ ] OTP Code Generator and Validator
 *   [ ] Password Strength Analyzer
@@ -95,12 +95,12 @@ This list is based on an audit of the popular `it-tools` web application, and in
 *   [ ] Phone Parser and Formatter
 *   [ ] Regex Memo
 *   [ ] Regex Tester
-*   [ ] Roman Numeral Converter
+*   [x] Roman Numeral Converter
 *   [ ] RSA Key Pair Generator
 *   [ ] Safelink Decoder
 *   [ ] SVG Placeholder Generator
 *   [ ] Text Diff
-*   [ ] Text to NATO Alphabet
+*   [x] Text to NATO Alphabet
 *   [ ] Text to Unicode
 *   [ ] TOML to JSON
 *   [ ] TOML to YAML
@@ -132,8 +132,8 @@ These are planned enhancements to the core application.
 
 #### Tool Discovery
 
-*   **Searchable Tool List:** Implement a search bar in the left pane to allow users to quickly find tools by name.
-*   **Metadata-based Search:** Associate metadata and keywords with each tool. This will allow the search to return relevant tools even if the search term doesn't exactly match the tool's name. For example, searching for "hash" should also bring up "HMAC" and "Bcrypt".
+* [x] **Searchable Tool List:** Implement a search bar in the left pane to allow users to quickly find tools by name.
+* [x] **Metadata-based Search:** Associate metadata and keywords with each tool. This will allow the search to return relevant tools even if the search term doesn't exactly match the tool's name. For example, searching for "hash" should also bring up "HMAC" and "Bcrypt".
 
 ##### Implementation suggestions
 
@@ -156,6 +156,26 @@ A major enhancement would be to implement a system that allows the output of one
 *   **Data Format Compatibility:** Not all tools will have compatible input and output formats. The system will need to be able to handle this, either by disabling incompatible suggestions or by automatically converting the data between formats.
 *   **State Management:** The state of each tool in the pipeline will need to be managed, so that the user can go back and modify the settings of a previous tool and have the changes propagate through the pipeline.
 *   **UI Complexity:** The UI for the pipeline system needs to be powerful enough to be useful, but simple enough to not be overwhelming for new users. A progressive disclosure approach could be used, where the more advanced features are hidden by default.
+
+## Technical Guidelines & Future-Proofing
+
+To ensure "Tools" remains compatible with sandboxed environments (like Flatpak) and maintains its high performance and security, developers should adhere to the following guidelines:
+
+### Sandboxing & Isolation
+
+*   **Internal Resources:** Always prefer bundling data and assets within the Qt Resource System (`qrc:/`). This ensures the application remains self-contained and avoids the need for external filesystem permissions.
+*   **Avoid Direct Filesystem Access:** Do not use direct file paths (e.g., `/home/user/...`) to access data. If a tool needs to interact with the user's files, use standard Qt/Kirigami dialogs (e.g., `FileDialog`), which automatically leverage XDG Portals in sandboxed environments.
+*   **Environment Isolation:** Avoid dependencies on global system environment variables or external configuration files outside the application's own internal storage.
+
+### Offline-First Development
+
+*   **No Web Dependencies:** All tools must function entirely offline. Do not use external APIs, web-based fonts, or remote scripts. If a tool requires external data (like the MIME types list), bundle it as a local JSON file within the resources.
+*   **Local C++ Libraries:** For complex processing (like ASCII art generation or encryption), use local C++ libraries or built-in Qt functionality rather than web services.
+
+### QML & C++ Integration
+
+*   **Prefer C++ for Heavy Lifting:** While QML is excellent for UI, complex logic and data processing should be implemented in C++ to maintain performance and take advantage of strong typing.
+*   **Avoid `XMLHttpRequest` for Local Files:** For reading internal JSON resources, prefer loading the data in C++ and exposing it to QML as a property. This avoids security warnings and potential future deprecations in the Qt runtime.
 
 ## Conclusion
 

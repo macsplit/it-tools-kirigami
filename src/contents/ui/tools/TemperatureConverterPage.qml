@@ -30,7 +30,7 @@ Kirigami.ScrollablePage {
                     font.bold: true
                 }
 
-                TextField {
+                AppTextField {
                     id: tempInput
                     Layout.fillWidth: true
                     inputMethodHints: Qt.ImhFormattedNumbersOnly

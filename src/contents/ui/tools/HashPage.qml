@@ -8,7 +8,7 @@ Kirigami.Page {
     ColumnLayout {
         anchors.fill: parent
         anchors.margins: Kirigami.Units.largeSpacing
-        TextArea {
+        AppTextArea {
             id: hashInput
             placeholderText: "Input text..."
             Layout.fillWidth: true
@@ -20,19 +20,19 @@ Kirigami.Page {
             Layout.fillWidth: true
             spacing: Kirigami.Units.smallSpacing
             Label { text: "MD5:"; font.bold: true }
-            TextField {
+            OutputField {
                 readOnly: true
                 Layout.fillWidth: true
                 text: hashTool.md5(hashInput.text)
             }
             Label { text: "SHA1:"; font.bold: true }
-            TextField {
+            OutputField {
                 readOnly: true
                 Layout.fillWidth: true
                 text: hashTool.sha1(hashInput.text)
             }
             Label { text: "SHA256:"; font.bold: true }
-            TextField {
+            OutputField {
                 readOnly: true
                 Layout.fillWidth: true
                 text: hashTool.sha256(hashInput.text)

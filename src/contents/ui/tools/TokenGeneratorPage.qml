@@ -27,7 +27,7 @@ Kirigami.Page {
             text: "Token:"
             font.bold: true
         }
-        TextField {
+        OutputField {
             id: tokenOutput
             readOnly: true
             Layout.fillWidth: true

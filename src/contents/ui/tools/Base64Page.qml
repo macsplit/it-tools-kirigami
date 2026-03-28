@@ -8,7 +8,7 @@ Kirigami.Page {
     ColumnLayout {
         anchors.fill: parent
         anchors.margins: Kirigami.Units.largeSpacing
-        TextArea {
+        AppTextArea {
             id: inputField
             placeholderText: "Input text..."
             Layout.fillWidth: true
@@ -32,7 +32,7 @@ Kirigami.Page {
                 }
             }
         }
-        TextArea {
+        OutputArea {
             id: outputField
             placeholderText: "Output text..."
             readOnly: true

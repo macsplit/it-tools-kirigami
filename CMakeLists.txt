@@ -27,6 +27,7 @@ add_executable(tools
     src/qrcodetool.h
     src/urltool.h
     src/networktool.h
+    src/toolmanager.h
     src/qrcodegen.cpp
     src/resources.qrc
 )

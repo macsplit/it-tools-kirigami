@@ -11,7 +11,7 @@ Kirigami.ScrollablePage {
         spacing: Kirigami.Units.largeSpacing
 
         Label { text: "String to obfuscate:"; font.bold: true }
-        TextArea {
+        AppTextArea {
             id: obfuscateInput
             placeholderText: "Enter string to obfuscate..."
             Layout.fillWidth: true
@@ -36,7 +36,7 @@ Kirigami.ScrollablePage {
         }
 
         Label { text: "Obfuscated String:"; font.bold: true }
-        TextArea {
+        OutputArea {
             readOnly: true
             Layout.fillWidth: true
             Layout.preferredHeight: 100

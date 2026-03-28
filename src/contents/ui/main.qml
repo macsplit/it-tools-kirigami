@@ -10,7 +10,9 @@ Kirigami.ApplicationWindow {
 
     title: "Tools"
     
-    // Use grid units for scaling-aware sizing
+    // Force single column view even on wide screens
+    wideScreen: false
+    
     width: Kirigami.Units.gridUnit * 45
     height: Kirigami.Units.gridUnit * 25
     
@@ -20,118 +22,174 @@ Kirigami.ApplicationWindow {
     UrlTool { id: urlTool }
     NetworkTool { id: networkTool }
 
-    // Logic for filtering categories
-    function isCategoryVisible(cat, filter) {
-        if (!filter) return true;
-        for (var i = 0; i < toolsModel.count; i++) {
-            var item = toolsModel.get(i);
-            if (item.category === cat && item.name.toLowerCase().indexOf(filter.toLowerCase()) !== -1) {
-                return true;
-            }
-        }
-        return false;
+    ListModel {
+        id: toolsModel
     }
 
     ListModel {
-        id: toolsModel
-        ListElement { name: "Token Generator"; category: "Crypto"; file: "tools/TokenGeneratorPage.qml" }
-        ListElement { name: "Hash Text"; category: "Crypto"; file: "tools/HashPage.qml" }
-        ListElement { name: "HMAC Generator"; category: "Crypto"; file: "tools/HmacPage.qml" }
-        ListElement { name: "Base64 Converter"; category: "Converter"; file: "tools/Base64Page.qml" }
-        ListElement { name: "Integer Base Converter"; category: "Converter"; file: "tools/BaseConverterPage.qml" }
-        ListElement { name: "Color Converter"; category: "Converter"; file: "tools/ColorConverterPage.qml" }
-        ListElement { name: "JSON to YAML"; category: "Converter"; file: "tools/JsonYamlPage.qml" }
-        ListElement { name: "JSON to XML"; category: "Converter"; file: "tools/JsonToXmlPage.qml" }
-        ListElement { name: "JSON to CSV"; category: "Converter"; file: "tools/JsonToCsvPage.qml" }
-        ListElement { name: "XML to JSON"; category: "Converter"; file: "tools/XmlToJsonPage.qml" }
-        ListElement { name: "CSV to JSON"; category: "Converter"; file: "tools/CsvToJsonPage.qml" }
-        ListElement { name: "Text to Binary"; category: "Converter"; file: "tools/TextToBinaryPage.qml" }
-        ListElement { name: "Temperature Converter"; category: "Converter"; file: "tools/TemperatureConverterPage.qml" }
-        ListElement { name: "List Converter"; category: "Converter"; file: "tools/ListConverterPage.qml" }
-        ListElement { name: "Markdown to HTML"; category: "Converter"; file: "tools/MarkdownPage.qml" }
-        ListElement { name: "IPv4 Converter"; category: "Network"; file: "tools/Ipv4ConverterPage.qml" }
-        ListElement { name: "IPv4 Subnet Calculator"; category: "Network"; file: "tools/Ipv4SubnetPage.qml" }
-        ListElement { name: "WiFi QR Code Generator"; category: "Network"; file: "tools/WifiPage.qml" }
-        ListElement { name: "URL Encoder/Decoder"; category: "Web"; file: "tools/UrlEncoderPage.qml" }
-        ListElement { name: "HTML Entities"; category: "Web"; file: "tools/HtmlEntitiesPage.qml" }
-        ListElement { name: "JWT Parser"; category: "Web"; file: "tools/JwtPage.qml" }
-        ListElement { name: "URL Parser"; category: "Web"; file: "tools/UrlParserPage.qml" }
-        ListElement { name: "HTTP Status Codes"; category: "Web"; file: "tools/HttpStatusPage.qml" }
-        ListElement { name: "UUID Generator"; category: "Development"; file: "tools/UuidPage.qml" }
-        ListElement { name: "JSON Formatter"; category: "Development"; file: "tools/JsonFormatterPage.qml" }
-        ListElement { name: "XML Formatter"; category: "Development"; file: "tools/XmlFormatterPage.qml" }
-        ListElement { name: "SQL Prettify"; category: "Development"; file: "tools/SqlPrettifyPage.qml" }
-        ListElement { name: "Chmod Calculator"; category: "Development"; file: "tools/ChmodPage.qml" }
-        ListElement { name: "Cron Expression Parser"; category: "Development"; file: "tools/CronPage.qml" }
-        ListElement { name: "MAC Address Generator"; category: "Network"; file: "tools/MacGeneratorPage.qml" }
-        ListElement { name: "Random Port Generator"; category: "Network"; file: "tools/PortGeneratorPage.qml" }
-        ListElement { name: "Case Converter"; category: "Text"; file: "tools/CaseConverterPage.qml" }
-        ListElement { name: "Lorem Ipsum"; category: "Text"; file: "tools/LoremIpsumPage.qml" }
-        ListElement { name: "Text Statistics"; category: "Text"; file: "tools/TextStatisticsPage.qml" }
-        ListElement { name: "Slugify String"; category: "Text"; file: "tools/SlugifyPage.qml" }
-        ListElement { name: "String Obfuscator"; category: "Text"; file: "tools/StringObfuscatorPage.qml" }
+        id: filteredToolsModel
+    }
+
+    // Navigation logic
+    function goToDashboard() {
+        while (pageStack.depth > 1) {
+            pageStack.pop();
+        }
+        if (pageStack.currentItem && pageStack.currentItem.objectName === "dashboard") {
+            pageStack.currentItem.toolsModel = toolsModel;
+        }
+    }
+
+    function openTool(file) {
+        var resolvedFile = Qt.resolvedUrl(file);
+        if (pageStack.currentItem && pageStack.currentItem.objectName === "dashboard") {
+            pageStack.push(resolvedFile);
+            return;
+        }
+
+        if (pageStack.depth > 1) {
+            pageStack.replace(resolvedFile);
+            return;
+        }
+
+        pageStack.push(resolvedFile);
+    }
+
+    function matchesSearch(item, filter) {
+        if (!filter) return true;
+        var searchStr = filter.toLowerCase();
+        if (item.name.toLowerCase().indexOf(searchStr) !== -1) return true;
+        if (item.keywords && item.keywords.toLowerCase().indexOf(searchStr) !== -1) return true;
+        return false;
+    }
+
+    function refreshDrawerFilter() {
+        filteredToolsModel.clear();
+        for (var i = 0; i < toolsModel.count; i++) {
+            var item = toolsModel.get(i);
+            if (matchesSearch(item, searchField.text)) {
+                filteredToolsModel.append(item);
+            }
+        }
+    }
+
+    Component.onCompleted: {
+        var data = ToolManager.tools.slice(0);
+        data.sort(function(a, b) {
+            var categoryCompare = a.category.localeCompare(b.category);
+            if (categoryCompare !== 0) {
+                return categoryCompare;
+            }
+
+            return a.name.localeCompare(b.name);
+        });
+
+        for (var i = 0; i < data.length; i++) {
+            toolsModel.append(data[i]);
+        }
+        
+        // Ensure single column view for consistent layout
+        if (pageStack.hasOwnProperty("columnDisplayMode")) {
+            pageStack.columnDisplayMode = Kirigami.ColumnView.SingleColumn; // 0
+        } else if (pageStack.columnView && pageStack.columnView.hasOwnProperty("columnDisplayMode")) {
+            pageStack.columnView.columnDisplayMode = Kirigami.ColumnView.SingleColumn;
+        }
+
+        if (pageStack.currentItem && pageStack.currentItem.objectName === "dashboard") {
+            pageStack.currentItem.toolsModel = toolsModel;
+        }
+
+        refreshDrawerFilter();
     }
 
     globalDrawer: Kirigami.GlobalDrawer {
         id: drawer
-        isMenu: false
         collapsible: true
-        modal: false
-        width: Kirigami.Units.gridUnit * 10
+        collapsed: false
+        modal: true // Set modal to true to force single column behavior
+        width: Kirigami.Units.gridUnit * 15
         handleVisible: true
-        
-        header: ColumnLayout {
-            width: drawer.width
+
+        contentItem: ColumnLayout {
             spacing: 0
+            
+            Kirigami.BasicListItem {
+                text: "Home / Dashboard"
+                icon: "go-home-symbolic"
+                Layout.fillWidth: true
+                focusPolicy: Qt.NoFocus
+                onClicked: {
+                    root.goToDashboard();
+                    if (drawer.modal) drawer.close();
+                }
+            }
+
             Kirigami.SearchField {
                 id: searchField
-                placeholderText: "Search..."
+                placeholderText: "Search tools..."
                 Layout.fillWidth: true
                 Layout.margins: Kirigami.Units.smallSpacing
-            }
-        }
+                onTextChanged: root.refreshDrawerFilter()
 
-        contentItem: ListView {
-            id: toolsList
-            model: toolsModel
-            clip: true
-            topMargin: Kirigami.Units.smallSpacing
-            bottomMargin: Kirigami.Units.gridUnit * 4
-            
-            section.property: "category"
-            section.delegate: Kirigami.ListSectionHeader {
-                width: toolsList.width
-                text: section
-                visible: root.isCategoryVisible(section, searchField.text)
-                height: visible ? implicitHeight : 0
+                Keys.onPressed: function(event) {
+                    if (event.key === Qt.Key_Menu || (event.key === Qt.Key_F10 && (event.modifiers & Qt.ShiftModifier))) {
+                        event.accepted = true;
+                    }
+                }
+
+                MouseArea {
+                    anchors.fill: parent
+                    acceptedButtons: Qt.RightButton
+                    cursorShape: Qt.ArrowCursor
+                    onPressed: function(mouse) {
+                        mouse.accepted = true;
+                    }
+                    onReleased: function(mouse) {
+                        mouse.accepted = true;
+                    }
+                    onClicked: function(mouse) {
+                        mouse.accepted = true;
+                    }
+                    onPressAndHold: function(mouse) {
+                        mouse.accepted = true;
+                    }
+                }
             }
 
-            delegate: Kirigami.BasicListItem {
-                width: toolsList.width
-                text: model.name
-                visible: model.name.toLowerCase().indexOf(searchField.text.toLowerCase()) !== -1
-                height: visible ? implicitHeight : 0
-                onClicked: {
-                    root.pageStack.replace(Qt.resolvedUrl(model.file));
-                    if (drawer.modal) {
-                        drawer.close();
+            ListView {
+                id: toolsList
+                Layout.fillWidth: true
+                Layout.fillHeight: true
+                model: filteredToolsModel
+                clip: true
+                focus: false
+                keyNavigationEnabled: false
+                
+                section.property: "category"
+                section.delegate: Kirigami.ListSectionHeader {
+                    width: toolsList.width
+                    text: section
+                }
+
+                delegate: Kirigami.BasicListItem {
+                    width: toolsList.width
+                    text: model.name
+                    focusPolicy: Qt.NoFocus
+                    onClicked: {
+                        root.openTool(model.file);
+                        if (drawer.modal) drawer.close();
                     }
                 }
             }
         }
     }
 
-    pageStack.initialPage: Kirigami.Page {
-        title: "Welcome"
-        Kirigami.PlaceholderMessage {
-            anchors.centerIn: parent
-            width: parent.width - (Kirigami.Units.largeSpacing * 4)
-            text: "Welcome to Tools"
-            explanation: "Select a tool from the sidebar to get started."
-        }
-    }
+    pageStack.defaultColumnWidth: width
+    pageStack.globalToolBar.style: Kirigami.ApplicationHeaderStyle.ToolBar
+    pageStack.globalToolBar.showNavigationButtons: Kirigami.ApplicationHeaderStyle.ShowBackButton | Kirigami.ApplicationHeaderStyle.ShowForwardButton
+    pageStack.initialPage: Qt.resolvedUrl("Dashboard.qml")
 
     function showMessage(msg) {
-        root.showPassiveNotification(msg)
+        root.showPassiveNotification(msg, 1200)
     }
 }

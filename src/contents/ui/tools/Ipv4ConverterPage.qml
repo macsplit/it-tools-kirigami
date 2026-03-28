@@ -13,7 +13,7 @@ Kirigami.ScrollablePage {
         spacing: Kirigami.Units.largeSpacing
 
         Label { text: "IPv4 Address:"; font.bold: true }
-        TextField {
+        AppTextField {
             id: ipInput
             text: "192.168.1.1"
             Layout.fillWidth: true
@@ -23,25 +23,25 @@ Kirigami.ScrollablePage {
             Layout.fillWidth: true
             wideMode: true
 
-            TextField {
+            OutputField {
                 Kirigami.FormData.label: "Decimal:"
                 text: ipData.decimal || ""
                 readOnly: true
                 Layout.fillWidth: true
             }
-            TextField {
+            OutputField {
                 Kirigami.FormData.label: "Hexadecimal:"
                 text: ipData.hex || ""
                 readOnly: true
                 Layout.fillWidth: true
             }
-            TextField {
+            OutputField {
                 Kirigami.FormData.label: "Binary:"
                 text: ipData.binary || ""
                 readOnly: true
                 Layout.fillWidth: true
             }
-            TextField {
+            OutputField {
                 Kirigami.FormData.label: "IPv6 (mapped):"
                 text: ipData.ipv6 || ""
                 readOnly: true

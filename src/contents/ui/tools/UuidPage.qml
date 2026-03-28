@@ -14,7 +14,7 @@ Kirigami.Page {
             text: "Generated UUID:"
             font.bold: true
         }
-        TextField {
+        OutputField {
             id: uuidField
             readOnly: true
             Layout.fillWidth: true

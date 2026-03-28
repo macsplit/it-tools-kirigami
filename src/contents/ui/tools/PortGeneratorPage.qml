@@ -11,7 +11,7 @@ Kirigami.Page {
         spacing: Kirigami.Units.smallSpacing
 
         Label { text: "Generated Port:"; font.bold: true }
-        TextField {
+        OutputField {
             id: portOutput
             readOnly: true
             Layout.fillWidth: true

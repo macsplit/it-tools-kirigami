@@ -11,7 +11,7 @@ Kirigami.Page {
         spacing: Kirigami.Units.smallSpacing
 
         Label { text: "Generated MAC Address:"; font.bold: true }
-        TextField {
+        OutputField {
             id: macOutput
             readOnly: true
             Layout.fillWidth: true

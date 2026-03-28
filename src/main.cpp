@@ -9,12 +9,19 @@
 #include "qrcodetool.h"
 #include "urltool.h"
 #include "networktool.h"
+#include "toolmanager.h"
 
 int main(int argc, char *argv[])
 {
     QGuiApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
     QApplication app(argc, argv);
     app.setWindowIcon(QIcon(":/icon.svg"));
+
+    qmlRegisterSingletonType<ToolManager>("ittools.kirigami", 1, 0, "ToolManager", [](QQmlEngine *engine, QJSEngine *scriptEngine) -> QObject * {
+        Q_UNUSED(engine)
+        Q_UNUSED(scriptEngine)
+        return new ToolManager();
+    });
 
     qmlRegisterType<HashTool>("ittools.kirigami", 1, 0, "HashTool");
     qmlRegisterType<BaseTool>("ittools.kirigami", 1, 0, "BaseTool");

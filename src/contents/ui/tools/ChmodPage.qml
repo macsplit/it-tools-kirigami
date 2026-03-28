@@ -48,7 +48,7 @@ Kirigami.Page {
             font.family: "monospace"
         }
 
-        TextField {
+        OutputField {
             Layout.fillWidth: true
             readOnly: true
             text: "chmod " + calculateOctal() + " path"

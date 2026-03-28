@@ -11,7 +11,7 @@ Kirigami.Page {
         spacing: Kirigami.Units.smallSpacing
 
         Label { text: "Input number:"; font.bold: true }
-        TextField {
+        AppTextField {
             id: baseInput
             text: "42"
             Layout.fillWidth: true
@@ -23,13 +23,13 @@ Kirigami.Page {
         }
 
         Label { text: "Binary (2):"; font.bold: true }
-        TextField { readOnly: true; Layout.fillWidth: true; text: baseTool.convert(baseInput.text, fromBase.value, 2) }
+        OutputField { readOnly: true; Layout.fillWidth: true; text: baseTool.convert(baseInput.text, fromBase.value, 2) }
         Label { text: "Octal (8):"; font.bold: true }
-        TextField { readOnly: true; Layout.fillWidth: true; text: baseTool.convert(baseInput.text, fromBase.value, 8) }
+        OutputField { readOnly: true; Layout.fillWidth: true; text: baseTool.convert(baseInput.text, fromBase.value, 8) }
         Label { text: "Decimal (10):"; font.bold: true }
-        TextField { readOnly: true; Layout.fillWidth: true; text: baseTool.convert(baseInput.text, fromBase.value, 10) }
+        OutputField { readOnly: true; Layout.fillWidth: true; text: baseTool.convert(baseInput.text, fromBase.value, 10) }
         Label { text: "Hexadecimal (16):"; font.bold: true }
-        TextField { readOnly: true; Layout.fillWidth: true; text: baseTool.convert(baseInput.text, fromBase.value, 16) }
+        OutputField { readOnly: true; Layout.fillWidth: true; text: baseTool.convert(baseInput.text, fromBase.value, 16) }
         
         Item { Layout.fillHeight: true }
     }

@@ -8,7 +8,7 @@ Kirigami.Page {
     ColumnLayout {
         anchors.fill: parent
         anchors.margins: Kirigami.Units.largeSpacing
-        TextArea {
+        AppTextArea {
             id: statsInput
             placeholderText: "Input text..."
             Layout.fillWidth: true

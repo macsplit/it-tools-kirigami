@@ -8,7 +8,7 @@ Kirigami.Page {
     ColumnLayout {
         anchors.fill: parent
         anchors.margins: Kirigami.Units.largeSpacing
-        TextArea {
+        AppTextArea {
             id: jwtInput
             placeholderText: "Paste JWT here..."
             Layout.fillWidth: true
@@ -16,7 +16,7 @@ Kirigami.Page {
             Layout.preferredHeight: 100
             wrapMode: TextEdit.WrapAnywhere
         }
-        TextArea {
+        OutputArea {
             id: jwtHeaderOutput
             placeholderText: "Header"
             readOnly: true
@@ -26,7 +26,7 @@ Kirigami.Page {
             font.family: "monospace"
             text: parseJwt(jwtInput.text, 0)
         }
-        TextArea {
+        OutputArea {
             id: jwtPayloadOutput
             placeholderText: "Payload"
             readOnly: true

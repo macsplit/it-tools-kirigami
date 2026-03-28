@@ -79,7 +79,7 @@ Kirigami.ScrollablePage {
         anchors.margins: Kirigami.Units.gridUnit
         spacing: Kirigami.Units.largeSpacing
 
-        TextField {
+        AppTextField {
             id: cronInput
             placeholderText: "* * * * *"
             text: "40 * * * *"
@@ -139,7 +139,7 @@ Kirigami.ScrollablePage {
             Layout.topMargin: Kirigami.Units.gridUnit
         }
 
-        TextArea {
+        OutputArea {
             readOnly: true
             Layout.fillWidth: true
             font.family: "monospace"

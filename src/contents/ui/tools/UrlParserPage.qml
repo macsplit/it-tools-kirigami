@@ -13,7 +13,7 @@ Kirigami.ScrollablePage {
         spacing: Kirigami.Units.largeSpacing
 
         Label { text: "URL to parse:"; font.bold: true }
-        TextField {
+        AppTextField {
             id: urlInput
             text: "https://me:pwd@it-tools.tech:3000/url-parser?key1=value&key2=value2#the-hash"
             Layout.fillWidth: true
@@ -23,49 +23,49 @@ Kirigami.ScrollablePage {
             Layout.fillWidth: true
             wideMode: true
 
-            TextField {
+            OutputField {
                 Kirigami.FormData.label: "Protocol:"
                 text: urlData.scheme || ""
                 readOnly: true
                 Layout.fillWidth: true
             }
-            TextField {
+            OutputField {
                 Kirigami.FormData.label: "Username:"
                 text: urlData.username || ""
                 readOnly: true
                 Layout.fillWidth: true
             }
-            TextField {
+            OutputField {
                 Kirigami.FormData.label: "Password:"
                 text: urlData.password || ""
                 readOnly: true
                 Layout.fillWidth: true
             }
-            TextField {
+            OutputField {
                 Kirigami.FormData.label: "Hostname:"
                 text: urlData.host || ""
                 readOnly: true
                 Layout.fillWidth: true
             }
-            TextField {
+            OutputField {
                 Kirigami.FormData.label: "Port:"
                 text: urlData.port || ""
                 readOnly: true
                 Layout.fillWidth: true
             }
-            TextField {
+            OutputField {
                 Kirigami.FormData.label: "Path:"
                 text: urlData.path || ""
                 readOnly: true
                 Layout.fillWidth: true
             }
-            TextField {
+            OutputField {
                 Kirigami.FormData.label: "Query:"
                 text: urlData.query || ""
                 readOnly: true
                 Layout.fillWidth: true
             }
-            TextField {
+            OutputField {
                 Kirigami.FormData.label: "Fragment:"
                 text: urlData.fragment || ""
                 readOnly: true
@@ -79,12 +79,12 @@ Kirigami.ScrollablePage {
             model: urlData.params ? Object.keys(urlData.params) : []
             delegate: RowLayout {
                 Layout.fillWidth: true
-                TextField {
+                OutputField {
                     text: modelData
                     readOnly: true
                     Layout.fillWidth: true
                 }
-                TextField {
+                OutputField {
                     text: urlData.params[modelData]
                     readOnly: true
                     Layout.fillWidth: true

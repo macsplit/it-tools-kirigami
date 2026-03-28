@@ -8,11 +8,13 @@ Kirigami.Page {
     ColumnLayout {
         anchors.fill: parent
         anchors.margins: Kirigami.Units.largeSpacing
-        TextArea {
+        AppTextArea {
             id: htmlInput
             placeholderText: "Input text..."
             Layout.fillWidth: true
             Layout.fillHeight: true
+            showPasteButton: true
+            showCopyButton: true
         }
         RowLayout {
             Button {

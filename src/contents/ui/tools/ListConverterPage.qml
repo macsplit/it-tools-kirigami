@@ -25,23 +25,23 @@ Kirigami.ScrollablePage {
             ColumnLayout {
                 RowLayout {
                     Label { text: "Separator:" }
-                    TextField { id: separator; text: ", "; Layout.preferredWidth: 50 }
+                    AppTextField { id: separator; text: ", "; Layout.preferredWidth: 50 }
                 }
                 RowLayout {
                     Label { text: "Item Wrap:" }
-                    TextField { id: itemPrefix; placeholderText: "Prefix"; Layout.preferredWidth: 80 }
-                    TextField { id: itemSuffix; placeholderText: "Suffix"; Layout.preferredWidth: 80 }
+                    AppTextField { id: itemPrefix; placeholderText: "Prefix"; Layout.preferredWidth: 80 }
+                    AppTextField { id: itemSuffix; placeholderText: "Suffix"; Layout.preferredWidth: 80 }
                 }
                 RowLayout {
                     Label { text: "List Wrap:" }
-                    TextField { id: listPrefix; placeholderText: "Prefix"; Layout.preferredWidth: 80 }
-                    TextField { id: listSuffix; placeholderText: "Suffix"; Layout.preferredWidth: 80 }
+                    AppTextField { id: listPrefix; placeholderText: "Prefix"; Layout.preferredWidth: 80 }
+                    AppTextField { id: listSuffix; placeholderText: "Suffix"; Layout.preferredWidth: 80 }
                 }
             }
         }
 
         Label { text: "Input list (one item per line):"; font.bold: true }
-        TextArea {
+        AppTextArea {
             id: listInput
             placeholderText: "Item 1\nItem 2\nItem 3"
             Layout.fillWidth: true
@@ -49,7 +49,7 @@ Kirigami.ScrollablePage {
         }
 
         Label { text: "Transformed list:"; font.bold: true }
-        TextArea {
+        OutputArea {
             readOnly: true
             Layout.fillWidth: true
             Layout.preferredHeight: 150

@@ -10,10 +10,10 @@ Kirigami.ScrollablePage {
         spacing: Kirigami.Units.largeSpacing
 
         Label { text: "SSID (Network Name):"; font.bold: true }
-        TextField { id: ssidInput; Layout.fillWidth: true }
+        AppTextField { id: ssidInput; Layout.fillWidth: true }
 
         Label { text: "Password:"; font.bold: true }
-        TextField { id: passwordInput; Layout.fillWidth: true; echoMode: TextField.Password }
+        AppTextField { id: passwordInput; Layout.fillWidth: true; echoMode: TextField.Password }
 
         Label { text: "Encryption:"; font.bold: true }
         ComboBox {
@@ -38,7 +38,7 @@ Kirigami.ScrollablePage {
         }
 
         Label { text: "WiFi QR Code String:"; font.bold: true }
-        TextField {
+        OutputField {
             readOnly: true
             Layout.fillWidth: true
             text: "WIFI:S:" + ssidInput.text + ";T:" + (encryptionType.currentText === "None" ? "nopass" : encryptionType.currentText) + ";P:" + passwordInput.text + ";;"
