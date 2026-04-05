@@ -1,8 +1,8 @@
 [Desktop Entry]
 Name=Tools
 Comment=A collection of handy developer tools
-Exec=tools
-Icon=org.kde.tools
+Exec=app.pastetools.Tools
+Icon=app.pastetools.Tools
 Type=Application
 Terminal=false
 Categories=Development;Qt;KDE;

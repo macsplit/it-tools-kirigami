@@ -15,6 +15,11 @@ int main(int argc, char *argv[])
 {
     QGuiApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
     QApplication app(argc, argv);
+    QApplication::setApplicationName(QStringLiteral("Tools"));
+    QApplication::setApplicationDisplayName(QStringLiteral("Tools"));
+    QApplication::setDesktopFileName(QStringLiteral("app.pastetools.Tools"));
+    QApplication::setOrganizationDomain(QStringLiteral("pastetools.app"));
+    QApplication::setOrganizationName(QStringLiteral("pastetools"));
     app.setWindowIcon(QIcon(":/icon.svg"));
 
     qmlRegisterSingletonType<ToolManager>("ittools.kirigami", 1, 0, "ToolManager", [](QQmlEngine *engine, QJSEngine *scriptEngine) -> QObject * {

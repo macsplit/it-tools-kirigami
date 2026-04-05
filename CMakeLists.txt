@@ -1,6 +1,8 @@
 cmake_minimum_required(VERSION 3.16)
 project(tools VERSION 0.1.0 LANGUAGES CXX)
 
+set(APP_ID app.pastetools.Tools)
+
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_AUTOMOC ON)
@@ -32,6 +34,8 @@ add_executable(tools
     src/resources.qrc
 )
 
+set_target_properties(tools PROPERTIES OUTPUT_NAME ${APP_ID})
+
 target_link_libraries(tools
     Qt5::Core
     Qt5::Quick
@@ -45,7 +49,10 @@ target_link_libraries(tools
 install(TARGETS tools ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})
 
 # Install the .desktop file
-install(FILES org.kde.tools.desktop DESTINATION ${KDE_INSTALL_APPDIR})
+install(FILES ${APP_ID}.desktop DESTINATION ${KDE_INSTALL_APPDIR})
+
+# Install AppStream metadata
+install(FILES ${APP_ID}.metainfo.xml DESTINATION ${KDE_INSTALL_METAINFODIR})
 
 # Install the application icon
-install(FILES src/icon.svg DESTINATION ${KDE_INSTALL_ICONDIR}/hicolor/scalable/apps RENAME org.kde.tools.svg)
+install(FILES src/icon.svg DESTINATION ${KDE_INSTALL_ICONDIR}/hicolor/scalable/apps RENAME ${APP_ID}.svg)

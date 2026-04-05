@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component type="desktop-application">
+  <id>app.pastetools.Tools</id>
+  <metadata_license>CC0-1.0</metadata_license>
+  <project_license>GPL-3.0-or-later</project_license>
+  <name>Tools</name>
+  <summary>Linux desktop utility suite for common developer tasks</summary>
+  <developer id="app.pastetools">
+    <name>macsplit</name>
+  </developer>
+  <launchable type="desktop-id">app.pastetools.Tools.desktop</launchable>
+  <url type="homepage">https://pastetools.app</url>
+  <url type="vcs-browser">https://github.com/macsplit/it-tools-kirigami</url>
+  <url type="bugtracker">https://github.com/macsplit/it-tools-kirigami/issues</url>
+  <url type="contribute">https://github.com/macsplit/it-tools-kirigami</url>
+  <description>
+    <p>
+      Tools is a Linux desktop app that collects practical developer and utility
+      tools in one place.
+    </p>
+    <p>
+      It includes formatters, converters, generators, networking helpers, and
+      text utilities for quick daily work.
+    </p>
+  </description>
+  <categories>
+    <category>Development</category>
+    <category>Utility</category>
+  </categories>
+  <screenshots>
+    <screenshot type="default">
+      <image>https://pastetools.app/dashboard.png</image>
+      <caption>Dashboard view with all tools shown as cards.</caption>
+    </screenshot>
+    <screenshot>
+      <image>https://pastetools.app/sidebarlist.png</image>
+      <caption>Sidebar tool list with search.</caption>
+    </screenshot>
+    <screenshot>
+      <image>https://pastetools.app/exampletool.png</image>
+      <caption>Color Converter example tool.</caption>
+    </screenshot>
+  </screenshots>
+  <content_rating type="oars-1.1"/>
+  <releases>
+    <release version="0.1.0" date="2026-04-05"/>
+  </releases>
+</component>

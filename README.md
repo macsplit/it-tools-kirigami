@@ -2,6 +2,10 @@
 
 A Kirigami-based developer utility suite, providing a set of handy tools, inspired by [IT-Tools](https://github.com/CorentinTh/it-tools).
 
+Official website: https://pastetools.app
+
+Application ID: `app.pastetools.Tools`
+
 ![Screenshot](screenshot.png)
 
 ## Tools Included
@@ -29,7 +33,7 @@ mkdir build
 cd build
 cmake ..
 make
-./bin/it-tools-kirigami
+./app.pastetools.Tools
 ```
 
 ## Contributing
