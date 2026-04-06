@@ -349,6 +349,26 @@ h3 {
   padding: 18px 20px;
 }
 
+.install-block {
+  display: grid;
+  gap: 14px;
+  margin-top: 18px;
+}
+
+.install-block pre {
+  margin: 0;
+  overflow-x: auto;
+  padding: 16px 18px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  background: rgba(10, 18, 26, 0.78);
+}
+
+.install-block code {
+  font-family: "Noto Sans Mono", "DejaVu Sans Mono", monospace;
+  color: var(--accent-strong);
+}
+
 .gallery-grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));

@@ -82,6 +82,32 @@
 
       <section class="section">
         <div class="section-heading">
+          <p class="eyebrow">Install</p>
+          <h2>Flatpak install options</h2>
+        </div>
+        <div class="doc-list">
+          <article class="doc-entry">
+            <h3>Direct install</h3>
+            <p><a href="app.pastetools.Tools.flatpakref">app.pastetools.Tools.flatpakref</a></p>
+          </article>
+          <article class="doc-entry">
+            <h3>Repository file</h3>
+            <p><a href="pastetools.flatpakrepo">pastetools.flatpakrepo</a></p>
+          </article>
+          <article class="doc-entry">
+            <h3>Bundle download</h3>
+            <p><a href="app.pastetools.Tools.flatpak">app.pastetools.Tools.flatpak</a></p>
+          </article>
+        </div>
+        <div class="install-block">
+          <pre><code>flatpak install https://pastetools.app/app.pastetools.Tools.flatpakref</code></pre>
+          <pre><code>flatpak remote-add --if-not-exists pastetools https://pastetools.app/pastetools.flatpakrepo
+flatpak install pastetools app.pastetools.Tools</code></pre>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="section-heading">
           <p class="eyebrow">Tool Guide</p>
           <h2>Main categories and examples</h2>
         </div>

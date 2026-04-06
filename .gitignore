@@ -1,4 +1,7 @@
+.flatpak-builder/
+.flatpak-build/
 build/
-*.user
-*.swp
-.directory
+web/repo/
+web/*.flatpak
+web/*.flatpakref
+web/*.flatpakrepo

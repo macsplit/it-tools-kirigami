@@ -1,0 +1,43 @@
+name: Flatpak Bundle
+
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v4
+
+      - name: Install Flatpak tooling
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y flatpak flatpak-builder
+
+      - name: Add Flathub remote
+        run: |
+          flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
+
+      - name: Build Flatpak bundle
+        run: |
+          flatpak-builder --repo="$RUNNER_TEMP/repo" --force-clean "$RUNNER_TEMP/build-dir" app.pastetools.Tools.json
+          flatpak build-bundle "$RUNNER_TEMP/repo" app.pastetools.Tools.flatpak app.pastetools.Tools stable
+
+      - name: Upload workflow artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: app.pastetools.Tools.flatpak
+          path: app.pastetools.Tools.flatpak
+
+      - name: Attach bundle to release
+        if: github.event_name == 'release'
+        uses: softprops/action-gh-release@v2
+        with:
+          files: app.pastetools.Tools.flatpak

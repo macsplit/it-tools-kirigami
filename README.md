@@ -8,6 +8,30 @@ Application ID: `app.pastetools.Tools`
 
 ![Screenshot](screenshot.png)
 
+## Flatpak
+
+The project can be distributed as a self-hosted Flatpak.
+
+Install from the hosted repository:
+
+```bash
+flatpak install https://pastetools.app/app.pastetools.Tools.flatpakref
+```
+
+Or add the repository first:
+
+```bash
+flatpak remote-add --if-not-exists pastetools https://pastetools.app/pastetools.flatpakrepo
+flatpak install pastetools app.pastetools.Tools
+```
+
+To build and publish the Flatpak locally:
+
+```bash
+./scripts/release-flatpak.sh
+./scripts/publish-web.sh
+```
+
 ## Tools Included
 
 - **Crypto**: Token Generator, Hash Text, HMAC Generator
