@@ -5,9 +5,13 @@
   "sdk": "org.kde.Sdk",
   "command": "app.pastetools.Tools",
   "finish-args": [
-    "--socket=fallback-x11",
-    "--socket=wayland"
-  ],
+      "--socket=fallback-x11",
+      "--socket=wayland",
+      "--device=dri",
+      "--share=ipc",
+      "--env=QT_QPA_PLATFORMTHEME=kde",
+      "--filesystem=xdg-data/icons:ro"
+    ],
   "cleanup": [
     "/include",
     "/lib/cmake",
