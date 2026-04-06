@@ -83,7 +83,7 @@ img {
   align-items: center;
   justify-content: space-between;
   gap: 20px;
-  padding: 22px 26px 0;
+  padding: 18px 22px 0;
 }
 
 .brand {
@@ -111,7 +111,7 @@ img {
   display: grid;
   grid-template-columns: 1.4fr 1fr;
   gap: 28px;
-  padding: 48px 26px 34px;
+  padding: 26px 22px 24px;
 }
 
 .hero-copy,
@@ -122,8 +122,8 @@ img {
 }
 
 .eyebrow {
-  margin: 0 0 12px;
-  font-size: 0.78rem;
+  margin: 0 0 8px;
+  font-size: 0.74rem;
   font-weight: 700;
   letter-spacing: 0.18em;
   text-transform: uppercase;
@@ -138,13 +138,13 @@ h3 {
 }
 
 h1 {
-  max-width: 12ch;
-  font-size: clamp(2.6rem, 5vw, 4.8rem);
-  letter-spacing: -0.04em;
+  max-width: 14ch;
+  font-size: clamp(1.8rem, 3.2vw, 3rem);
+  letter-spacing: -0.035em;
 }
 
 h2 {
-  font-size: clamp(1.9rem, 3vw, 2.8rem);
+  font-size: clamp(1.45rem, 2.3vw, 2rem);
   letter-spacing: -0.03em;
 }
 
@@ -154,8 +154,8 @@ h3 {
 
 .lead {
   max-width: 60ch;
-  margin: 18px 0 0;
-  font-size: 1.08rem;
+  margin: 12px 0 0;
+  font-size: 0.98rem;
   color: var(--muted);
 }
 
@@ -165,10 +165,10 @@ h3 {
 
 .identity-note {
   max-width: 62ch;
-  margin: 16px 0 0;
+  margin: 12px 0 0;
   padding-left: 18px;
   color: var(--muted);
-  font-size: 0.95rem;
+  font-size: 0.92rem;
 }
 
 .identity-note li + li {
@@ -188,7 +188,7 @@ h3 {
   display: flex;
   flex-wrap: wrap;
   gap: 14px;
-  margin: 28px 0 24px;
+  margin: 18px 0 18px;
 }
 
 .button {
@@ -220,7 +220,7 @@ h3 {
 
 .highlights li,
 .panel-list li {
-  margin-top: 10px;
+  margin-top: 8px;
 }
 
 .panel-card,
@@ -237,22 +237,22 @@ h3 {
 
 .panel-card {
   height: 100%;
-  padding: 24px;
+  padding: 20px;
   background:
     linear-gradient(180deg, rgba(28, 50, 69, 0.94), rgba(14, 24, 33, 0.94)),
     var(--bg-panel-strong);
 }
 
 .panel-title {
-  margin: 0 0 18px;
-  font-size: 0.95rem;
+  margin: 0 0 14px;
+  font-size: 0.9rem;
   font-weight: 700;
   color: var(--accent-strong);
 }
 
 .section {
   margin-top: 28px;
-  padding: 36px 26px;
+  padding: 28px 22px;
   border: 1px solid var(--line);
   border-radius: var(--radius-lg);
   background: rgba(15, 27, 38, 0.7);
@@ -267,7 +267,7 @@ h3 {
 
 .section-heading {
   max-width: 60ch;
-  margin-bottom: 22px;
+  margin-bottom: 18px;
 }
 
 .section-text {
@@ -298,7 +298,7 @@ h3 {
 .info-card,
 .category-card,
 .doc-card {
-  padding: 22px;
+  padding: 18px;
 }
 
 .info-card p,
@@ -311,11 +311,11 @@ h3 {
 }
 
 .compact-header {
-  padding-bottom: 10px;
+  padding-bottom: 6px;
 }
 
 .page-title-block {
-  padding: 52px 26px 38px;
+  padding: 28px 22px 22px;
 }
 
 .steps {
@@ -325,7 +325,7 @@ h3 {
 }
 
 .step-card {
-  padding: 22px;
+  padding: 18px;
 }
 
 .step-number {
@@ -346,7 +346,7 @@ h3 {
 }
 
 .doc-entry {
-  padding: 18px 20px;
+  padding: 16px 18px;
 }
 
 .install-block {
@@ -453,7 +453,7 @@ h3 {
   }
 
   .hero-grid {
-    padding-top: 34px;
+    padding-top: 22px;
   }
 
   .cta-row {

@@ -179,4 +179,4 @@ To ensure "Tools" remains compatible with sandboxed environments (like Flatpak) 
 
 ## Conclusion
 
-This roadmap provides a high-level overview of the future development of **Tools**. The focus is on adding more useful tools, improving the user experience, and adding powerful new features like the workflow/pipeline system. By following this roadmap, **Tools** can become an indispensable utility for developers, hackers, and sysadmins.
+This roadmap provides a high-level overview of the future development of **Tools**. The focus is on adding more useful tools, improving the user experience, and adding powerful new features like the workflow/pipeline system.

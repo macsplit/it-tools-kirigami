@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Tools for Linux</title>
-  <meta name="description" content="Tools is a Linux desktop app that brings practical developer and utility tools into one focused, offline-friendly workspace.">
+  <meta name="description" content="Tools is a Linux desktop app that groups 40 small developer and utility tools into one Qt and Kirigami application.">
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -21,10 +21,10 @@
       <section class="hero-grid">
         <div class="hero-copy">
           <p class="eyebrow">Linux Desktop Utility Suite</p>
-          <h1>Useful developer tools, collected into one desktop app.</h1>
+          <h1>40 small tools in one Linux app.</h1>
           <p class="lead">
-            Tools brings converters, formatters, generators, networking helpers,
-            and text utilities together in one Linux app.
+            Tools groups common conversion, formatting, networking, text, and
+            reference utilities into a single Qt and Kirigami application.
           </p>
           <div class="cta-row">
             <a class="button button-primary" href="docs.html">Read the docs</a>
@@ -36,21 +36,22 @@
             <li>License: GPL-3.0-or-later</li>
           </ul>
           <ul class="highlights">
-            <li>Built for Linux with Qt and Kirigami</li>
-            <li>Fast access to common daily utilities</li>
-            <li>One app instead of dozens of browser tabs</li>
+            <li>40 tools across 6 categories</li>
+            <li>Built with Qt and Kirigami</li>
+            <li>Flatpak and source builds available</li>
           </ul>
         </div>
 
         <div class="hero-panel">
           <div class="panel-card">
-            <p class="panel-title">What you can do</p>
+            <p class="panel-title">Included categories</p>
             <ul class="panel-list">
-              <li>Format JSON, XML, and SQL</li>
-              <li>Generate tokens, UUIDs, hashes, and HMAC values</li>
-              <li>Convert Base64, CSV, JSON, XML, and YAML</li>
-              <li>Work with URLs, JWTs, MIME types, and HTTP codes</li>
-              <li>Handle IPv4, subnets, ports, MAC addresses, and WiFi QR codes</li>
+              <li>Crypto: 3 tools</li>
+              <li>Converter: 13 tools</li>
+              <li>Network: 5 tools</li>
+              <li>Web: 6 tools</li>
+              <li>Development: 7 tools</li>
+              <li>Text: 6 tools</li>
             </ul>
           </div>
         </div>
@@ -60,60 +61,36 @@
     <main>
       <section class="section">
         <div class="section-heading">
-          <p class="eyebrow">Why Use It</p>
-          <h2>Designed for everyday practical work</h2>
+          <p class="eyebrow">What It Covers</p>
+          <h2>Tool coverage</h2>
         </div>
         <div class="card-grid">
           <article class="info-card">
-            <h3>Desktop-first</h3>
-            <p>
-              Keep common utilities in one app instead of a stack of browser tabs.
-            </p>
-          </article>
-          <article class="info-card">
-            <h3>Broad coverage</h3>
-            <p>
-              Crypto, conversion, text, networking, and formatting tools in one place.
-            </p>
-          </article>
-          <article class="info-card">
-            <h3>Friendly layout</h3>
-            <p>
-              Browse by category, search for a tool, and move on.
-            </p>
-          </article>
-        </div>
-      </section>
-
-      <section class="section">
-        <div class="section-heading">
-          <p class="eyebrow">Included Categories</p>
-          <h2>A single app with a wide toolbox</h2>
-        </div>
-        <div class="category-grid">
-          <article class="category-card">
             <h3>Crypto</h3>
-            <p>Token generation, hashes, and HMAC values for quick security-related tasks.</p>
+            <p>
+              Token Generator, Hash Text, HMAC Generator.
+            </p>
           </article>
-          <article class="category-card">
+          <article class="info-card">
             <h3>Converters</h3>
-            <p>Common format and value conversions, including JSON, XML, CSV, Base64, Markdown, and more.</p>
+            <p>
+              Base64, integer bases, colors, JSON, YAML, XML, CSV, Markdown,
+              temperature, lists, binary, Roman numerals.
+            </p>
           </article>
-          <article class="category-card">
-            <h3>Network</h3>
-            <p>IPv4 conversion, subnet calculations, random ports, MAC addresses, and WiFi QR generation.</p>
+          <article class="info-card">
+            <h3>Network and web</h3>
+            <p>
+              IPv4, subnetting, WiFi QR codes, MAC addresses, ports, URL tools,
+              HTML entities, JWT parsing, HTTP status codes.
+            </p>
           </article>
-          <article class="category-card">
-            <h3>Web</h3>
-            <p>URL encoding, parsing, JWT inspection, HTML entities, basic auth strings, and status code lookup.</p>
-          </article>
-          <article class="category-card">
-            <h3>Development</h3>
-            <p>UUIDs, MIME types, formatters, SQL prettifying, chmod help, and cron expression parsing.</p>
-          </article>
-          <article class="category-card">
-            <h3>Text</h3>
-            <p>Case conversion, text statistics, slugification, NATO spelling, obfuscation, and placeholder text.</p>
+          <article class="info-card">
+            <h3>Development and text</h3>
+            <p>
+              MIME types, UUIDs, JSON/XML/SQL formatting, chmod, cron parsing,
+              case conversion, text statistics, slugify, NATO alphabet.
+            </p>
           </article>
         </div>
       </section>
@@ -150,32 +127,43 @@ flatpak install pastetools app.pastetools.Tools</code></pre>
       <section class="section">
         <div class="section-heading">
           <p class="eyebrow">Screenshots</p>
-          <h2>A quick look at the app</h2>
+          <h2>Interface</h2>
         </div>
         <div class="gallery-grid">
           <figure class="gallery-card">
             <img src="sidebarlist.png" alt="Tools sidebar showing the searchable list of available tools">
-            <figcaption>Browse the tool list from the sidebar.</figcaption>
+            <figcaption>Sidebar with categories, search, and tool list.</figcaption>
           </figure>
           <figure class="gallery-card">
             <img src="exampletool.png" alt="Color Converter tool in the Tools app">
-            <figcaption>Open a tool and work in the main view.</figcaption>
+            <figcaption>Example tool view: Color Converter.</figcaption>
           </figure>
           <figure class="gallery-card">
             <img src="dashboard.png" alt="Dashboard view showing Tools app cards for all utilities">
-            <figcaption>Use the dashboard to scan the whole toolbox.</figcaption>
+            <figcaption>Dashboard view with tool cards.</figcaption>
           </figure>
         </div>
       </section>
 
       <section class="section section-accent">
         <div class="section-heading">
-          <p class="eyebrow">Good Fit</p>
-          <h2>Useful for developers, sysadmins, support teams, and technical writers</h2>
+          <p class="eyebrow">Project</p>
+          <h2>Technical details</h2>
         </div>
-        <p class="section-text">
-          Good for format conversion, quick checks, structured text cleanup, and small daily tasks.
-        </p>
+        <div class="build-grid">
+          <article class="info-card">
+            <h3>Platform</h3>
+            <p>Linux desktop.</p>
+          </article>
+          <article class="info-card">
+            <h3>Framework</h3>
+            <p>Qt and Kirigami.</p>
+          </article>
+          <article class="info-card">
+            <h3>License</h3>
+            <p>GPL-3.0-or-later.</p>
+          </article>
+        </div>
       </section>
     </main>
 
