@@ -30,6 +30,7 @@ fi
 
 flatpak-builder \
   --default-branch="${BRANCH}" \
+  --gpg-sign="${KEY_ID}" \
   --state-dir="${STATE_DIR}" \
   --repo="${TMP_REPO_DIR}" \
   --force-clean \
