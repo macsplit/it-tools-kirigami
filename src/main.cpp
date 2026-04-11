@@ -1,4 +1,5 @@
 #include <QApplication>
+#include <QFile>
 #include <QQmlApplicationEngine>
 #include <QtQml>
 #include <QUrl>
@@ -9,11 +10,20 @@
 #include "qrcodetool.h"
 #include "urltool.h"
 #include "networktool.h"
+#include "timetool.h"
 #include "toolmanager.h"
 
 int main(int argc, char *argv[])
 {
     QGuiApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
+
+    // Flatpak sandboxes commonly inherit SESSION_MANAGER from the host, but
+    // the XSMP socket is not reachable inside the sandbox. Clearing it avoids
+    // Qt's startup warning about failing to open the session-management socket.
+    if (QFile::exists(QStringLiteral("/.flatpak-info"))) {
+        qunsetenv("SESSION_MANAGER");
+    }
+
     QApplication app(argc, argv);
     QApplication::setApplicationName(QStringLiteral("Tools"));
     QApplication::setApplicationDisplayName(QStringLiteral("Tools"));
@@ -33,6 +43,7 @@ int main(int argc, char *argv[])
     qmlRegisterType<ConversionTool>("ittools.kirigami", 1, 0, "ConversionTool");
     qmlRegisterType<UrlTool>("ittools.kirigami", 1, 0, "UrlTool");
     qmlRegisterType<NetworkTool>("ittools.kirigami", 1, 0, "NetworkTool");
+    qmlRegisterType<TimeTool>("ittools.kirigami", 1, 0, "TimeTool");
 
     QQmlApplicationEngine engine;
     engine.addImageProvider(QLatin1String("qrcode"), new QrCodeProvider);

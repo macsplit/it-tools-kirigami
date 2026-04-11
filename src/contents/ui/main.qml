@@ -21,6 +21,7 @@ Kirigami.ApplicationWindow {
     ConversionTool { id: conversionTool }
     UrlTool { id: urlTool }
     NetworkTool { id: networkTool }
+    TimeTool { id: timeTool }
 
     ListModel {
         id: toolsModel

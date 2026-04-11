@@ -4,6 +4,7 @@ import QtQuick.Controls 2.15
 TextArea {
     id: root
     clip: true
+    selectByMouse: true
 
     property string copiedMessage: "Copied to clipboard"
     property bool showPasteButton: !readOnly

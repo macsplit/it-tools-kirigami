@@ -56,6 +56,10 @@
         <file>contents/ui/tools/MarkdownPage.qml</file>
         <file>contents/ui/tools/HttpStatusPage.qml</file>
         <file>contents/ui/tools/CsvToJsonPage.qml</file>
+        <file>contents/ui/tools/EpochConverterPage.qml</file>
+        <file>contents/ui/tools/EpochParserWorker.js</file>
+        <file>contents/ui/tools/BcryptPage.qml</file>
+        <file>contents/ui/vendor/chrono-en.bundle.js</file>
         <file>icon.svg</file>
     </qresource>
 </RCC>

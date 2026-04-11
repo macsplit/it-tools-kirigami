@@ -5,6 +5,9 @@
 #include <QString>
 #include <QCryptographicHash>
 #include <QMessageAuthenticationCode>
+#include <QRandomGenerator>
+#include <crypt.h>
+#include <cstdlib>
 
 class HashTool : public QObject
 {
@@ -22,6 +25,53 @@ public:
 
     Q_INVOKABLE static QString sha256(const QString &input) {
         return hash(input, QCryptographicHash::Sha256);
+    }
+
+    Q_INVOKABLE QString bcryptHash(const QString &input, int cost) const {
+        if (input.isEmpty()) return QString();
+        if (cost < 4 || cost > 31) return QStringLiteral("Invalid bcrypt cost");
+
+        QByteArray randomBytes(16, Qt::Uninitialized);
+        auto *generator = QRandomGenerator::global();
+        for (int i = 0; i < randomBytes.size(); ++i) {
+            randomBytes[i] = static_cast<char>(generator->bounded(256));
+        }
+
+        QByteArray password = input.toUtf8();
+        char *setting = crypt_gensalt_ra("$2b$", static_cast<unsigned long>(cost),
+                                         randomBytes.constData(), randomBytes.size());
+        if (!setting) return QStringLiteral("Failed to generate bcrypt salt");
+
+        void *data = nullptr;
+        int size = 0;
+        char *hashed = crypt_ra(password.constData(), setting, &data, &size);
+
+        QString result = hashed ? QString::fromLatin1(hashed)
+                                : QStringLiteral("Failed to generate bcrypt hash");
+
+        free(setting);
+        if (data) {
+            free(data);
+        }
+
+        return result;
+    }
+
+    Q_INVOKABLE bool verifyBcrypt(const QString &input, const QString &hash) const {
+        if (input.isEmpty() || hash.isEmpty()) return false;
+
+        QByteArray password = input.toUtf8();
+        QByteArray hashedInput = hash.toUtf8();
+        void *data = nullptr;
+        int size = 0;
+        char *hashed = crypt_ra(password.constData(), hashedInput.constData(), &data, &size);
+        bool matches = hashed && QString::fromLatin1(hashed) == hash;
+
+        if (data) {
+            free(data);
+        }
+
+        return matches;
     }
 
     Q_INVOKABLE QString hmac(const QString &input, const QString &key, const QString &algo) {

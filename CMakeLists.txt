@@ -29,6 +29,7 @@ add_executable(tools
     src/qrcodetool.h
     src/urltool.h
     src/networktool.h
+    src/timetool.h
     src/toolmanager.h
     src/qrcodegen.cpp
     src/resources.qrc
@@ -44,6 +45,7 @@ target_link_libraries(tools
     Qt5::Xml
     KF5::Kirigami2
     KF5::CoreAddons
+    crypt
 )
 
 install(TARGETS tools ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})

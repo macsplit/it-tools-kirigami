@@ -8,33 +8,50 @@ Kirigami.Page {
     ColumnLayout {
         anchors.fill: parent
         anchors.margins: Kirigami.Units.largeSpacing
-        AppTextArea {
-            id: jwtInput
-            placeholderText: "Paste JWT here..."
+        ScrollView {
             Layout.fillWidth: true
             Layout.fillHeight: true
             Layout.preferredHeight: 100
-            wrapMode: TextEdit.WrapAnywhere
+            ScrollBar.horizontal.policy: ScrollBar.AsNeeded
+            ScrollBar.vertical.policy: ScrollBar.AsNeeded
+
+            AppTextArea {
+                id: jwtInput
+                placeholderText: "Paste JWT here..."
+                wrapMode: TextEdit.NoWrap
+            }
         }
-        OutputArea {
-            id: jwtHeaderOutput
-            placeholderText: "Header"
-            readOnly: true
+        ScrollView {
             Layout.fillWidth: true
             Layout.fillHeight: true
             Layout.preferredHeight: 100
-            font.family: "monospace"
-            text: parseJwt(jwtInput.text, 0)
+            ScrollBar.horizontal.policy: ScrollBar.AsNeeded
+            ScrollBar.vertical.policy: ScrollBar.AsNeeded
+
+            OutputArea {
+                id: jwtHeaderOutput
+                placeholderText: "Header"
+                readOnly: true
+                font.family: "monospace"
+                wrapMode: TextEdit.NoWrap
+                text: parseJwt(jwtInput.text, 0)
+            }
         }
-        OutputArea {
-            id: jwtPayloadOutput
-            placeholderText: "Payload"
-            readOnly: true
+        ScrollView {
             Layout.fillWidth: true
             Layout.fillHeight: true
             Layout.preferredHeight: 200
-            font.family: "monospace"
-            text: parseJwt(jwtInput.text, 1)
+            ScrollBar.horizontal.policy: ScrollBar.AsNeeded
+            ScrollBar.vertical.policy: ScrollBar.AsNeeded
+
+            OutputArea {
+                id: jwtPayloadOutput
+                placeholderText: "Payload"
+                readOnly: true
+                font.family: "monospace"
+                wrapMode: TextEdit.NoWrap
+                text: parseJwt(jwtInput.text, 1)
+            }
         }
     }
 

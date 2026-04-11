@@ -5,6 +5,82 @@ import org.kde.kirigami 2.19 as Kirigami
 
 Kirigami.Page {
     title: "Case Converter"
+
+    function extractWords(segment) {
+        var words = [];
+        var parts = segment.split(/[\s_-]+/);
+
+        for (var i = 0; i < parts.length; i++) {
+            var part = parts[i];
+            if (!part.length) {
+                continue;
+            }
+
+            var matches = part.match(/[A-Z]+(?![a-z])|[A-Z]?[a-z]+|[0-9]+/g);
+            if (matches) {
+                for (var j = 0; j < matches.length; j++) {
+                    words.push(matches[j].toLowerCase());
+                }
+            } else {
+                words.push(part.toLowerCase());
+            }
+        }
+
+        return words;
+    }
+
+    function transformSegment(segment, mode) {
+        var words = extractWords(segment);
+        if (!words.length) {
+            return segment;
+        }
+
+        if (mode === "camel") {
+            var camel = words[0];
+            for (var i = 1; i < words.length; i++) {
+                camel += words[i].charAt(0).toUpperCase() + words[i].slice(1);
+            }
+            return camel;
+        }
+
+        if (mode === "pascal") {
+            var pascal = "";
+            for (var j = 0; j < words.length; j++) {
+                pascal += words[j].charAt(0).toUpperCase() + words[j].slice(1);
+            }
+            return pascal;
+        }
+
+        if (mode === "snake") {
+            return words.join("_");
+        }
+
+        if (mode === "kebab") {
+            return words.join("-");
+        }
+
+        return segment;
+    }
+
+    function convertPreservingSymbols(text, mode) {
+        var result = "";
+        var segment = "";
+
+        for (var i = 0; i < text.length; i++) {
+            var ch = text.charAt(i);
+            if (/[A-Za-z0-9\s_-]/.test(ch)) {
+                segment += ch;
+            } else {
+                result += transformSegment(segment, mode);
+                result += ch;
+                segment = "";
+            }
+        }
+
+        result += transformSegment(segment, mode);
+        return result;
+    }
+
     ColumnLayout {
         anchors.fill: parent
         anchors.margins: Kirigami.Units.largeSpacing
@@ -29,44 +105,19 @@ Kirigami.Page {
             }
             Button {
                 text: "camelCase"
-                onClicked: {
-                    var words = caseInputField.text.toLowerCase().split(/[\s_-]+/);
-                    if (words.length === 0) return;
-                    var res = words[0];
-                    for (var i = 1; i < words.length; i++) {
-                        if (words[i].length > 0)
-                            res += words[i].charAt(0).toUpperCase() + words[i].slice(1);
-                    }
-                    caseInputField.text = res;
-                }
+                onClicked: caseInputField.text = convertPreservingSymbols(caseInputField.text, "camel")
             }
             Button {
                 text: "PascalCase"
-                onClicked: {
-                    var words = caseInputField.text.toLowerCase().split(/[\s_-]+/);
-                    var res = "";
-                    for (var i = 0; i < words.length; i++) {
-                        if (words[i].length > 0)
-                            res += words[i].charAt(0).toUpperCase() + words[i].slice(1);
-                    }
-                    caseInputField.text = res;
-                }
+                onClicked: caseInputField.text = convertPreservingSymbols(caseInputField.text, "pascal")
             }
             Button {
                 text: "snake_case"
-                onClicked: {
-                    caseInputField.text = caseInputField.text.replace(/([a-z])([A-Z])/g, '$1_$2')
-                                                              .replace(/[\s-]+/g, '_')
-                                                              .toLowerCase();
-                }
+                onClicked: caseInputField.text = convertPreservingSymbols(caseInputField.text, "snake")
             }
             Button {
                 text: "kebab-case"
-                onClicked: {
-                    caseInputField.text = caseInputField.text.replace(/([a-z])([A-Z])/g, '$1-$2')
-                                                              .replace(/[\s_]+/g, '-')
-                                                              .toLowerCase();
-                }
+                onClicked: caseInputField.text = convertPreservingSymbols(caseInputField.text, "kebab")
             }
         }
     }
