@@ -188,9 +188,12 @@ QVariant ToolsTest::invokeBackend(const QString &toolName,
 
     if (toolName == QStringLiteral("ConversionTool")) {
         if (methodName == QStringLiteral("jsonToYaml")) return conversionTool.jsonToYaml(args.at(0).toString());
+        if (methodName == QStringLiteral("yamlToJson")) return conversionTool.yamlToJson(args.at(0).toString());
         if (methodName == QStringLiteral("jsonToXml")) return conversionTool.jsonToXml(args.at(0).toString());
         if (methodName == QStringLiteral("jsonToCsv")) return conversionTool.jsonToCsv(args.at(0).toString());
+        if (methodName == QStringLiteral("jsonToToml")) return conversionTool.jsonToToml(args.at(0).toString());
         if (methodName == QStringLiteral("csvToJson")) return conversionTool.csvToJson(args.at(0).toString());
+        if (methodName == QStringLiteral("tomlToJson")) return conversionTool.tomlToJson(args.at(0).toString());
         if (methodName == QStringLiteral("xmlToJson")) return conversionTool.xmlToJson(args.at(0).toString());
         if (methodName == QStringLiteral("markdownToHtml")) return conversionTool.markdownToHtml(args.at(0).toString());
         if (methodName == QStringLiteral("jsonMinify")) return conversionTool.jsonMinify(args.at(0).toString());

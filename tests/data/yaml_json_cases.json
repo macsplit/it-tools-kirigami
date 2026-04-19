@@ -1,0 +1,24 @@
+{
+  "kind": "backend",
+  "tool": "ConversionTool",
+  "cases": [
+    {
+      "name": "yaml to json with list",
+      "method": "yamlToJson",
+      "args": ["name: Tools\nfeatures:\n  - offline\n  - local"],
+      "contains": ["\"name\": \"Tools\"", "\"features\": [", "\"offline\"", "\"local\""]
+    },
+    {
+      "name": "invalid yaml indentation returns error",
+      "method": "yamlToJson",
+      "args": ["name:\n\tbroken: true"],
+      "contains": ["Invalid YAML:"]
+    },
+    {
+      "name": "json to yaml quotes ambiguous strings",
+      "method": "jsonToYaml",
+      "args": ["{\"flag\":\"true\",\"label\":\"hello world\"}"],
+      "contains": ["\"flag\": \"true\"", "\"label\": \"hello world\""]
+    }
+  ]
+}

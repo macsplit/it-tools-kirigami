@@ -1,0 +1,24 @@
+{
+  "kind": "backend",
+  "tool": "ConversionTool",
+  "cases": [
+    {
+      "name": "json to toml with nested table",
+      "method": "jsonToToml",
+      "args": ["{\"name\":\"Tools\",\"features\":[\"offline\",\"local\"],\"owner\":{\"name\":\"macsplit\"}}"],
+      "contains": ["name = 'Tools'", "features = [ 'offline', 'local' ]", "[owner]", "name = 'macsplit'"]
+    },
+    {
+      "name": "toml to json with nested table",
+      "method": "tomlToJson",
+      "args": ["name = \"Tools\"\nfeatures = [\"offline\", \"local\"]\n\n[owner]\nname = \"macsplit\""],
+      "contains": ["\"name\": \"Tools\"", "\"features\": [", "\"owner\": {", "\"name\": \"macsplit\""]
+    },
+    {
+      "name": "json to toml requires object root",
+      "method": "jsonToToml",
+      "args": ["[1,2,3]"],
+      "equals": "JSON root must be an object"
+    }
+  ]
+}

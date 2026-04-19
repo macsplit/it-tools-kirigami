@@ -42,6 +42,7 @@
         <file>contents/ui/tools/SlugifyPage.qml</file>
         <file>contents/ui/tools/WifiPage.qml</file>
         <file>contents/ui/tools/JsonYamlPage.qml</file>
+        <file>contents/ui/tools/YamlToJsonPage.qml</file>
         <file>contents/ui/tools/CronPage.qml</file>
         <file>contents/ui/tools/DateTimeConverterPage.qml</file>
         <file>contents/ui/tools/UrlParserPage.qml</file>
@@ -53,6 +54,8 @@
         <file>contents/ui/tools/TextToUnicodePage.qml</file>
         <file>contents/ui/tools/JsonToXmlPage.qml</file>
         <file>contents/ui/tools/JsonToCsvPage.qml</file>
+        <file>contents/ui/tools/JsonToTomlPage.qml</file>
+        <file>contents/ui/tools/TomlToJsonPage.qml</file>
         <file>contents/ui/tools/MathEvaluatorPage.qml</file>
         <file>contents/ui/tools/TemperatureConverterPage.qml</file>
         <file>contents/ui/tools/PercentageCalculatorPage.qml</file>

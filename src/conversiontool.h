@@ -15,7 +15,16 @@
 #include <QColor>
 #include <QVariantMap>
 #include <QLocale>
+#include <QStringList>
+#include <QJsonValue>
+#include <QJsonObject>
+#include <QJsonArray>
 #include <cmath>
+#include <limits>
+#include <sstream>
+
+#include <yaml-cpp/yaml.h>
+#include <toml.hpp>
 
 class ConversionTool : public QObject
 {
@@ -26,10 +35,30 @@ public:
     Q_INVOKABLE QString jsonToYaml(const QString &jsonStr) {
         if (jsonStr.trimmed().isEmpty()) return "";
         QJsonParseError error;
-        QJsonDocument doc = QJsonDocument::fromJson(jsonStr.toUtf8(), &error);
+        const QJsonDocument doc = QJsonDocument::fromJson(jsonStr.toUtf8(), &error);
         if (error.error != QJsonParseError::NoError) return "Invalid JSON: " + error.errorString();
-        
-        return toYaml(doc.toVariant(), 0).trimmed();
+
+        YAML::Emitter emitter;
+        emitter.SetSeqFormat(YAML::Block);
+        emitter.SetMapFormat(YAML::Block);
+        emitter.SetStringFormat(YAML::DoubleQuoted);
+        emitter << variantToYamlNode(doc.toVariant());
+        if (!emitter.good()) return QStringLiteral("Failed to emit YAML");
+
+        return QString::fromUtf8(emitter.c_str()).trimmed();
+    }
+
+    Q_INVOKABLE QString yamlToJson(const QString &yamlStr) {
+        if (yamlStr.trimmed().isEmpty()) return "";
+
+        try {
+            QString error;
+            const QVariant parsed = yamlNodeToVariant(YAML::Load(yamlStr.toStdString()), error);
+            if (!error.isEmpty()) return error;
+            return variantToJsonText(parsed);
+        } catch (const YAML::Exception &e) {
+            return QStringLiteral("Invalid YAML: ") + QString::fromStdString(e.what());
+        }
     }
 
     Q_INVOKABLE QString formatXml(const QString &xmlStr, int indent) {
@@ -160,6 +189,37 @@ public:
         return QString::fromUtf8(QJsonDocument::fromVariant(results).toJson(QJsonDocument::Indented));
     }
 
+    Q_INVOKABLE QString jsonToToml(const QString &jsonStr) {
+        if (jsonStr.trimmed().isEmpty()) return "";
+
+        QJsonParseError error;
+        const QJsonDocument doc = QJsonDocument::fromJson(jsonStr.toUtf8(), &error);
+        if (error.error != QJsonParseError::NoError) return "Invalid JSON: " + error.errorString();
+        if (!doc.isObject()) return "JSON root must be an object";
+
+        QString conversionError;
+        toml::table table;
+        if (!fillTomlTable(table, doc.object().toVariantMap(), conversionError)) {
+            return conversionError;
+        }
+
+        std::ostringstream out;
+        out << table;
+        return QString::fromStdString(out.str()).trimmed();
+    }
+
+    Q_INVOKABLE QString tomlToJson(const QString &tomlStr) {
+        if (tomlStr.trimmed().isEmpty()) return "";
+
+        try {
+            const QByteArray utf8 = tomlStr.toUtf8();
+            const auto parsed = toml::parse(std::string_view(utf8.constData(), static_cast<size_t>(utf8.size())));
+            return variantToJsonText(tomlNodeToVariant(parsed));
+        } catch (const toml::parse_error &e) {
+            return QStringLiteral("Invalid TOML: ") + QString::fromUtf8(e.description().data(), static_cast<int>(e.description().size()));
+        }
+    }
+
     Q_INVOKABLE QString markdownToHtml(const QString &md) {
         if (md.trimmed().isEmpty()) return "";
         QTextDocument doc;
@@ -261,6 +321,260 @@ public:
     }
 
 private:
+    static QString jsonValueToString(const QJsonValue &value, int indentLevel = 0) {
+        const QString indent(indentLevel * 2, QLatin1Char(' '));
+        const QString childIndent((indentLevel + 1) * 2, QLatin1Char(' '));
+
+        if (value.isNull() || value.isUndefined()) return QStringLiteral("null");
+        if (value.isBool()) return value.toBool() ? QStringLiteral("true") : QStringLiteral("false");
+        if (value.isDouble()) return QString::number(value.toDouble(), 'g', 15);
+        if (value.isString()) {
+            QString escaped = value.toString();
+            escaped.replace(QStringLiteral("\\"), QStringLiteral("\\\\"));
+            escaped.replace(QStringLiteral("\""), QStringLiteral("\\\""));
+            escaped.replace(QStringLiteral("\n"), QStringLiteral("\\n"));
+            escaped.replace(QStringLiteral("\r"), QStringLiteral("\\r"));
+            escaped.replace(QStringLiteral("\t"), QStringLiteral("\\t"));
+            return QStringLiteral("\"%1\"").arg(escaped);
+        }
+
+        if (value.isArray()) {
+            const QJsonArray array = value.toArray();
+            if (array.isEmpty()) return QStringLiteral("[]");
+
+            QStringList lines;
+            for (const QJsonValue &item : array) {
+                lines.append(childIndent + jsonValueToString(item, indentLevel + 1));
+            }
+            return QStringLiteral("[\n%1\n%2]").arg(lines.join(QStringLiteral(",\n")), indent);
+        }
+
+        const QJsonObject object = value.toObject();
+        if (object.isEmpty()) return QStringLiteral("{}");
+
+        QStringList lines;
+        for (auto it = object.constBegin(); it != object.constEnd(); ++it) {
+            lines.append(QStringLiteral("%1\"%2\": %3")
+                             .arg(childIndent,
+                                  it.key(),
+                                  jsonValueToString(it.value(), indentLevel + 1)));
+        }
+        return QStringLiteral("{\n%1\n%2}").arg(lines.join(QStringLiteral(",\n")), indent);
+    }
+
+    static QString variantToJsonText(const QVariant &value) {
+        return jsonValueToString(QJsonValue::fromVariant(value)) + QStringLiteral("\n");
+    }
+
+    static YAML::Node variantToYamlNode(const QVariant &value) {
+        switch (value.type()) {
+        case QVariant::Map: {
+            YAML::Node node(YAML::NodeType::Map);
+            node.SetStyle(YAML::EmitterStyle::Block);
+            const QVariantMap map = value.toMap();
+            for (auto it = map.constBegin(); it != map.constEnd(); ++it) {
+                node[it.key().toStdString()] = variantToYamlNode(it.value());
+            }
+            return node;
+        }
+        case QVariant::List: {
+            YAML::Node node(YAML::NodeType::Sequence);
+            node.SetStyle(YAML::EmitterStyle::Block);
+            const QVariantList list = value.toList();
+            for (const QVariant &item : list) {
+                node.push_back(variantToYamlNode(item));
+            }
+            return node;
+        }
+        case QVariant::Bool:
+            return YAML::Node(value.toBool());
+        case QVariant::Int:
+        case QVariant::LongLong:
+            return YAML::Node(value.toLongLong());
+        case QVariant::UInt:
+        case QVariant::ULongLong:
+            return YAML::Node(static_cast<long long>(value.toULongLong()));
+        case QVariant::Double:
+            return YAML::Node(value.toDouble());
+        default:
+            if (!value.isValid()) return YAML::Node();
+            return YAML::Node(value.toString().toStdString());
+        }
+    }
+
+    static QVariant yamlNodeToVariant(const YAML::Node &node, QString &error) {
+        if (!error.isEmpty()) return QVariant();
+        if (!node || node.IsNull()) return QVariant();
+
+        if (node.IsSequence()) {
+            QVariantList list;
+            for (const auto &item : node) {
+                list.append(yamlNodeToVariant(item, error));
+                if (!error.isEmpty()) return QVariant();
+            }
+            return list;
+        }
+
+        if (node.IsMap()) {
+            QVariantMap map;
+            for (const auto &entry : node) {
+                if (!entry.first.IsScalar()) {
+                    error = QStringLiteral("YAML contains non-string mapping keys, which cannot be represented as JSON objects");
+                    return QVariant();
+                }
+                map.insert(QString::fromStdString(entry.first.Scalar()), yamlNodeToVariant(entry.second, error));
+                if (!error.isEmpty()) return QVariant();
+            }
+            return map;
+        }
+
+        try { return node.as<bool>(); } catch (const YAML::Exception &) {}
+        try { return static_cast<qlonglong>(node.as<long long>()); } catch (const YAML::Exception &) {}
+        try { return node.as<double>(); } catch (const YAML::Exception &) {}
+        return QString::fromStdString(node.Scalar());
+    }
+
+    static bool fillTomlArray(toml::array &array, const QVariantList &list, QString &error) {
+        for (const QVariant &item : list) {
+            if (!appendTomlValue(array, item, error)) return false;
+        }
+        return true;
+    }
+
+    static bool fillTomlTable(toml::table &table, const QVariantMap &map, QString &error) {
+        for (auto it = map.constBegin(); it != map.constEnd(); ++it) {
+            if (!insertTomlValue(table, it.key().toStdString(), it.value(), error)) return false;
+        }
+        return true;
+    }
+
+    static bool appendTomlValue(toml::array &array, const QVariant &value, QString &error) {
+        switch (value.type()) {
+        case QVariant::Map: {
+            toml::table child;
+            if (!fillTomlTable(child, value.toMap(), error)) return false;
+            array.push_back(std::move(child));
+            return true;
+        }
+        case QVariant::List: {
+            toml::array child;
+            if (!fillTomlArray(child, value.toList(), error)) return false;
+            array.push_back(std::move(child));
+            return true;
+        }
+        case QVariant::Bool:
+            array.push_back(value.toBool());
+            return true;
+        case QVariant::Int:
+        case QVariant::LongLong:
+            array.push_back(static_cast<int64_t>(value.toLongLong()));
+            return true;
+        case QVariant::UInt:
+        case QVariant::ULongLong: {
+            const qulonglong unsignedValue = value.toULongLong();
+            if (unsignedValue > static_cast<qulonglong>(std::numeric_limits<int64_t>::max())) {
+                error = QStringLiteral("JSON number is too large to be represented in TOML");
+                return false;
+            }
+            array.push_back(static_cast<int64_t>(unsignedValue));
+            return true;
+        }
+        case QVariant::Double:
+            array.push_back(value.toDouble());
+            return true;
+        case QVariant::Invalid:
+            error = QStringLiteral("JSON null values cannot be represented in TOML");
+            return false;
+        default:
+            array.push_back(value.toString().toStdString());
+            return true;
+        }
+    }
+
+    static bool insertTomlValue(toml::table &table, const std::string &key, const QVariant &value, QString &error) {
+        switch (value.type()) {
+        case QVariant::Map: {
+            toml::table child;
+            if (!fillTomlTable(child, value.toMap(), error)) return false;
+            table.insert_or_assign(key, std::move(child));
+            return true;
+        }
+        case QVariant::List: {
+            toml::array child;
+            if (!fillTomlArray(child, value.toList(), error)) return false;
+            table.insert_or_assign(key, std::move(child));
+            return true;
+        }
+        case QVariant::Bool:
+            table.insert_or_assign(key, value.toBool());
+            return true;
+        case QVariant::Int:
+        case QVariant::LongLong:
+            table.insert_or_assign(key, static_cast<int64_t>(value.toLongLong()));
+            return true;
+        case QVariant::UInt:
+        case QVariant::ULongLong: {
+            const qulonglong unsignedValue = value.toULongLong();
+            if (unsignedValue > static_cast<qulonglong>(std::numeric_limits<int64_t>::max())) {
+                error = QStringLiteral("JSON number is too large to be represented in TOML");
+                return false;
+            }
+            table.insert_or_assign(key, static_cast<int64_t>(unsignedValue));
+            return true;
+        }
+        case QVariant::Double:
+            table.insert_or_assign(key, value.toDouble());
+            return true;
+        case QVariant::Invalid:
+            error = QStringLiteral("JSON null values cannot be represented in TOML");
+            return false;
+        default:
+            table.insert_or_assign(key, value.toString().toStdString());
+            return true;
+        }
+    }
+
+    static QVariant tomlNodeToVariant(const toml::node &node) {
+        if (const auto *table = node.as_table()) {
+            QVariantMap map;
+            for (const auto &[key, value] : *table) {
+                const std::string_view keyText = key.str();
+                map.insert(QString::fromUtf8(keyText.data(), static_cast<int>(keyText.size())), tomlNodeToVariant(value));
+            }
+            return map;
+        }
+
+        if (const auto *array = node.as_array()) {
+            QVariantList list;
+            for (const auto &item : *array) {
+                list.append(tomlNodeToVariant(item));
+            }
+            return list;
+        }
+
+        if (const auto *str = node.as_string()) return QString::fromStdString(str->get());
+        if (const auto *integer = node.as_integer()) return static_cast<qlonglong>(integer->get());
+        if (const auto *floating = node.as_floating_point()) return floating->get();
+        if (const auto *boolean = node.as_boolean()) return boolean->get();
+        if (const auto *date = node.as_date()) {
+            std::ostringstream out;
+            out << *date;
+            return QString::fromStdString(out.str());
+        }
+        if (const auto *time = node.as_time()) {
+            std::ostringstream out;
+            out << *time;
+            return QString::fromStdString(out.str());
+        }
+        if (const auto *dateTime = node.as_date_time()) {
+            std::ostringstream out;
+            out << *dateTime;
+            return QString::fromStdString(out.str());
+        }
+
+        return QString();
+    }
+
     void variantToDom(QDomDocument &doc, QDomElement &parent, const QVariant &var) {
         if (var.type() == QVariant::Map) {
             QVariantMap map = var.toMap();
@@ -316,37 +630,6 @@ private:
                 QString text = child.toText().data().trimmed();
                 if (!text.isEmpty()) res["#text"] = text;
             }
-        }
-        return res;
-    }
-
-    QString toYaml(const QVariant &var, int indent) {
-        QString res;
-        QString pad = QString("  ").repeated(indent);
-        if (var.type() == QVariant::Map) {
-            QVariantMap map = var.toMap();
-            QMapIterator<QString, QVariant> i(map);
-            while (i.hasNext()) {
-                i.next();
-                QString key = i.key();
-                QVariant val = i.value();
-                if (val.type() == QVariant::Map || val.type() == QVariant::List) {
-                    res += pad + key + ":\n" + toYaml(val, indent + 1);
-                } else {
-                    res += pad + key + ": " + val.toString() + "\n";
-                }
-            }
-        } else if (var.type() == QVariant::List) {
-            QVariantList list = var.toList();
-            for (const QVariant &item : list) {
-                if (item.type() == QVariant::Map || item.type() == QVariant::List) {
-                    res += pad + "-\n" + toYaml(item, indent + 1);
-                } else {
-                    res += pad + "- " + item.toString() + "\n";
-                }
-            }
-        } else {
-            res += pad + var.toString() + "\n";
         }
         return res;
     }

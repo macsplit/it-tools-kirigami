@@ -21,6 +21,10 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fexceptions")
 find_package(Qt5 5.15 REQUIRED COMPONENTS Core Quick QuickControls2 Widgets Xml)
 find_package(KF5 REQUIRED COMPONENTS Kirigami2 CoreAddons)
 
+file(GLOB YAML_CPP_SOURCES CONFIGURE_DEPENDS
+    third_party/yaml-cpp/src/*.cpp
+)
+
 add_executable(tools
     src/main.cpp
     src/hashtool.h
@@ -38,6 +42,7 @@ add_executable(tools
     src/toolmanager.h
     src/qrcodegen.cpp
     src/resources.qrc
+    ${YAML_CPP_SOURCES}
 )
 
 set_target_properties(tools PROPERTIES OUTPUT_NAME ${APP_ID})
@@ -52,6 +57,14 @@ target_link_libraries(tools
     KF5::CoreAddons
     crypt
 )
+
+target_include_directories(tools PRIVATE
+    src
+    third_party/yaml-cpp/include
+    third_party/tomlplusplus
+)
+
+target_compile_definitions(tools PRIVATE YAML_CPP_STATIC_DEFINE)
 
 install(TARGETS tools ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})
 
@@ -86,10 +99,16 @@ if(BUILD_TESTING)
         src/toolmanager.h
         src/qrcodegen.cpp
         src/resources.qrc
+        ${YAML_CPP_SOURCES}
     )
 
-    target_include_directories(tools_tests PRIVATE src)
+    target_include_directories(tools_tests PRIVATE
+        src
+        third_party/yaml-cpp/include
+        third_party/tomlplusplus
+    )
     target_compile_definitions(tools_tests PRIVATE TOOLS_TEST_SOURCE_DIR="${CMAKE_SOURCE_DIR}")
+    target_compile_definitions(tools_tests PRIVATE YAML_CPP_STATIC_DEFINE)
 
     target_link_libraries(tools_tests
         Qt5::Core

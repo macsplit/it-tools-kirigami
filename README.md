@@ -34,11 +34,17 @@ To build and publish the Flatpak locally:
 ## Tools Included
 
 - **Crypto**: Token Generator, Hash Text, HMAC Generator, Bcrypt Password Hash
-- **Converter**: Base64 Converter, Integer Base Converter, Color Converter, JSON to YAML, JSON to XML, JSON to CSV, XML to JSON, CSV to JSON, Text to Binary, Epoch Converter, Date/Time Converter, Roman Numeral Converter, Temperature Converter, List Converter, Markdown to HTML
+- **Converter**: Base64 Converter, Integer Base Converter, Color Converter, JSON to YAML, YAML to JSON, JSON to XML, JSON to CSV, JSON to TOML, XML to JSON, CSV to JSON, TOML to JSON, Text to Binary, Epoch Converter, Date/Time Converter, Roman Numeral Converter, Temperature Converter, List Converter, Markdown to HTML
 - **Network**: IPv4 Converter, IPv4 Subnet Calculator, WiFi QR Code Generator, MAC Address Generator, Random Port Generator, IPv4 Range Expander
 - **Web**: Basic Auth Generator, URL Encoder/Decoder, HTML Entities, JWT Parser, URL Parser, HTTP Status Codes
 - **Development**: MIME Types, UUID Generator, ULID Generator, JSON Formatter, JSON Minify, XML Formatter, SQL Prettify, Chmod Calculator, Cron Expression Parser, Percentage Calculator, Math Evaluator
 - **Text**: Case Converter, Email Normalizer, Text to NATO Alphabet, Numeronym Generator, Text to Unicode, Lorem Ipsum, Text Statistics, Slugify String, String Obfuscator
+
+## Current Status
+
+- The app currently ships 54 tools.
+- YAML and TOML conversion now use vendored source parsers/formatters rather than host-installed libraries.
+- The next correctness-focused work is tightening tools whose names imply broader format support than they currently deliver, especially SQL formatting, cron parsing, XML/JSON conversion, CSV conversion, HTML entities, and email normalization.
 
 ## Building and Running
 

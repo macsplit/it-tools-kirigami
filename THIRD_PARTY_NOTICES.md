@@ -15,6 +15,30 @@ This project is primarily original code under the repository license, but it als
 - Notes:
   - The upstream MIT license notice is preserved directly in the vendored source files.
 
+### toml++ (Mark Gillard / marzer)
+
+- Purpose: TOML parsing and serialization backend used by the TOML conversion tools.
+- Upstream: https://github.com/marzer/tomlplusplus
+- License: MIT
+- Vendored files:
+  - `third_party/tomlplusplus/toml.hpp`
+- Notes:
+  - The upstream MIT license notice is embedded in the vendored single-header source.
+  - Vendored version: `v3.4.0`
+
+### yaml-cpp (Jesse Beder and contributors)
+
+- Purpose: YAML parsing and emitting backend used by the YAML conversion tools.
+- Upstream: https://github.com/jbeder/yaml-cpp
+- License: MIT
+- Vendored files:
+  - `third_party/yaml-cpp/include/`
+  - `third_party/yaml-cpp/src/`
+  - `third_party/yaml-cpp/LICENSE`
+  - `third_party/yaml-cpp/README.md`
+- Notes:
+  - Vendored version: `0.8.0`
+
 ## Policy For Future Vendored Code
 
 Any newly vendored source should include all of the following:
