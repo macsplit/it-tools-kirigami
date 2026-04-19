@@ -281,6 +281,43 @@ private:
             return referenceDate.addDays(-1);
         }
 
+        static const QRegularExpression relativeCalendarPattern(
+            QStringLiteral("^(next|last|this)\\s+(week|month|year)$")
+        );
+        const QRegularExpressionMatch relativeCalendarMatch = relativeCalendarPattern.match(text);
+        if (relativeCalendarMatch.hasMatch()) {
+            const QString direction = relativeCalendarMatch.captured(1);
+            const QString unit = relativeCalendarMatch.captured(2);
+
+            if (unit == QStringLiteral("week")) {
+                if (direction == QStringLiteral("next")) {
+                    return referenceDate.addDays(7);
+                }
+                if (direction == QStringLiteral("last")) {
+                    return referenceDate.addDays(-7);
+                }
+                return referenceDate;
+            }
+
+            if (unit == QStringLiteral("month")) {
+                if (direction == QStringLiteral("next")) {
+                    return referenceDate.addMonths(1);
+                }
+                if (direction == QStringLiteral("last")) {
+                    return referenceDate.addMonths(-1);
+                }
+                return referenceDate;
+            }
+
+            if (direction == QStringLiteral("next")) {
+                return referenceDate.addYears(1);
+            }
+            if (direction == QStringLiteral("last")) {
+                return referenceDate.addYears(-1);
+            }
+            return referenceDate;
+        }
+
         static const QStringList weekdays = {
             QString(),
             QStringLiteral("monday"),
@@ -403,9 +440,17 @@ private:
     static QDateTime parseNaturalDateTime(const QString &input,
                                           const QTimeZone &zone,
                                           const QDateTime &reference) {
+        // Keep natural-date parsing deterministic and grammar-based.
+        // Support only forms with one clear meaning and explicit timezone semantics.
+        // If a phrase needs broad heuristics or has multiple plausible readings,
+        // leave it unsupported rather than guessing.
         const QString text = normalizeNaturalDateInput(input);
         if (text.isEmpty()) {
             return QDateTime();
+        }
+
+        if (text == QStringLiteral("now") || text == QStringLiteral("right now")) {
+            return reference;
         }
 
         const QDateTime relativeOffset = parseRelativeOffset(text, zone, reference);

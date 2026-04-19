@@ -43,6 +43,46 @@
       ]
     },
     {
+      "name": "parse tomorrow",
+      "method": "parseNaturalDateWithReference",
+      "args": ["tomorrow", "UTC", "2026-04-19T09:30:00Z"],
+      "contains": [
+        "ISO 8601: 2026-04-20T00:00:00.000+00:00",
+        "Date only: 2026-04-20",
+        "Timezone: UTC"
+      ]
+    },
+    {
+      "name": "parse yesterday",
+      "method": "parseNaturalDateWithReference",
+      "args": ["yesterday", "UTC", "2026-04-19T09:30:00Z"],
+      "contains": [
+        "ISO 8601: 2026-04-18T00:00:00.000+00:00",
+        "Date only: 2026-04-18",
+        "Timezone: UTC"
+      ]
+    },
+    {
+      "name": "parse next month",
+      "method": "parseNaturalDateWithReference",
+      "args": ["next month", "UTC", "2026-04-19T09:30:00Z"],
+      "contains": [
+        "ISO 8601: 2026-05-19T00:00:00.000+00:00",
+        "Date only: 2026-05-19",
+        "Timezone: UTC"
+      ]
+    },
+    {
+      "name": "parse last year",
+      "method": "parseNaturalDateWithReference",
+      "args": ["last year", "UTC", "2026-04-19T09:30:00Z"],
+      "contains": [
+        "ISO 8601: 2025-04-19T00:00:00.000+00:00",
+        "Date only: 2025-04-19",
+        "Timezone: UTC"
+      ]
+    },
+    {
       "name": "parse time then explicit date",
       "method": "parseNaturalDateWithReference",
       "args": ["10pm on 13th October 2023", "UTC", "2026-04-19T09:30:00Z"],
@@ -60,6 +100,26 @@
         "ISO 8601: 2026-04-19T22:00:00.000+01:00",
         "Date only: 2026-04-19",
         "Timezone: Europe/London"
+      ]
+    },
+    {
+      "name": "parse now in utc without bst skew",
+      "method": "parseNaturalDateWithReference",
+      "args": ["now", "UTC", "2026-04-19T16:54:54.072+01:00"],
+      "contains": [
+        "ISO 8601: 2026-04-19T15:54:54.072+00:00",
+        "Timezone: UTC",
+        "Unix seconds: 1776614094"
+      ]
+    },
+    {
+      "name": "parse now in london keeps bst offset",
+      "method": "parseNaturalDateWithReference",
+      "args": ["now", "Europe/London", "2026-04-19T16:54:54.072+01:00"],
+      "contains": [
+        "ISO 8601: 2026-04-19T16:54:54.072+01:00",
+        "Timezone: Europe/London",
+        "Unix seconds: 1776614094"
       ]
     }
   ]
