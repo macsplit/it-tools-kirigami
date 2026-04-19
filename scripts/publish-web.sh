@@ -6,7 +6,7 @@ DEST="${1:-nuc:/var/www/tools/}"
 
 if command -v rsync >/dev/null 2>&1; then
   if ssh "${DEST%%:*}" "command -v rsync >/dev/null 2>&1"; then
-    rsync -av --delete "${ROOT_DIR}/web/" "${DEST}"
+      rsync -rlD --delete "${ROOT_DIR}/web/" "${DEST}"
     exit 0
   fi
 fi

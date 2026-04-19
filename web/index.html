@@ -3,183 +3,134 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Tools for Linux</title>
-  <meta name="description" content="Tools is a Linux desktop app that groups 48 developer and IT utility tools into one Qt and Kirigami application.">
+  <title>Tools</title>
+  <meta name="description" content="A native Linux utility suite with 48+ tools for developers and IT admins.">
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
   <div class="site-shell">
+    <div class="topbar">
+      <div class="brand">Tools</div>
+      <div class="nav-links">
+        <a href="https://github.com/macsplit/it-tools-kirigami">GitHub</a>
+      </div>
+    </div>
+
     <header class="hero">
-      <nav class="topbar">
-        <a class="brand" href="index.html">Tools</a>
-        <div class="nav-links">
-          <a href="docs.html">Documentation</a>
-          <a href="https://github.com/macsplit/it-tools-kirigami">GitHub</a>
+      <div class="hero-content">
+        <h1>48 utility tools in one Linux app.</h1>
+        <p class="lead">
+          A native Linux application grouping common conversion, formatting, networking, text, and
+          reference utilities into a single interface. Fast, offline, and secure.
+        </p>
+        <div class="cta-row">
+          <a class="button button-primary" href="app.pastetools.Tools.flatpakref">Install Flatpak</a>
+          <a class="button" href="https://github.com/macsplit/it-tools-kirigami">View Source</a>
         </div>
-      </nav>
-
-      <section class="hero-grid">
-        <div class="hero-copy">
-          <p class="eyebrow">Linux Desktop Utility Suite</p>
-          <h1>48 local utility tools in one Linux app.</h1>
-          <p class="lead">
-            Tools groups common conversion, formatting, networking, text, and
-            reference utilities into a single Qt and Kirigami application for
-            developers and IT admins.
-          </p>
-          <div class="cta-row">
-            <a class="button button-primary" href="docs.html">Read the docs</a>
-            <a class="button button-secondary" href="https://github.com/macsplit/it-tools-kirigami">View source</a>
-          </div>
-          <ul class="identity-note">
-            <li><code>app.pastetools.Tools</code></li>
-            <li>GitHub: <a href="https://github.com/macsplit/it-tools-kirigami">github.com/macsplit/it-tools-kirigami</a></li>
-            <li>License: GPL-3.0-or-later</li>
-          </ul>
-          <ul class="highlights">
-            <li>48 tools across 6 categories</li>
-            <li>Built with Qt and Kirigami</li>
-            <li>Runs locally with no network access</li>
-            <li>Flatpak and source builds available</li>
-          </ul>
-        </div>
-
-        <div class="hero-panel">
-          <div class="panel-card">
-            <p class="panel-title">Included categories</p>
-            <ul class="panel-list">
-              <li>Crypto: 4 tools</li>
-              <li>Converter: 15 tools</li>
-              <li>Network: 5 tools</li>
-              <li>Web: 6 tools</li>
-              <li>Development: 10 tools</li>
-              <li>Text: 8 tools</li>
-            </ul>
-          </div>
-        </div>
-      </section>
+      </div>
+      <div class="hero-screenshot">
+        <img src="exampletool.png" alt="Tools Example Tool">
+      </div>
     </header>
 
     <main>
-      <section class="section">
-        <div class="section-heading">
-          <p class="eyebrow">What It Covers</p>
-          <h2>Tool coverage</h2>
-        </div>
-        <div class="card-grid">
-          <article class="info-card">
-            <h3>Crypto</h3>
-            <p>
-              Token generation, hashing, HMAC, and bcrypt password hashing.
-            </p>
+      <section class="tool-section">
+        <div class="section-title">Available Tools</div>
+        <div class="category-grid">
+          <!-- Crypto -->
+          <article class="category-card" data-cat="crypto">
+            <div class="category-header">
+              <img class="category-icon" src="icons/category-crypto-symbolic.svg" alt="">
+              <div class="category-title">Crypto</div>
+            </div>
+            <div class="tool-list">
+              Token Generator, Hash Text, HMAC Generator, Bcrypt Password Hash.
+            </div>
           </article>
-          <article class="info-card">
-            <h3>Converters</h3>
-            <p>
-              Base64, integer bases, colors, JSON and XML transforms, CSV,
-              Markdown, date and time, temperature, lists, binary, and Roman numerals.
-            </p>
+
+          <!-- Converter -->
+          <article class="category-card" data-cat="converter">
+            <div class="category-header">
+              <img class="category-icon" src="icons/category-converter-symbolic.svg" alt="">
+              <div class="category-title">Converter</div>
+            </div>
+            <div class="tool-list">
+              Base64, Integer Base, Color, JSON/YAML/XML/CSV transforms, Text to Binary, Epoch, Date/Time, Roman Numerals, Temperature, List, Markdown.
+            </div>
           </article>
-          <article class="info-card">
-            <h3>Network and web</h3>
-            <p>
-              IPv4 tools, WiFi QR payloads, MAC addresses, ports, URL helpers,
-              HTML entities, JWT parsing, and HTTP status reference data.
-            </p>
+
+          <!-- Network -->
+          <article class="category-card" data-cat="network">
+            <div class="category-header">
+              <img class="category-icon" src="icons/category-network-symbolic.svg" alt="">
+              <div class="category-title">Network</div>
+            </div>
+            <div class="tool-list">
+              IPv4 Converter, Subnet Calculator, WiFi QR, MAC Generator, Random Port Generator.
+            </div>
           </article>
-          <article class="info-card">
-            <h3>Development and text</h3>
-            <p>
-              MIME types, UUIDs and ULIDs, JSON/XML/SQL formatting, chmod,
-              cron parsing, percentage math, case conversion, text statistics,
-              slugify, numeronyms, Unicode, and NATO alphabet.
-            </p>
+
+          <!-- Web -->
+          <article class="category-card" data-cat="web">
+            <div class="category-header">
+              <img class="category-icon" src="icons/category-web-symbolic.svg" alt="">
+              <div class="category-title">Web</div>
+            </div>
+            <div class="tool-list">
+              Basic Auth, URL Encode, HTML Entities, JWT Parser, URL Parser, HTTP Status Codes.
+            </div>
+          </article>
+
+          <!-- Development -->
+          <article class="category-card" data-cat="development">
+            <div class="category-header">
+              <img class="category-icon" src="icons/category-development-symbolic.svg" alt="">
+              <div class="category-title">Development</div>
+            </div>
+            <div class="tool-list">
+              MIME Types, UUID/ULID, JSON/XML/SQL formatters, Chmod, Cron Parser, Percentage Calculator.
+            </div>
+          </article>
+
+          <!-- Text -->
+          <article class="category-card" data-cat="text">
+            <div class="category-header">
+              <img class="category-icon" src="icons/category-text-symbolic.svg" alt="">
+              <div class="category-title">Text</div>
+            </div>
+            <div class="tool-list">
+              Case Converter, NATO Alphabet, Numeronym, Unicode, Lorem Ipsum, Text Stats, Slugify, Obfuscator.
+            </div>
           </article>
         </div>
       </section>
 
-      <section class="section">
-        <div class="section-heading">
-          <p class="eyebrow">Install</p>
-          <h2>Install the Flatpak</h2>
+      <section class="screenshots-section">
+        <div class="section-title">Screenshots</div>
+        <div class="screenshot-grid">
+          <div class="screenshot-item">
+            <img src="dashboard.png" alt="Tools Dashboard">
+          </div>
+          <div class="screenshot-item">
+            <img src="sidebarlist.png" alt="Sidebar Navigation">
+          </div>
         </div>
-        <div class="card-grid install-grid">
-          <article class="info-card">
-            <h3>Direct install</h3>
-            <p>Install from the hosted ref file.</p>
-            <p><a href="app.pastetools.Tools.flatpakref">app.pastetools.Tools.flatpakref</a></p>
-          </article>
-          <article class="info-card">
-            <h3>Repository file</h3>
-            <p>Add the PasteTools Flatpak repository to Flatpak.</p>
-            <p><a href="pastetools.flatpakrepo">pastetools.flatpakrepo</a></p>
-          </article>
-          <article class="info-card">
-            <h3>Bundle</h3>
-            <p>Download a Flatpak bundle directly.</p>
-            <p><a href="app.pastetools.Tools.flatpak">app.pastetools.Tools.flatpak</a></p>
-          </article>
-        </div>
-        <div class="install-block">
-          <pre><code>flatpak install https://pastetools.app/app.pastetools.Tools.flatpakref</code></pre>
-          <pre><code>flatpak remote-add --if-not-exists pastetools https://pastetools.app/pastetools.flatpakrepo
+      </section>
+
+      <section class="install-section">
+        <div class="section-title">Installation</div>
+        <pre><code>flatpak install https://pastetools.app/app.pastetools.Tools.flatpakref</code></pre>
+        <p>Or add the repository:</p>
+        <pre><code>flatpak remote-add --if-not-exists pastetools https://pastetools.app/pastetools.flatpakrepo
 flatpak install pastetools app.pastetools.Tools</code></pre>
-        </div>
-      </section>
-
-      <section class="section">
-        <div class="section-heading">
-          <p class="eyebrow">Screenshots</p>
-          <h2>Views</h2>
-        </div>
-        <div class="gallery-grid">
-          <figure class="gallery-card">
-            <img src="sidebarlist.png" alt="Tools sidebar showing the searchable list of available tools">
-            <figcaption>Sidebar with categories, search, and tool list.</figcaption>
-          </figure>
-          <figure class="gallery-card">
-            <img src="exampletool.png" alt="Color Converter tool in the Tools app">
-            <figcaption>Example tool view: Color Converter.</figcaption>
-          </figure>
-          <figure class="gallery-card">
-            <img src="dashboard.png" alt="Dashboard view showing Tools app cards for all utilities">
-            <figcaption>Dashboard view with tool cards.</figcaption>
-          </figure>
-        </div>
-      </section>
-
-      <section class="section section-accent">
-        <div class="section-heading">
-          <p class="eyebrow">Project</p>
-          <h2>Technical details</h2>
-        </div>
-        <div class="build-grid">
-          <article class="info-card">
-            <h3>Platform</h3>
-            <p>Linux desktop.</p>
-          </article>
-          <article class="info-card">
-            <h3>Framework</h3>
-            <p>Qt and Kirigami.</p>
-          </article>
-          <article class="info-card">
-            <h3>Verification</h3>
-            <p>Automated tests cover backend logic and QML smoke loading.</p>
-          </article>
-          <article class="info-card">
-            <h3>License</h3>
-            <p>GPL-3.0-or-later.</p>
-          </article>
-        </div>
       </section>
     </main>
 
     <footer class="footer">
-      <p>Tools for Linux.</p>
+      <div>Tools &copy; 2026</div>
       <div class="footer-links">
-        <a href="docs.html">Documentation</a>
-        <a href="https://github.com/macsplit/it-tools-kirigami">Source code</a>
-        <a href="https://github.com/macsplit/it-tools-kirigami/blob/main/LICENSE">License</a>
+        <a href="https://github.com/macsplit/it-tools-kirigami">Source Code</a>
+        <a href="https://github.com/macsplit/it-tools-kirigami/blob/main/LICENSE">GPL-3.0 License</a>
       </div>
     </footer>
   </div>
