@@ -65,19 +65,18 @@ The application is currently in a stable and minimally viable state. The core ar
 
 The following sections outline the planned future development for **Tools**.
 
+Tool discovery by name and metadata is already in place in the current application, so this roadmap focuses only on work that remains ahead.
+
 ### New Tools to be Added
 
 This list is based on an audit of the popular `it-tools` web application, and includes tools that are not yet implemented in **Tools**.
 
 *   [ ] ASCII Text Drawer
 *   [ ] Base64 File Converter
-*   [x] Basic Auth Generator
-*   [x] Bcrypt
 *   [ ] Benchmark Builder
 *   [ ] BIP39 Generator
 *   [ ] Camera Recorder
 *   [ ] Chronometer
-*   [x] Date/Time Converter
 *   [ ] Device Information
 *   [ ] Docker Run to Docker Compose Converter
 *   [ ] Email Normalizer
@@ -90,33 +89,24 @@ This list is based on an audit of the popular `it-tools` web application, and in
 *   [ ] IPv4 Range Expander
 *   [ ] IPv6 ULA Generator
 *   [ ] JSON Diff
-*   [x] JSON Minify
 *   [ ] JSON to TOML
 *   [ ] JSON Viewer
 *   [ ] Keycode Info
 *   [ ] MAC Address Lookup
-*   [x] Markdown to HTML
 *   [ ] Math Evaluator
 *   [ ] Meta Tag Generator
-*   [x] MIME Types
-*   [x] Numeronym Generator
 *   [ ] OTP Code Generator and Validator
 *   [ ] Password Strength Analyzer
 *   [ ] PDF Signature Checker
-*   [x] Percentage Calculator
 *   [ ] Phone Parser and Formatter
 *   [ ] Regex Memo
 *   [ ] Regex Tester
-*   [x] Roman Numeral Converter
 *   [ ] RSA Key Pair Generator
 *   [ ] Safelink Decoder
 *   [ ] SVG Placeholder Generator
 *   [ ] Text Diff
-*   [x] Text to NATO Alphabet
-*   [x] Text to Unicode
 *   [ ] TOML to JSON
 *   [ ] TOML to YAML
-*   [x] ULID Generator
 *   [ ] User Agent Parser
 *   [ ] YAML to JSON Converter
 *   [ ] YAML to TOML
@@ -141,16 +131,6 @@ This is a list of potential new tools that are not present in `it-tools`, but wo
 ### Enhancements
 
 These are planned enhancements to the core application.
-
-#### Tool Discovery
-
-* [x] **Searchable Tool List:** Implement a search bar in the left pane to allow users to quickly find tools by name.
-* [x] **Metadata-based Search:** Associate metadata and keywords with each tool. This will allow the search to return relevant tools even if the search term doesn't exactly match the tool's name. For example, searching for "hash" should also bring up "HMAC" and "Bcrypt".
-
-##### Implementation suggestions
-
-*   Create a JSON or XML file that stores the metadata for each tool. This file would include the tool's name, a description, and a list of keywords.
-*   The search functionality would then parse this file and use it to provide more relevant search results.
 
 ## Technical Guidelines & Future-Proofing
 
