@@ -1,0 +1,24 @@
+{
+  "kind": "backend",
+  "tool": "HashTool",
+  "cases": [
+    {
+      "name": "md5 of hello",
+      "method": "md5",
+      "args": ["hello"],
+      "equals": "5d41402abc4b2a76b9719d911017c592"
+    },
+    {
+      "name": "sha256 of hello",
+      "method": "sha256",
+      "args": ["hello"],
+      "equals": "2cf24dba5fb0a30e26e83b2ac5b9e29e1b161e5c1fa7425e73043362938b9824"
+    },
+    {
+      "name": "hmac sha256",
+      "method": "hmac",
+      "args": ["message", "secret", "SHA256"],
+      "equals": "8b5f48702995c1598c573db1e21866a9b825d4a794d169d7060a03605796360b"
+    }
+  ]
+}

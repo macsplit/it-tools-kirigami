@@ -1,0 +1,24 @@
+{
+  "kind": "backend",
+  "tool": "UrlTool",
+  "cases": [
+    {
+      "name": "url encode",
+      "method": "encode",
+      "args": ["hello world?"],
+      "equals": "hello%20world%3F"
+    },
+    {
+      "name": "url decode",
+      "method": "decode",
+      "args": ["hello%20world%3F"],
+      "equals": "hello world?"
+    },
+    {
+      "name": "invalid url decode",
+      "method": "decode",
+      "args": ["hello%2G"],
+      "equals": "Invalid URL encoding"
+    }
+  ]
+}

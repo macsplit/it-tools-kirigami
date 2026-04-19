@@ -1,0 +1,22 @@
+{
+  "kind": "backend",
+  "tool": "UrlTool",
+  "cases": [
+    {
+      "name": "parse full url",
+      "method": "parse",
+      "args": ["https://me:pwd@example.com:3000/path?key=value#frag"],
+      "mapEquals": {
+        "valid": "true",
+        "scheme": "https",
+        "username": "me",
+        "password": "pwd",
+        "host": "example.com",
+        "port": "3000",
+        "path": "/path",
+        "query": "key=value",
+        "fragment": "frag"
+      }
+    }
+  ]
+}

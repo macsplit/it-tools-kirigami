@@ -34,14 +34,7 @@ Kirigami.Page {
         }
         Button {
             text: "Generate"
-            onClicked: {
-                var charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()_+";
-                var retVal = "";
-                for (var i = 0; i < tokenLength.value; ++i) {
-                    retVal += charset.charAt(Math.floor(Math.random() * charset.length));
-                }
-                tokenOutput.text = retVal;
-            }
+            onClicked: tokenOutput.text = idTool.generateToken(tokenLength.value)
             Layout.alignment: Qt.AlignLeft
         }
         Item { Layout.fillHeight: true }

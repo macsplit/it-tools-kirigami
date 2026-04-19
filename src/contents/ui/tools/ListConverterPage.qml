@@ -53,22 +53,17 @@ Kirigami.ScrollablePage {
             readOnly: true
             Layout.fillWidth: true
             Layout.preferredHeight: 150
-            text: transformList(listInput.text)
+            text: textTool.transformList(
+                      listInput.text,
+                      trimItems.checked,
+                      removeDuplicates.checked,
+                      lowerCase.checked,
+                      reverseList.checked,
+                      separator.text,
+                      itemPrefix.text,
+                      itemSuffix.text,
+                      listPrefix.text,
+                      listSuffix.text)
         }
-    }
-
-    function transformList(input) {
-        if (!input) return "";
-        var items = input.split(/\r\n|\r|\n/);
-        
-        if (trimItems.checked) items = items.map(function(i) { return i.trim(); });
-        items = items.filter(function(i) { return i.length > 0; });
-        if (lowerCase.checked) items = items.map(function(i) { return i.toLowerCase(); });
-        if (removeDuplicates.checked) items = items.filter(function(item, pos) { return items.indexOf(item) === pos; });
-        if (reverseList.checked) items.reverse();
-        
-        items = items.map(function(i) { return itemPrefix.text + i + itemSuffix.text; });
-        
-        return listPrefix.text + items.join(separator.text) + listSuffix.text;
     }
 }

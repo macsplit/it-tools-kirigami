@@ -11,6 +11,11 @@
 #include "urltool.h"
 #include "networktool.h"
 #include "timetool.h"
+#include "mathtool.h"
+#include "idtool.h"
+#include "texttool.h"
+#include "crontool.h"
+#include "mimetool.h"
 #include "toolmanager.h"
 
 int main(int argc, char *argv[])
@@ -44,6 +49,11 @@ int main(int argc, char *argv[])
     qmlRegisterType<UrlTool>("ittools.kirigami", 1, 0, "UrlTool");
     qmlRegisterType<NetworkTool>("ittools.kirigami", 1, 0, "NetworkTool");
     qmlRegisterType<TimeTool>("ittools.kirigami", 1, 0, "TimeTool");
+    qmlRegisterType<MathTool>("ittools.kirigami", 1, 0, "MathTool");
+    qmlRegisterType<IdTool>("ittools.kirigami", 1, 0, "IdTool");
+    qmlRegisterType<TextTool>("ittools.kirigami", 1, 0, "TextTool");
+    qmlRegisterType<CronTool>("ittools.kirigami", 1, 0, "CronTool");
+    qmlRegisterType<MimeTool>("ittools.kirigami", 1, 0, "MimeTool");
 
     QQmlApplicationEngine engine;
     engine.addImageProvider(QLatin1String("qrcode"), new QrCodeProvider);

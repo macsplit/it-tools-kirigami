@@ -1,0 +1,32 @@
+{
+  "kind": "backend",
+  "tool": "ConversionTool",
+  "cases": [
+    {
+      "name": "hex to rgb and hsl",
+      "method": "colorFromHex",
+      "args": ["#1EA54C"],
+      "mapEquals": {
+        "hex": "#1EA54C",
+        "rgb": "rgb(30, 165, 76)",
+        "hsl": "hsl(140, 69%, 38%)"
+      }
+    },
+    {
+      "name": "rgb to hex",
+      "method": "colorFromRgb",
+      "args": ["rgb(30, 165, 76)"],
+      "mapEquals": {
+        "hex": "#1EA54C"
+      }
+    },
+    {
+      "name": "hsl to rgb",
+      "method": "colorFromHsl",
+      "args": ["hsl(140, 69%, 38%)"],
+      "mapEquals": {
+        "rgb": "rgb(30, 164, 75)"
+      }
+    }
+  ]
+}

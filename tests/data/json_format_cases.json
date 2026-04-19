@@ -1,0 +1,18 @@
+{
+  "kind": "backend",
+  "tool": "ConversionTool",
+  "cases": [
+    {
+      "name": "format nested json",
+      "method": "jsonFormat",
+      "args": ["{\"a\":1,\"b\":[2,3]}", 4],
+      "equals": "{\n    \"a\": 1,\n    \"b\": [\n        2,\n        3\n    ]\n}\n"
+    },
+    {
+      "name": "invalid json returns error",
+      "method": "jsonFormat",
+      "args": ["{ invalid", 4],
+      "equals": "Invalid JSON format"
+    }
+  ]
+}

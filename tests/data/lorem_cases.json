@@ -1,0 +1,12 @@
+{
+  "kind": "backend",
+  "tool": "TextTool",
+  "cases": [
+    {
+      "name": "lorem ipsum paragraph",
+      "method": "loremIpsum",
+      "args": [],
+      "contains": ["Lorem ipsum dolor sit amet"]
+    }
+  ]
+}

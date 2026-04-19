@@ -1,0 +1,18 @@
+{
+  "kind": "backend",
+  "tool": "BaseTool",
+  "cases": [
+    {
+      "name": "hex to decimal",
+      "method": "convert",
+      "args": ["2a", 16, 10],
+      "equals": "42"
+    },
+    {
+      "name": "decimal to binary",
+      "method": "convert",
+      "args": ["42", 10, 2],
+      "equals": "101010"
+    }
+  ]
+}

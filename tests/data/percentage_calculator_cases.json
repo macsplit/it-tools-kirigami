@@ -1,0 +1,18 @@
+{
+  "kind": "backend",
+  "tool": "MathTool",
+  "cases": [
+    {
+      "name": "15 percent of 240",
+      "method": "percentOf",
+      "args": ["15", "240"],
+      "equals": "36"
+    },
+    {
+      "name": "comma decimal input",
+      "method": "percentOf",
+      "args": ["12,5", "80"],
+      "equals": "10"
+    }
+  ]
+}

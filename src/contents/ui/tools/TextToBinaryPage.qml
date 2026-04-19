@@ -24,7 +24,7 @@ Kirigami.ScrollablePage {
             Layout.fillWidth: true
             Layout.preferredHeight: 100
             font.family: "monospace"
-            text: textToBinary(textInput.text)
+            text: textTool.textToBinary(textInput.text)
         }
 
         Label { text: "Binary to convert:"; font.bold: true }
@@ -40,31 +40,7 @@ Kirigami.ScrollablePage {
             readOnly: true
             Layout.fillWidth: true
             Layout.preferredHeight: 100
-            text: binaryToText(binaryInput.text)
-        }
-    }
-
-    function textToBinary(str) {
-        if (!str) return "";
-        var res = "";
-        for (var i = 0; i < str.length; i++) {
-            var bin = str.charCodeAt(i).toString(2);
-            res += "00000000".slice(bin.length) + bin + " ";
-        }
-        return res.trim();
-    }
-
-    function binaryToText(bin) {
-        if (!bin) return "";
-        try {
-            var bins = bin.trim().split(/\s+/);
-            var res = "";
-            for (var i = 0; i < bins.length; i++) {
-                res += String.fromCharCode(parseInt(bins[i], 2));
-            }
-            return res;
-        } catch (e) {
-            return "Invalid binary";
+            text: textTool.binaryToText(binaryInput.text)
         }
     }
 }

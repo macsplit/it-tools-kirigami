@@ -5,22 +5,6 @@ import org.kde.kirigami 2.19 as Kirigami
 
 Kirigami.Page {
     title: "Text to NATO Alphabet"
-    
-    property var natoAlphabet: [
-        "Alpha", "Bravo", "Charlie", "Delta", "Echo", "Foxtrot", "Golf", "Hotel", "India",
-        "Juliet", "Kilo", "Lima", "Mike", "November", "Oscar", "Papa", "Quebec", "Romeo",
-        "Sierra", "Tango", "Uniform", "Victor", "Whiskey", "X-ray", "Yankee", "Zulu"
-    ]
-    
-    function convertToNato(text) {
-        return text.split("").map(function(character) {
-            var code = character.toLowerCase().charCodeAt(0);
-            if (code >= 97 && code <= 122) { // a-z
-                return natoAlphabet[code - 97];
-            }
-            return character;
-        }).join(" ");
-    }
 
     ColumnLayout {
         anchors.fill: parent
@@ -32,7 +16,7 @@ Kirigami.Page {
             Layout.fillWidth: true
             Layout.fillHeight: true
             wrapMode: TextEdit.WrapAnywhere
-            onTextChanged: outputField.text = convertToNato(text)
+            onTextChanged: outputField.text = textTool.convertToNato(text)
         }
         
         OutputArea {

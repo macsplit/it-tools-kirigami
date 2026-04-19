@@ -22,6 +22,11 @@ Kirigami.ApplicationWindow {
     UrlTool { id: urlTool }
     NetworkTool { id: networkTool }
     TimeTool { id: timeTool }
+    MathTool { id: mathTool }
+    IdTool { id: idTool }
+    TextTool { id: textTool }
+    CronTool { id: cronTool }
+    MimeTool { id: mimeTool }
 
     ListModel {
         id: toolsModel

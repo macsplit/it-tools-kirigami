@@ -1,0 +1,12 @@
+{
+  "kind": "backend",
+  "tool": "UrlTool",
+  "cases": [
+    {
+      "name": "basic auth header",
+      "method": "basicAuthHeader",
+      "args": ["user", "pass"],
+      "equals": "Authorization: Basic dXNlcjpwYXNz"
+    }
+  ]
+}

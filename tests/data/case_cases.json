@@ -1,0 +1,24 @@
+{
+  "kind": "backend",
+  "tool": "TextTool",
+  "cases": [
+    {
+      "name": "camel case conversion",
+      "method": "convertCase",
+      "args": ["hello world-example", "camel"],
+      "equals": "helloWorldExample"
+    },
+    {
+      "name": "pascal case preserves punctuation boundaries",
+      "method": "convertCase",
+      "args": ["hello world! test", "pascal"],
+      "equals": "HelloWorld!Test"
+    },
+    {
+      "name": "snake case",
+      "method": "convertCase",
+      "args": ["HelloWorld Again", "snake"],
+      "equals": "hello_world_again"
+    }
+  ]
+}

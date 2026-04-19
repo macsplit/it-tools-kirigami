@@ -1,0 +1,30 @@
+{
+  "kind": "backend",
+  "tool": "ConversionTool",
+  "cases": [
+    {
+      "name": "celsius to kelvin",
+      "method": "temperatureToKelvin",
+      "args": ["celsius", "0"],
+      "equals": "273.15"
+    },
+    {
+      "name": "fahrenheit to kelvin",
+      "method": "temperatureToKelvin",
+      "args": ["fahrenheit", "32"],
+      "equals": "273.15"
+    },
+    {
+      "name": "kelvin to celsius",
+      "method": "temperatureFromKelvin",
+      "args": ["celsius", "273.15"],
+      "equals": "0.00"
+    },
+    {
+      "name": "below absolute zero clamps",
+      "method": "temperatureToKelvin",
+      "args": ["celsius", "-300"],
+      "equals": "0.00"
+    }
+  ]
+}

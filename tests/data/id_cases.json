@@ -1,0 +1,36 @@
+{
+  "kind": "backend",
+  "tool": "IdTool",
+  "cases": [
+    {
+      "name": "uuid format",
+      "method": "generateUuid",
+      "args": [],
+      "matches": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+    },
+    {
+      "name": "ulid format",
+      "method": "generateUlid",
+      "args": [],
+      "matches": "^[0123456789ABCDEFGHJKMNPQRSTVWXYZ]{26}$"
+    },
+    {
+      "name": "ulid batch json",
+      "method": "generateUlids",
+      "args": [2, "JSON"],
+      "contains": ["[", "]"]
+    },
+    {
+      "name": "wifi qr payload escapes special characters",
+      "method": "wifiQrPayload",
+      "args": ["Office;Guest", "pa:ss;word", "WPA"],
+      "equals": "WIFI:S:Office\\;Guest;T:WPA;P:pa\\:ss\\;word;;"
+    },
+    {
+      "name": "wifi qr payload no password mode",
+      "method": "wifiQrPayload",
+      "args": ["Open WiFi", "ignored", "None"],
+      "equals": "WIFI:S:Open WiFi;T:nopass;P:;;"
+    }
+  ]
+}

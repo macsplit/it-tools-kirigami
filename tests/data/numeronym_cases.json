@@ -1,0 +1,18 @@
+{
+  "kind": "backend",
+  "tool": "TextTool",
+  "cases": [
+    {
+      "name": "internationalization and localization",
+      "method": "numeronymizeText",
+      "args": ["internationalization localization"],
+      "equals": "i18n l10n"
+    },
+    {
+      "name": "preserve punctuation",
+      "method": "numeronymizeText",
+      "args": ["accessibility, localization!"],
+      "equals": "a11y, l10n!"
+    }
+  ]
+}

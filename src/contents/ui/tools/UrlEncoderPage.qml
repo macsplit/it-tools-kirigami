@@ -4,13 +4,6 @@ import QtQuick.Layouts 1.15
 import org.kde.kirigami 2.19 as Kirigami
 
 Kirigami.Page {
-    function showError(message) {
-        var window = applicationWindow();
-        if (window && window.showMessage) {
-            window.showMessage(message);
-        }
-    }
-
     title: "URL Encoder/Decoder"
     ColumnLayout {
         anchors.fill: parent
@@ -26,17 +19,11 @@ Kirigami.Page {
         RowLayout {
             Button {
                 text: "Encode"
-                onClicked: urlInput.text = encodeURIComponent(urlInput.text)
+                onClicked: urlInput.text = urlTool.encode(urlInput.text)
             }
             Button {
                 text: "Decode"
-                onClicked: {
-                    try {
-                        urlInput.text = decodeURIComponent(urlInput.text)
-                    } catch (e) {
-                        showError("Invalid URL encoding")
-                    }
-                }
+                onClicked: urlInput.text = urlTool.decode(urlInput.text)
             }
         }
     }

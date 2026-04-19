@@ -19,17 +19,11 @@ Kirigami.Page {
             Layout.alignment: Qt.AlignHCenter
             Button {
                 text: "Encode"
-                onClicked: outputField.text = Qt.btoa(inputField.text)
+                onClicked: outputField.text = urlTool.base64Encode(inputField.text)
             }
             Button {
                 text: "Decode"
-                onClicked: {
-                    try {
-                        outputField.text = Qt.atob(inputField.text)
-                    } catch (e) {
-                        outputField.text = "Error: Invalid Base64"
-                    }
-                }
+                onClicked: outputField.text = urlTool.base64Decode(inputField.text)
             }
         }
         OutputArea {

@@ -19,34 +19,11 @@ Kirigami.Page {
         RowLayout {
             Button {
                 text: "Encode"
-                onClicked: {
-                    var entities = {
-                        '&': '&amp;',
-                        '<': '&lt;',
-                        '>': '&gt;',
-                        '"': '&quot;',
-                        "'": '&#39;'
-                    };
-                    htmlInput.text = htmlInput.text.replace(/[&<>"']/g, function(m) {
-                        return entities[m];
-                    });
-                }
+                onClicked: htmlInput.text = textTool.htmlEntitiesEncode(htmlInput.text)
             }
             Button {
                 text: "Decode"
-                onClicked: {
-                    var entities = {
-                        '&amp;': '&',
-                        '&lt;': '<',
-                        '&gt;': '>',
-                        '&quot;': '"',
-                        '&#39;': "'",
-                        '&apos;': "'"
-                    };
-                    htmlInput.text = htmlInput.text.replace(/&amp;|&lt;|&gt;|&quot;|&#39;|&apos;/g, function(m) {
-                        return entities[m];
-                    });
-                }
+                onClicked: htmlInput.text = textTool.htmlEntitiesDecode(htmlInput.text)
             }
         }
     }

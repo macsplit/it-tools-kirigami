@@ -30,6 +30,11 @@ add_executable(tools
     src/urltool.h
     src/networktool.h
     src/timetool.h
+    src/mathtool.h
+    src/idtool.h
+    src/texttool.h
+    src/crontool.h
+    src/mimetool.h
     src/toolmanager.h
     src/qrcodegen.cpp
     src/resources.qrc
@@ -58,3 +63,47 @@ install(FILES ${APP_ID}.metainfo.xml DESTINATION ${KDE_INSTALL_METAINFODIR})
 
 # Install the application icon
 install(FILES src/icon.svg DESTINATION ${KDE_INSTALL_ICONDIR}/hicolor/scalable/apps RENAME ${APP_ID}.svg)
+
+include(CTest)
+
+if(BUILD_TESTING)
+    find_package(Qt5 5.15 REQUIRED COMPONENTS Test Qml)
+
+    add_executable(tools_tests
+        tests/tools_test.cpp
+        src/hashtool.h
+        src/basetool.h
+        src/conversiontool.h
+        src/qrcodetool.h
+        src/urltool.h
+        src/networktool.h
+        src/timetool.h
+        src/mathtool.h
+        src/idtool.h
+        src/texttool.h
+        src/crontool.h
+        src/mimetool.h
+        src/toolmanager.h
+        src/qrcodegen.cpp
+        src/resources.qrc
+    )
+
+    target_include_directories(tools_tests PRIVATE src)
+    target_compile_definitions(tools_tests PRIVATE TOOLS_TEST_SOURCE_DIR="${CMAKE_SOURCE_DIR}")
+
+    target_link_libraries(tools_tests
+        Qt5::Core
+        Qt5::Qml
+        Qt5::Quick
+        Qt5::QuickControls2
+        Qt5::Widgets
+        Qt5::Xml
+        Qt5::Test
+        KF5::Kirigami2
+        KF5::CoreAddons
+        crypt
+    )
+
+    add_test(NAME tools_tests COMMAND tools_tests)
+    set_tests_properties(tools_tests PROPERTIES ENVIRONMENT "QT_QPA_PLATFORM=offscreen")
+endif()

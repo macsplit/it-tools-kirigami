@@ -36,14 +36,20 @@ Kirigami.Page {
 
         Label {
             Layout.alignment: Qt.AlignHCenter
-            text: calculateOctal()
+            text: textTool.chmodOctal(
+                      ownerRead.checked, ownerWrite.checked, ownerExec.checked,
+                      groupRead.checked, groupWrite.checked, groupExec.checked,
+                      publicRead.checked, publicWrite.checked, publicExec.checked)
             font.pixelSize: 48
             font.family: "monospace"
         }
 
         Label {
             Layout.alignment: Qt.AlignHCenter
-            text: calculateSymbolic()
+            text: textTool.chmodSymbolic(
+                      ownerRead.checked, ownerWrite.checked, ownerExec.checked,
+                      groupRead.checked, groupWrite.checked, groupExec.checked,
+                      publicRead.checked, publicWrite.checked, publicExec.checked)
             font.pixelSize: 24
             font.family: "monospace"
         }
@@ -51,29 +57,11 @@ Kirigami.Page {
         OutputField {
             Layout.fillWidth: true
             readOnly: true
-            text: "chmod " + calculateOctal() + " path"
+            text: "chmod " + textTool.chmodOctal(
+                      ownerRead.checked, ownerWrite.checked, ownerExec.checked,
+                      groupRead.checked, groupWrite.checked, groupExec.checked,
+                      publicRead.checked, publicWrite.checked, publicExec.checked) + " path"
         }
         Item { Layout.fillHeight: true }
-    }
-
-    function calculateOctal() {
-        var o = (ownerRead.checked ? 4 : 0) + (ownerWrite.checked ? 2 : 0) + (ownerExec.checked ? 1 : 0);
-        var g = (groupRead.checked ? 4 : 0) + (groupWrite.checked ? 2 : 0) + (groupExec.checked ? 1 : 0);
-        var p = (publicRead.checked ? 4 : 0) + (publicWrite.checked ? 2 : 0) + (publicExec.checked ? 1 : 0);
-        return "" + o + g + p;
-    }
-
-    function calculateSymbolic() {
-        var s = "";
-        s += (ownerRead.checked ? "r" : "-");
-        s += (ownerWrite.checked ? "w" : "-");
-        s += (ownerExec.checked ? "x" : "-");
-        s += (groupRead.checked ? "r" : "-");
-        s += (groupWrite.checked ? "w" : "-");
-        s += (groupExec.checked ? "x" : "-");
-        s += (publicRead.checked ? "r" : "-");
-        s += (publicWrite.checked ? "w" : "-");
-        s += (publicExec.checked ? "x" : "-");
-        return s;
     }
 }

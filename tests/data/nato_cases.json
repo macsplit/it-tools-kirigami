@@ -1,0 +1,12 @@
+{
+  "kind": "backend",
+  "tool": "TextTool",
+  "cases": [
+    {
+      "name": "text to nato",
+      "method": "convertToNato",
+      "args": ["ab!"],
+      "equals": "Alpha Bravo !"
+    }
+  ]
+}

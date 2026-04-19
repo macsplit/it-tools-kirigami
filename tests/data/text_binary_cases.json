@@ -1,0 +1,24 @@
+{
+  "kind": "backend",
+  "tool": "TextTool",
+  "cases": [
+    {
+      "name": "text to binary",
+      "method": "textToBinary",
+      "args": ["Hi"],
+      "equals": "01001000 01101001"
+    },
+    {
+      "name": "binary to text",
+      "method": "binaryToText",
+      "args": ["01001000 01101001"],
+      "equals": "Hi"
+    },
+    {
+      "name": "invalid binary returns message",
+      "method": "binaryToText",
+      "args": ["10201000"],
+      "equals": "Invalid binary"
+    }
+  ]
+}

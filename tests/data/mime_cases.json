@@ -1,0 +1,12 @@
+{
+  "kind": "backend",
+  "tool": "MimeTool",
+  "cases": [
+    {
+      "name": "mime search by extension",
+      "method": "search",
+      "args": ["json"],
+      "contains": ["application/json"]
+    }
+  ]
+}

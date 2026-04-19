@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Tools for Linux</title>
-  <meta name="description" content="Tools is a Linux desktop app that groups 40 small developer and utility tools into one Qt and Kirigami application.">
+  <meta name="description" content="Tools is a Linux desktop app that groups 48 developer and IT utility tools into one Qt and Kirigami application.">
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -21,10 +21,11 @@
       <section class="hero-grid">
         <div class="hero-copy">
           <p class="eyebrow">Linux Desktop Utility Suite</p>
-          <h1>40 small tools in one Linux app.</h1>
+          <h1>48 local utility tools in one Linux app.</h1>
           <p class="lead">
             Tools groups common conversion, formatting, networking, text, and
-            reference utilities into a single Qt and Kirigami application.
+            reference utilities into a single Qt and Kirigami application for
+            developers and IT admins.
           </p>
           <div class="cta-row">
             <a class="button button-primary" href="docs.html">Read the docs</a>
@@ -36,8 +37,9 @@
             <li>License: GPL-3.0-or-later</li>
           </ul>
           <ul class="highlights">
-            <li>40 tools across 6 categories</li>
+            <li>48 tools across 6 categories</li>
             <li>Built with Qt and Kirigami</li>
+            <li>Runs locally with no network access</li>
             <li>Flatpak and source builds available</li>
           </ul>
         </div>
@@ -46,12 +48,12 @@
           <div class="panel-card">
             <p class="panel-title">Included categories</p>
             <ul class="panel-list">
-              <li>Crypto: 3 tools</li>
-              <li>Converter: 13 tools</li>
+              <li>Crypto: 4 tools</li>
+              <li>Converter: 15 tools</li>
               <li>Network: 5 tools</li>
               <li>Web: 6 tools</li>
-              <li>Development: 7 tools</li>
-              <li>Text: 6 tools</li>
+              <li>Development: 10 tools</li>
+              <li>Text: 8 tools</li>
             </ul>
           </div>
         </div>
@@ -68,28 +70,29 @@
           <article class="info-card">
             <h3>Crypto</h3>
             <p>
-              Token Generator, Hash Text, HMAC Generator.
+              Token generation, hashing, HMAC, and bcrypt password hashing.
             </p>
           </article>
           <article class="info-card">
             <h3>Converters</h3>
             <p>
-              Base64, integer bases, colors, JSON, YAML, XML, CSV, Markdown,
-              temperature, lists, binary, Roman numerals.
+              Base64, integer bases, colors, JSON and XML transforms, CSV,
+              Markdown, date and time, temperature, lists, binary, and Roman numerals.
             </p>
           </article>
           <article class="info-card">
             <h3>Network and web</h3>
             <p>
-              IPv4, subnetting, WiFi QR codes, MAC addresses, ports, URL tools,
-              HTML entities, JWT parsing, HTTP status codes.
+              IPv4 tools, WiFi QR payloads, MAC addresses, ports, URL helpers,
+              HTML entities, JWT parsing, and HTTP status reference data.
             </p>
           </article>
           <article class="info-card">
             <h3>Development and text</h3>
             <p>
-              MIME types, UUIDs, JSON/XML/SQL formatting, chmod, cron parsing,
-              case conversion, text statistics, slugify, NATO alphabet.
+              MIME types, UUIDs and ULIDs, JSON/XML/SQL formatting, chmod,
+              cron parsing, percentage math, case conversion, text statistics,
+              slugify, numeronyms, Unicode, and NATO alphabet.
             </p>
           </article>
         </div>
@@ -127,7 +130,7 @@ flatpak install pastetools app.pastetools.Tools</code></pre>
       <section class="section">
         <div class="section-heading">
           <p class="eyebrow">Screenshots</p>
-          <h2>Interface</h2>
+          <h2>Views</h2>
         </div>
         <div class="gallery-grid">
           <figure class="gallery-card">
@@ -158,6 +161,10 @@ flatpak install pastetools app.pastetools.Tools</code></pre>
           <article class="info-card">
             <h3>Framework</h3>
             <p>Qt and Kirigami.</p>
+          </article>
+          <article class="info-card">
+            <h3>Verification</h3>
+            <p>Automated tests cover backend logic and QML smoke loading.</p>
           </article>
           <article class="info-card">
             <h3>License</h3>

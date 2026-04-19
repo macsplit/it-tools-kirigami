@@ -7,72 +7,23 @@ Kirigami.ScrollablePage {
     id: root
     title: "Cron Expression Parser"
 
-    // --- State Variables ---
-    property var searchState: ({
-        "results": [],
-        "currentDate": new Date(),
-        "iterations": 0,
-        "parts": []
-    })
-
-    ListModel { id: nextOccurrencesModel }
-
-    // --- The Chunked Search Timer ---
-    // Instead of one big loop, we run 1000 iterations at a time.
-    Timer {
-        id: searchTimer
-        interval: 1
-        repeat: true
-        onTriggered: {
-            var state = root.searchState;
-            var chunkCount = 0;
-
-            while (state.results.length < 5 && state.iterations < 100000 && chunkCount < 1000) {
-                state.iterations++;
-                chunkCount++;
-                state.currentDate.setMinutes(state.currentDate.getMinutes() + 1);
-
-                if (matchesCron(state.currentDate, state.parts)) {
-                    var timeStr = state.currentDate.toLocaleString();
-                    state.results.push(timeStr);
-                    nextOccurrencesModel.append({"time": timeStr});
-                }
-            }
-
-            if (state.results.length >= 5 || state.iterations >= 100000) {
-                stop(); // Search finished or limit reached
-            }
-        }
-    }
-
     Timer {
         id: debounceTimer
         interval: 500
         repeat: false
         onTriggered: {
             var input = cronInput.text.trim();
-            var parts = input.split(/\s+/);
-
-            // Reset state
-            searchTimer.stop();
             nextOccurrencesModel.clear();
-            humanLabel.text = parseCron(input);
+            humanLabel.text = cronTool.describe(input);
 
-            if (parts.length >= 5) {
-                var start = new Date();
-                start.setSeconds(0);
-                start.setMilliseconds(0);
-
-                root.searchState = {
-                    "results": [],
-                    "currentDate": start,
-                    "iterations": 0,
-                    "parts": parts
-                };
-                searchTimer.start();
+            var occurrences = cronTool.nextOccurrences(input, 5);
+            for (var i = 0; i < occurrences.length; i++) {
+                nextOccurrencesModel.append({"time": occurrences[i]});
             }
         }
     }
+
+    ListModel { id: nextOccurrencesModel }
 
     ColumnLayout {
         anchors.fill: parent
@@ -101,7 +52,7 @@ Kirigami.ScrollablePage {
             wrapMode: Text.WordWrap
             font.pixelSize: 18
             color: Kirigami.Theme.highlightColor
-            text: parseCron(cronInput.text)
+            text: cronTool.describe(cronInput.text)
         }
 
         Label {
@@ -125,7 +76,7 @@ Kirigami.ScrollablePage {
             }
 
             Label {
-                text: searchTimer.running ? "Calculating..." : (nextOccurrencesModel.count === 0 ? "No results found" : "")
+                text: nextOccurrencesModel.count === 0 ? "No results found" : ""
                 visible: nextOccurrencesModel.count < 5
                 font.italic: true
                 opacity: 0.5
@@ -157,61 +108,6 @@ Kirigami.ScrollablePage {
         }
 
         Item { Layout.fillHeight: true }
-    }
-
-    // --- Logic Functions ---
-
-    function matchesCron(date, parts) {
-        return fieldMatches(date.getMinutes(), parts[0]) &&
-               fieldMatches(date.getHours(), parts[1]) &&
-               fieldMatches(date.getDate(), parts[2]) &&
-               fieldMatches(date.getMonth() + 1, parts[3]) &&
-               fieldMatches(date.getDay(), parts[4]);
-    }
-
-    function fieldMatches(val, pattern) {
-        if (pattern === "*" || pattern === "?") return true;
-        if (pattern.indexOf("/") !== -1) {
-            var p = pattern.split("/");
-            var start = p[0] === "*" ? 0 : parseInt(p[0]);
-            return (val >= start) && (val - start) % parseInt(p[1]) === 0;
-        }
-        if (pattern.indexOf("-") !== -1) {
-            var r = pattern.split("-");
-            return val >= parseInt(r[0]) && val <= parseInt(r[1]);
-        }
-        if (pattern.indexOf(",") !== -1) {
-            var list = pattern.split(",");
-            for (var i = 0; i < list.length; i++) {
-                if (parseInt(list[i]) === val) return true;
-            }
-            return false;
-        }
-        return parseInt(pattern) === val;
-    }
-
-    function parseCron(cron) {
-        var parts = cron.trim().split(/\s+/);
-        if (parts.length < 5) return "Invalid expression";
-        var min = parts[0], hour = parts[1], dom = parts[2], month = parts[3], dow = parts[4];
-        var desc = "At ";
-        if (min === "*" && hour === "*") desc = "Every minute ";
-        else if (min.indexOf("/") !== -1 && hour === "*") desc = "Every " + min.split("/")[1] + " minutes ";
-        else {
-            var hStr = (hour === "*" ? "every hour" : "hour " + hour);
-            var mStr = (min === "*" ? "00" : (min.length < 2 ? "0" + min : min));
-            desc += hStr + ":" + mStr + " ";
-        }
-        if (dom !== "*" || month !== "*" || dow !== "*") {
-            desc += "on ";
-            if (dom !== "*" && dom !== "?") desc += "day " + dom + " ";
-            if (month !== "*" && month !== "?") desc += "of month " + month + " ";
-            if (dow !== "*" && dow !== "?") {
-                var days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
-                desc += "on " + (days[parseInt(dow)] || dow);
-            }
-        } else { desc += "every day"; }
-        return desc;
     }
 
     Component.onCompleted: debounceTimer.restart()

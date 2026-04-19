@@ -1,0 +1,18 @@
+{
+  "kind": "backend",
+  "tool": "ConversionTool",
+  "cases": [
+    {
+      "name": "minify nested json",
+      "method": "jsonMinify",
+      "args": ["{\n  \"a\": 1,\n  \"b\": [2, 3]\n}"],
+      "equals": "{\"a\":1,\"b\":[2,3]}"
+    },
+    {
+      "name": "invalid json returns error",
+      "method": "jsonMinify",
+      "args": ["{ invalid"],
+      "equals": "Invalid JSON format"
+    }
+  ]
+}

@@ -20,11 +20,7 @@ Kirigami.Page {
         OutputField {
             readOnly: true
             Layout.fillWidth: true
-            text: slugInput.text.toLowerCase()
-                            .trim()
-                            .replace(/[^\w\s-]/g, '')
-                            .replace(/[\s_-]+/g, '-')
-                            .replace(/^-+|-+$/g, '')
+            text: textTool.slugify(slugInput.text)
         }
         Item { Layout.fillHeight: true }
     }

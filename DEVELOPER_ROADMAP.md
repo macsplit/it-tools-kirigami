@@ -14,11 +14,15 @@ The application is currently in a stable and minimally viable state. The core ar
 
 *   Base64 Encoder/Decoder
 *   Base Converter
+*   Basic Auth Generator
+*   Bcrypt Password Hash
 *   Case Converter
 *   Chmod Calculator
 *   Color Converter
 *   Cron Job Editor
 *   CSV to JSON Converter
+*   Epoch Converter
+*   Date/Time Converter
 *   Hash Calculator
 *   HMAC Generator
 *   HTML Entities Encoder/Decoder
@@ -26,6 +30,7 @@ The application is currently in a stable and minimally viable state. The core ar
 *   IPv4 Converter
 *   IPv4 Subnet Calculator
 *   JSON Formatter
+*   JSON Minify
 *   JSON to CSV Converter
 *   JSON to XML Converter
 *   JSON to YAML Converter
@@ -33,15 +38,22 @@ The application is currently in a stable and minimally viable state. The core ar
 *   List Converter
 *   Lorem Ipsum Generator
 *   MAC Address Generator
+*   MIME Types
 *   Markdown Preview
+*   Numeronym Generator
+*   Percentage Calculator
 *   Port Generator
+*   Roman Numeral Converter
 *   Slugify
 *   SQL Formatter
 *   String Obfuscator
 *   Temperature Converter
 *   Text Statistics
 *   Text to Binary Converter
+*   Text to NATO Alphabet
+*   Text to Unicode
 *   Token Generator
+*   ULID Generator
 *   URL Encoder/Decoder
 *   URL Parser
 *   UUID Generator
@@ -60,12 +72,12 @@ This list is based on an audit of the popular `it-tools` web application, and in
 *   [ ] ASCII Text Drawer
 *   [ ] Base64 File Converter
 *   [x] Basic Auth Generator
-*   [ ] Bcrypt
+*   [x] Bcrypt
 *   [ ] Benchmark Builder
 *   [ ] BIP39 Generator
 *   [ ] Camera Recorder
 *   [ ] Chronometer
-*   [ ] Date/Time Converter
+*   [x] Date/Time Converter
 *   [ ] Device Information
 *   [ ] Docker Run to Docker Compose Converter
 *   [ ] Email Normalizer
@@ -78,20 +90,20 @@ This list is based on an audit of the popular `it-tools` web application, and in
 *   [ ] IPv4 Range Expander
 *   [ ] IPv6 ULA Generator
 *   [ ] JSON Diff
-*   [ ] JSON Minify
+*   [x] JSON Minify
 *   [ ] JSON to TOML
 *   [ ] JSON Viewer
 *   [ ] Keycode Info
 *   [ ] MAC Address Lookup
-*   [ ] Markdown to HTML
+*   [x] Markdown to HTML
 *   [ ] Math Evaluator
 *   [ ] Meta Tag Generator
 *   [x] MIME Types
-*   [ ] Numeronym Generator
+*   [x] Numeronym Generator
 *   [ ] OTP Code Generator and Validator
 *   [ ] Password Strength Analyzer
 *   [ ] PDF Signature Checker
-*   [ ] Percentage Calculator
+*   [x] Percentage Calculator
 *   [ ] Phone Parser and Formatter
 *   [ ] Regex Memo
 *   [ ] Regex Tester
@@ -101,10 +113,10 @@ This list is based on an audit of the popular `it-tools` web application, and in
 *   [ ] SVG Placeholder Generator
 *   [ ] Text Diff
 *   [x] Text to NATO Alphabet
-*   [ ] Text to Unicode
+*   [x] Text to Unicode
 *   [ ] TOML to JSON
 *   [ ] TOML to YAML
-*   [ ] ULID Generator
+*   [x] ULID Generator
 *   [ ] User Agent Parser
 *   [ ] YAML to JSON Converter
 *   [ ] YAML to TOML
@@ -140,23 +152,6 @@ These are planned enhancements to the core application.
 *   Create a JSON or XML file that stores the metadata for each tool. This file would include the tool's name, a description, and a list of keywords.
 *   The search functionality would then parse this file and use it to provide more relevant search results.
 
-#### Workflow/Pipeline System
-
-A major enhancement would be to implement a system that allows the output of one tool to be easily used as the input for another. This would reduce the need for manual copy and paste, and would allow for the creation of powerful toolchains.
-
-##### User Experience (UX)
-
-*   **Auto-suggestions:** At the bottom of each tool's output area, a section could appear with suggestions for the next tool to use. For example, after encoding a string to Base64, a suggestion could appear to use the output in the URL Encoder.
-*   **"Send to..." menu:** A "Send to..." button or context menu could be added to the output area, which would allow the user to select the next tool to use from a list.
-*   **Drag and Drop:** Allow the output of a tool to be dragged and dropped onto another tool in the list to use it as input.
-*   **Pipeline Builder UI:** For more advanced users, a visual pipeline builder could be implemented, where users can drag and drop tools to create a processing chain.
-
-##### Technical Challenges
-
-*   **Data Format Compatibility:** Not all tools will have compatible input and output formats. The system will need to be able to handle this, either by disabling incompatible suggestions or by automatically converting the data between formats.
-*   **State Management:** The state of each tool in the pipeline will need to be managed, so that the user can go back and modify the settings of a previous tool and have the changes propagate through the pipeline.
-*   **UI Complexity:** The UI for the pipeline system needs to be powerful enough to be useful, but simple enough to not be overwhelming for new users. A progressive disclosure approach could be used, where the more advanced features are hidden by default.
-
 ## Technical Guidelines & Future-Proofing
 
 To ensure "Tools" remains compatible with sandboxed environments (like Flatpak) and maintains its high performance and security, developers should adhere to the following guidelines:
@@ -179,4 +174,4 @@ To ensure "Tools" remains compatible with sandboxed environments (like Flatpak) 
 
 ## Conclusion
 
-This roadmap provides a high-level overview of the future development of **Tools**. The focus is on adding more useful tools, improving the user experience, and adding powerful new features like the workflow/pipeline system.
+This roadmap provides a high-level overview of the future development of **Tools**. The focus is on adding more useful tools, keeping the application stable, and improving the day-to-day user experience in concrete, incremental steps.

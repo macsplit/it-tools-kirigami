@@ -1,0 +1,12 @@
+{
+  "kind": "backend",
+  "tool": "TextTool",
+  "cases": [
+    {
+      "name": "text to unicode entities",
+      "method": "textToUnicode",
+      "args": ["Hi"],
+      "equals": "&#72;&#105;"
+    }
+  ]
+}

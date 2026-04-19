@@ -18,10 +18,7 @@ Kirigami.Page {
         }
         Button {
             text: "Generate"
-            onClicked: {
-                // 1024 - 65535
-                portOutput.text = Math.floor(Math.random() * (65535 - 1024 + 1) + 1024).toString();
-            }
+            onClicked: portOutput.text = idTool.generatePort()
             Layout.alignment: Qt.AlignLeft
         }
         Item { Layout.fillHeight: true }

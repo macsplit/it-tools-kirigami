@@ -19,11 +19,14 @@
         <file>contents/ui/tools/MimeTypesPage.qml</file>
         <file>contents/ui/tools/RomanNumeralPage.qml</file>
         <file>contents/ui/tools/NatoAlphabetPage.qml</file>
+        <file>contents/ui/tools/NumeronymPage.qml</file>
         <file>contents/ui/tools/UuidPage.qml</file>
+        <file>contents/ui/tools/UlidPage.qml</file>
         <file>contents/ui/tools/BasicAuthPage.qml</file>
         <file>contents/ui/tools/Base64Page.qml</file>
         <file>contents/ui/tools/CaseConverterPage.qml</file>
         <file>contents/ui/tools/JsonFormatterPage.qml</file>
+        <file>contents/ui/tools/JsonMinifyPage.qml</file>
         <file>contents/ui/tools/TokenGeneratorPage.qml</file>
         <file>contents/ui/tools/LoremIpsumPage.qml</file>
         <file>contents/ui/tools/UrlEncoderPage.qml</file>
@@ -40,14 +43,17 @@
         <file>contents/ui/tools/WifiPage.qml</file>
         <file>contents/ui/tools/JsonYamlPage.qml</file>
         <file>contents/ui/tools/CronPage.qml</file>
+        <file>contents/ui/tools/DateTimeConverterPage.qml</file>
         <file>contents/ui/tools/UrlParserPage.qml</file>
         <file>contents/ui/tools/XmlFormatterPage.qml</file>
         <file>contents/ui/tools/StringObfuscatorPage.qml</file>
         <file>contents/ui/tools/XmlToJsonPage.qml</file>
         <file>contents/ui/tools/TextToBinaryPage.qml</file>
+        <file>contents/ui/tools/TextToUnicodePage.qml</file>
         <file>contents/ui/tools/JsonToXmlPage.qml</file>
         <file>contents/ui/tools/JsonToCsvPage.qml</file>
         <file>contents/ui/tools/TemperatureConverterPage.qml</file>
+        <file>contents/ui/tools/PercentageCalculatorPage.qml</file>
         <file>contents/ui/tools/ListConverterPage.qml</file>
         <file>contents/ui/tools/SqlPrettifyPage.qml</file>
         <file>contents/ui/tools/Ipv4ConverterPage.qml</file>

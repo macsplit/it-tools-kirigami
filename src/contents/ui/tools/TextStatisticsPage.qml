@@ -18,15 +18,15 @@ Kirigami.Page {
             Layout.fillWidth: true
             spacing: Kirigami.Units.smallSpacing
             Label {
-                text: "Characters: " + statsInput.text.length
+                text: "Characters: " + textTool.textStatistics(statsInput.text).characters
                 font.bold: true
             }
             Label {
-                text: "Words: " + statsInput.text.trim().split(/\s+/).filter(function(w) { return w !== ""; }).length
+                text: "Words: " + textTool.textStatistics(statsInput.text).words
                 font.bold: true
             }
             Label {
-                text: "Lines: " + statsInput.text.split(/\r\n|\r|\n/).length
+                text: "Lines: " + textTool.textStatistics(statsInput.text).lines
                 font.bold: true
             }
         }

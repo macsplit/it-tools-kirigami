@@ -1,6 +1,6 @@
 # Tools
 
-A Kirigami-based developer utility suite, providing a set of handy tools, inspired by [IT-Tools](https://github.com/CorentinTh/it-tools).
+A Kirigami-based Linux utility app for developer and IT support tasks.
 
 Official website: https://pastetools.app
 
@@ -34,12 +34,12 @@ To build and publish the Flatpak locally:
 
 ## Tools Included
 
-- **Crypto**: Token Generator, Hash Text, HMAC Generator
-- **Converter**: Base64, Integer Base, Color, JSON to YAML/XML/CSV, XML to JSON, CSV to JSON, Text to Binary, Temperature, List, Markdown to HTML
-- **Network**: IPv4 Converter, IPv4 Subnet Calculator, WiFi QR Code, MAC Address Generator, Random Port Generator
-- **Web**: URL Encoder/Decoder, HTML Entities, JWT Parser, URL Parser, HTTP Status Codes
-- **Development**: UUID Generator, JSON Formatter, XML Formatter, SQL Prettify, Chmod Calculator, Cron Expression Parser
-- **Text**: Case Converter, Lorem Ipsum, Text Statistics, Slugify String, String Obfuscator
+- **Crypto**: Token Generator, Hash Text, HMAC Generator, Bcrypt Password Hash
+- **Converter**: Base64 Converter, Integer Base Converter, Color Converter, JSON to YAML, JSON to XML, JSON to CSV, XML to JSON, CSV to JSON, Text to Binary, Epoch Converter, Date/Time Converter, Roman Numeral Converter, Temperature Converter, List Converter, Markdown to HTML
+- **Network**: IPv4 Converter, IPv4 Subnet Calculator, WiFi QR Code Generator, MAC Address Generator, Random Port Generator
+- **Web**: Basic Auth Generator, URL Encoder/Decoder, HTML Entities, JWT Parser, URL Parser, HTTP Status Codes
+- **Development**: MIME Types, UUID Generator, ULID Generator, JSON Formatter, JSON Minify, XML Formatter, SQL Prettify, Chmod Calculator, Cron Expression Parser, Percentage Calculator
+- **Text**: Case Converter, Text to NATO Alphabet, Numeronym Generator, Text to Unicode, Lorem Ipsum, Text Statistics, Slugify String, String Obfuscator
 
 ## Building and Running
 
@@ -56,13 +56,27 @@ To build and publish the Flatpak locally:
 mkdir build
 cd build
 cmake ..
-make
+cmake --build .
 ./app.pastetools.Tools
+```
+
+## Testing
+
+The project includes automated backend and QML smoke tests.
+
+```bash
+cmake --build build --target tools_tests
+./bin/tools_tests
+ctest --output-on-failure
 ```
 
 ## Contributing
 
-We welcome contributions! See [CONTRIBUTING.md](CONTRIBUTING.md) for details on how to add new tools.
+See [CONTRIBUTING.md](CONTRIBUTING.md) for the tool architecture, testing expectations, and contribution workflow.
+
+## Third-Party Code
+
+Bundled third-party components and their acknowledgements are listed in [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).
 
 ## License
 

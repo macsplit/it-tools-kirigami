@@ -1,0 +1,12 @@
+{
+  "kind": "backend",
+  "tool": "TextTool",
+  "cases": [
+    {
+      "name": "slugify text",
+      "method": "slugify",
+      "args": [" Hello, World! "],
+      "equals": "hello-world"
+    }
+  ]
+}

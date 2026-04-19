@@ -1,0 +1,18 @@
+{
+  "kind": "backend",
+  "tool": "TextTool",
+  "cases": [
+    {
+      "name": "chmod octal",
+      "method": "chmodOctal",
+      "args": [true, true, true, true, false, true, true, false, false],
+      "equals": "754"
+    },
+    {
+      "name": "chmod symbolic",
+      "method": "chmodSymbolic",
+      "args": [true, true, true, true, false, true, true, false, false],
+      "equals": "rwxr-xr--"
+    }
+  ]
+}

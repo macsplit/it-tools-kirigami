@@ -32,7 +32,7 @@ Kirigami.Page {
         
         OutputArea {
             id: outputField
-            text: "Authorization: Basic " + Qt.btoa(usernameField.text + ":" + passwordField.text)
+            text: urlTool.basicAuthHeader(usernameField.text, passwordField.text)
             readOnly: true
             Layout.fillWidth: true
             wrapMode: TextEdit.WrapAnywhere

@@ -1,0 +1,12 @@
+{
+  "kind": "backend",
+  "tool": "TextTool",
+  "cases": [
+    {
+      "name": "obfuscate with spaces preserved",
+      "method": "obfuscate",
+      "args": ["Lorem ipsum dolor", 2, 2, true],
+      "equals": "Lo*** ***** ***or"
+    }
+  ]
+}

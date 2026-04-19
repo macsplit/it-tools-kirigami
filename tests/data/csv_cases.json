@@ -1,0 +1,18 @@
+{
+  "kind": "backend",
+  "tool": "ConversionTool",
+  "cases": [
+    {
+      "name": "simple csv to json",
+      "method": "csvToJson",
+      "args": ["id,name\n1,Alice\n2,Bob"],
+      "contains": ["\"id\": \"1\"", "\"name\": \"Bob\""]
+    },
+    {
+      "name": "quoted csv value",
+      "method": "csvToJson",
+      "args": ["name,quote\nAlice,\"hello, world\""],
+      "contains": ["\"quote\": \"hello, world\""]
+    }
+  ]
+}

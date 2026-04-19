@@ -41,22 +41,7 @@ Kirigami.ScrollablePage {
             Layout.fillWidth: true
             Layout.preferredHeight: 100
             font.family: "monospace"
-            text: obfuscate(obfuscateInput.text, keepFirst.value, keepLast.value, keepSpace.checked)
+            text: textTool.obfuscate(obfuscateInput.text, keepFirst.value, keepLast.value, keepSpace.checked)
         }
-    }
-
-    function obfuscate(str, first, last, spaces) {
-        if (!str) return "";
-        var res = "";
-        for (var i = 0; i < str.length; i++) {
-            if (i < first || i >= str.length - last) {
-                res += str[i];
-            } else if (spaces && str[i] === ' ') {
-                res += ' ';
-            } else {
-                res += '*';
-            }
-        }
-        return res;
     }
 }

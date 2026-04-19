@@ -5,6 +5,7 @@ import org.kde.kirigami 2.19 as Kirigami
 
 Kirigami.ScrollablePage {
     title: "WiFi QR Code Generator"
+
     ColumnLayout {
         width: parent.width
         spacing: Kirigami.Units.largeSpacing
@@ -32,7 +33,7 @@ Kirigami.ScrollablePage {
             Image {
                 anchors.fill: parent
                 anchors.margins: 10
-                source: "image://qrcode/" + encodeURIComponent("WIFI:S:" + ssidInput.text + ";T:" + (encryptionType.currentText === "None" ? "nopass" : encryptionType.currentText) + ";P:" + passwordInput.text + ";;")
+                source: idTool.wifiQrImageSource(ssidInput.text, passwordInput.text, encryptionType.currentText)
                 cache: false
             }
         }
@@ -41,7 +42,7 @@ Kirigami.ScrollablePage {
         OutputField {
             readOnly: true
             Layout.fillWidth: true
-            text: "WIFI:S:" + ssidInput.text + ";T:" + (encryptionType.currentText === "None" ? "nopass" : encryptionType.currentText) + ";P:" + passwordInput.text + ";;"
+            text: idTool.wifiQrPayload(ssidInput.text, passwordInput.text, encryptionType.currentText)
         }
     }
 }

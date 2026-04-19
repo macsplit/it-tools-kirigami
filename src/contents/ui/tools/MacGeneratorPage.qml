@@ -18,15 +18,7 @@ Kirigami.Page {
         }
         Button {
             text: "Generate"
-            onClicked: {
-                var mac = "";
-                for (var i = 0; i < 6; i++) {
-                    var val = Math.floor(Math.random() * 256);
-                    var hex = ("0" + val.toString(16)).slice(-2);
-                    mac += hex + (i < 5 ? ":" : "");
-                }
-                macOutput.text = mac.toUpperCase();
-            }
+            onClicked: macOutput.text = idTool.generateMacAddress()
             Layout.alignment: Qt.AlignLeft
         }
         Item { Layout.fillHeight: true }

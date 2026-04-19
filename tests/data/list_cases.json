@@ -1,0 +1,12 @@
+{
+  "kind": "backend",
+  "tool": "TextTool",
+  "cases": [
+    {
+      "name": "list transform trims dedupes and joins",
+      "method": "transformList",
+      "args": [" A \nB\nA\n", true, true, true, false, ", ", "\"", "\"", "[", "]"],
+      "equals": "[\"a\", \"b\"]"
+    }
+  ]
+}

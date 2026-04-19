@@ -27,30 +27,7 @@ Kirigami.ScrollablePage {
             Layout.fillWidth: true
             Layout.preferredHeight: 200
             font.family: "monospace"
-            text: csvToJson(csvInput.text)
-        }
-    }
-
-    function csvToJson(csv) {
-        if (!csv) return "";
-        try {
-            var lines = csv.trim().split(/\r\n|\r|\n/);
-            if (lines.length < 2) return "[]";
-            
-            var headers = lines[0].split(",");
-            var results = [];
-            
-            for (var i = 1; i < lines.length; i++) {
-                var obj = {};
-                var currentline = lines[i].split(",");
-                for (var j = 0; j < headers.length; j++) {
-                    obj[headers[j].trim()] = currentline[j] ? currentline[j].trim() : "";
-                }
-                results.push(obj);
-            }
-            return JSON.stringify(results, null, 4);
-        } catch (e) {
-            return "Error parsing CSV";
+            text: conversionTool.csvToJson(csvInput.text)
         }
     }
 }

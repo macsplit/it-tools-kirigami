@@ -34,7 +34,7 @@ Kirigami.Page {
                 readOnly: true
                 font.family: "monospace"
                 wrapMode: TextEdit.NoWrap
-                text: parseJwt(jwtInput.text, 0)
+                text: urlTool.parseJwtPart(jwtInput.text, 0)
             }
         }
         ScrollView {
@@ -50,22 +50,8 @@ Kirigami.Page {
                 readOnly: true
                 font.family: "monospace"
                 wrapMode: TextEdit.NoWrap
-                text: parseJwt(jwtInput.text, 1)
+                text: urlTool.parseJwtPart(jwtInput.text, 1)
             }
-        }
-    }
-
-    function parseJwt(token, part) {
-        try {
-            var parts = token.split('.');
-            if (parts.length < 2) return "";
-            var base64Url = parts[part];
-            var base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-            while (base64.length % 4) base64 += '=';
-            var jsonPayload = Qt.atob(base64);
-            return JSON.stringify(JSON.parse(jsonPayload), null, 4);
-        } catch (e) {
-            return "";
         }
     }
 }

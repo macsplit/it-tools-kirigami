@@ -1,0 +1,24 @@
+{
+  "kind": "backend",
+  "tool": "TextTool",
+  "cases": [
+    {
+      "name": "arabic to roman",
+      "method": "arabicToRoman",
+      "args": ["2024"],
+      "equals": "MMXXIV"
+    },
+    {
+      "name": "roman to arabic",
+      "method": "romanToArabic",
+      "args": ["MMXXIV"],
+      "equals": "2024"
+    },
+    {
+      "name": "invalid roman rejected",
+      "method": "romanToArabic",
+      "args": ["IIII"],
+      "equals": ""
+    }
+  ]
+}

@@ -1,0 +1,18 @@
+{
+  "kind": "backend",
+  "tool": "UrlTool",
+  "cases": [
+    {
+      "name": "parse jwt header",
+      "method": "parseJwtPart",
+      "args": ["eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxMjMifQ.sig", 0],
+      "contains": ["\"alg\": \"HS256\""]
+    },
+    {
+      "name": "parse jwt payload",
+      "method": "parseJwtPart",
+      "args": ["eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxMjMifQ.sig", 1],
+      "contains": ["\"sub\": \"123\""]
+    }
+  ]
+}

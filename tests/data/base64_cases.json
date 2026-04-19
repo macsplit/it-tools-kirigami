@@ -1,0 +1,18 @@
+{
+  "kind": "backend",
+  "tool": "UrlTool",
+  "cases": [
+    {
+      "name": "base64 encode",
+      "method": "base64Encode",
+      "args": ["hello"],
+      "equals": "aGVsbG8="
+    },
+    {
+      "name": "base64 decode",
+      "method": "base64Decode",
+      "args": ["aGVsbG8="],
+      "equals": "hello"
+    }
+  ]
+}
