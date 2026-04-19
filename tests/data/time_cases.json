@@ -93,6 +93,16 @@
       ]
     },
     {
+      "name": "parse iso 8601 with t separator",
+      "method": "parseNaturalDateWithReference",
+      "args": ["2026-04-19T18:05", "UTC", "2026-04-19T09:30:00Z"],
+      "contains": [
+        "ISO 8601: 2026-04-19T18:05:00.000+00:00",
+        "Unix seconds: 1776621900",
+        "Timezone: UTC"
+      ]
+    },
+    {
       "name": "parse time only in target timezone",
       "method": "parseNaturalDateWithReference",
       "args": ["10pm", "Europe/London", "2026-04-19T09:30:00Z"],

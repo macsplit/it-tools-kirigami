@@ -468,11 +468,17 @@ private:
     static QDateTime parseNaturalDateTime(const QString &input,
                                           const QTimeZone &zone,
                                           const QDateTime &reference) {
+        const QString trimmed = input.trimmed();
+        const QDateTime isoDateTime = parseDateTimeInput(trimmed, QStringLiteral("ISO 8601"), zone);
+        if (isoDateTime.isValid()) {
+            return isoDateTime;
+        }
+
         // Keep natural-date parsing deterministic and grammar-based.
         // Support only forms with one clear meaning and explicit timezone semantics.
         // If a phrase needs broad heuristics or has multiple plausible readings,
         // leave it unsupported rather than guessing.
-        const QString text = normalizeNaturalDateInput(input);
+        const QString text = normalizeNaturalDateInput(trimmed);
         if (text.isEmpty()) {
             return QDateTime();
         }
