@@ -28,8 +28,7 @@ flatpak install pastetools app.pastetools.Tools
 To build and publish the Flatpak locally:
 
 ```bash
-./scripts/release-flatpak.sh
-./scripts/publish-web.sh
+./scripts/deploy-web.sh
 ```
 
 ## Tools Included
