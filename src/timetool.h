@@ -6,7 +6,7 @@
 #include <QStringList>
 #include <QDateTime>
 #include <QTimeZone>
-#include <QVariantMap>
+#include <QLocale>
 #include <QtGlobal>
 #include <QRegularExpression>
 
@@ -36,6 +36,36 @@ public:
 
         QDateTime zoned = utcDateTime.toTimeZone(zone);
         return describeDateTime(zoned);
+    }
+
+    Q_INVOKABLE QString parseNaturalDate(const QString &input, const QString &timeZoneId) const {
+        const QTimeZone zone = resolveTimeZone(timeZoneId);
+        if (!zone.isValid()) {
+            return QStringLiteral("Invalid timezone");
+        }
+
+        const QDateTime reference = QDateTime::currentDateTimeUtc().toTimeZone(zone);
+        return parseNaturalDateInternal(input, zone, reference);
+    }
+
+    Q_INVOKABLE QString parseNaturalDateWithReference(const QString &input,
+                                                      const QString &timeZoneId,
+                                                      const QString &referenceIso) const {
+        const QTimeZone zone = resolveTimeZone(timeZoneId);
+        if (!zone.isValid()) {
+            return QStringLiteral("Invalid timezone");
+        }
+
+        QDateTime reference = QDateTime::fromString(referenceIso.trimmed(), Qt::ISODateWithMs);
+        if (!reference.isValid()) {
+            reference = QDateTime::fromString(referenceIso.trimmed(), Qt::ISODate);
+        }
+
+        if (!reference.isValid()) {
+            return QStringLiteral("Invalid reference date/time");
+        }
+
+        return parseNaturalDateInternal(input, zone, reference.toTimeZone(zone));
     }
 
     Q_INVOKABLE QVariantMap buildParseContext(const QString &timeZoneId) const {
@@ -117,6 +147,11 @@ public:
     }
 
 private:
+    struct ParsedTime {
+        QTime value;
+        bool isValid = false;
+    };
+
     static QTimeZone resolveTimeZone(const QString &input) {
         QString trimmed = input.trimmed();
         if (trimmed.isEmpty() || trimmed.compare(QStringLiteral("local"), Qt::CaseInsensitive) == 0) {
@@ -144,6 +179,262 @@ private:
         }
 
         return QString::fromUtf8(zone.id());
+    }
+
+    static QString normalizeNaturalDateInput(const QString &input) {
+        QString text = input.trimmed().toLower();
+        text.replace(QRegularExpression(QStringLiteral("\\b(\\d{1,2})(st|nd|rd|th)\\b")), QStringLiteral("\\1"));
+        text.replace(QLatin1Char(','), QLatin1Char(' '));
+        text.replace(QRegularExpression(QStringLiteral("\\b(on|at)\\b")), QStringLiteral(" "));
+        text.replace(QRegularExpression(QStringLiteral("\\s+")), QStringLiteral(" "));
+        return text.trimmed();
+    }
+
+    static ParsedTime parseTimeToken(const QString &input) {
+        const QString text = input.trimmed();
+        if (text.isEmpty()) {
+            return ParsedTime();
+        }
+
+        if (text == QStringLiteral("noon")) {
+            return ParsedTime{QTime(12, 0), true};
+        }
+
+        if (text == QStringLiteral("midnight")) {
+            return ParsedTime{QTime(0, 0), true};
+        }
+
+        static const QRegularExpression amPmPattern(
+            QStringLiteral("^(\\d{1,2})(?::(\\d{2}))?(?::(\\d{2}))?\\s*(am|pm)$")
+        );
+        const QRegularExpressionMatch amPmMatch = amPmPattern.match(text);
+        if (amPmMatch.hasMatch()) {
+            int hour = amPmMatch.captured(1).toInt();
+            const int minute = amPmMatch.captured(2).isEmpty() ? 0 : amPmMatch.captured(2).toInt();
+            const int second = amPmMatch.captured(3).isEmpty() ? 0 : amPmMatch.captured(3).toInt();
+            const QString meridiem = amPmMatch.captured(4);
+
+            if (hour < 1 || hour > 12 || minute > 59 || second > 59) {
+                return ParsedTime();
+            }
+
+            if (hour == 12) {
+                hour = 0;
+            }
+            if (meridiem == QStringLiteral("pm")) {
+                hour += 12;
+            }
+
+            const QTime time(hour, minute, second);
+            return ParsedTime{time, time.isValid()};
+        }
+
+        static const QRegularExpression twentyFourHourPattern(
+            QStringLiteral("^(\\d{1,2}):(\\d{2})(?::(\\d{2}))?$")
+        );
+        const QRegularExpressionMatch twentyFourHourMatch = twentyFourHourPattern.match(text);
+        if (twentyFourHourMatch.hasMatch()) {
+            const int hour = twentyFourHourMatch.captured(1).toInt();
+            const int minute = twentyFourHourMatch.captured(2).toInt();
+            const int second = twentyFourHourMatch.captured(3).isEmpty() ? 0 : twentyFourHourMatch.captured(3).toInt();
+            const QTime time(hour, minute, second);
+            return ParsedTime{time, time.isValid()};
+        }
+
+        return ParsedTime();
+    }
+
+    static QDate parseExplicitDate(const QString &input) {
+        const QString text = input.trimmed();
+        const QDate isoDate = QDate::fromString(text, QStringLiteral("yyyy-MM-dd"));
+        if (isoDate.isValid()) {
+            return isoDate;
+        }
+
+        const QLocale english(QLocale::English);
+        const QStringList formats = {
+            QStringLiteral("d MMM yyyy"),
+            QStringLiteral("d MMMM yyyy"),
+            QStringLiteral("MMM d yyyy"),
+            QStringLiteral("MMMM d yyyy")
+        };
+
+        for (const QString &format : formats) {
+            const QDate date = english.toDate(text, format);
+            if (date.isValid()) {
+                return date;
+            }
+        }
+
+        return QDate();
+    }
+
+    static QDate parseRelativeDate(const QString &input, const QDate &referenceDate) {
+        const QString text = input.trimmed();
+        if (text == QStringLiteral("today")) {
+            return referenceDate;
+        }
+        if (text == QStringLiteral("tomorrow")) {
+            return referenceDate.addDays(1);
+        }
+        if (text == QStringLiteral("yesterday")) {
+            return referenceDate.addDays(-1);
+        }
+
+        static const QStringList weekdays = {
+            QString(),
+            QStringLiteral("monday"),
+            QStringLiteral("tuesday"),
+            QStringLiteral("wednesday"),
+            QStringLiteral("thursday"),
+            QStringLiteral("friday"),
+            QStringLiteral("saturday"),
+            QStringLiteral("sunday")
+        };
+        static const QRegularExpression weekdayPattern(
+            QStringLiteral("^(next|last|this)\\s+(monday|tuesday|wednesday|thursday|friday|saturday|sunday)$")
+        );
+        const QRegularExpressionMatch weekdayMatch = weekdayPattern.match(text);
+        if (!weekdayMatch.hasMatch()) {
+            return QDate();
+        }
+
+        const QString direction = weekdayMatch.captured(1);
+        const int targetDay = weekdays.indexOf(weekdayMatch.captured(2));
+        const int currentDay = referenceDate.dayOfWeek();
+        int delta = targetDay - currentDay;
+
+        if (direction == QStringLiteral("next")) {
+            if (delta <= 0) {
+                delta += 7;
+            }
+        } else if (direction == QStringLiteral("last")) {
+            if (delta >= 0) {
+                delta -= 7;
+            }
+        }
+
+        return referenceDate.addDays(delta);
+    }
+
+    static QDateTime parseRelativeOffset(const QString &input,
+                                         const QTimeZone &zone,
+                                         const QDateTime &reference) {
+        static const QRegularExpression relativePattern(
+            QStringLiteral("^(?:in\\s+)?(\\d+)\\s+(minute|minutes|hour|hours|day|days|week|weeks)(?:\\s+ago)?$")
+        );
+        const QRegularExpressionMatch match = relativePattern.match(input);
+        if (!match.hasMatch()) {
+            return QDateTime();
+        }
+
+        const int amount = match.captured(1).toInt();
+        const QString unit = match.captured(2);
+        const bool isAgo = input.endsWith(QStringLiteral(" ago"));
+        const int sign = isAgo ? -1 : 1;
+
+        if (unit.startsWith(QStringLiteral("minute"))) {
+            return reference.addSecs(sign * amount * 60);
+        }
+        if (unit.startsWith(QStringLiteral("hour"))) {
+            return reference.addSecs(sign * amount * 60 * 60);
+        }
+        if (unit.startsWith(QStringLiteral("day"))) {
+            return reference.addDays(sign * amount);
+        }
+        if (unit.startsWith(QStringLiteral("week"))) {
+            return reference.addDays(sign * amount * 7);
+        }
+
+        Q_UNUSED(zone)
+        return QDateTime();
+    }
+
+    static QDateTime buildDateTime(const QDate &date, const ParsedTime &time, const QTimeZone &zone) {
+        const QTime resolvedTime = time.isValid ? time.value : QTime(0, 0);
+        if (!date.isValid() || !resolvedTime.isValid()) {
+            return QDateTime();
+        }
+
+        return QDateTime(date, resolvedTime, zone);
+    }
+
+    static QDateTime parseDateAndOptionalTime(const QString &input,
+                                              const QTimeZone &zone,
+                                              const QDateTime &reference) {
+        const QString text = input.trimmed();
+        const QDate explicitDate = parseExplicitDate(text);
+        if (explicitDate.isValid()) {
+            return buildDateTime(explicitDate, ParsedTime(), zone);
+        }
+
+        const QDate relativeDate = parseRelativeDate(text, reference.date());
+        if (relativeDate.isValid()) {
+            return buildDateTime(relativeDate, ParsedTime(), zone);
+        }
+
+        static const QRegularExpression trailingTimePattern(
+            QStringLiteral("^(.*)\\s+(noon|midnight|\\d{1,2}(?::\\d{2})?(?::\\d{2})?\\s*(?:am|pm)?|\\d{1,2}:\\d{2}(?::\\d{2})?)$")
+        );
+        const QRegularExpressionMatch trailingTimeMatch = trailingTimePattern.match(text);
+        if (trailingTimeMatch.hasMatch()) {
+            const QDate date = parseExplicitDate(trailingTimeMatch.captured(1).trimmed()).isValid()
+                ? parseExplicitDate(trailingTimeMatch.captured(1).trimmed())
+                : parseRelativeDate(trailingTimeMatch.captured(1).trimmed(), reference.date());
+            const ParsedTime time = parseTimeToken(trailingTimeMatch.captured(2));
+            return buildDateTime(date, time, zone);
+        }
+
+        static const QRegularExpression leadingTimePattern(
+            QStringLiteral("^(noon|midnight|\\d{1,2}(?::\\d{2})?(?::\\d{2})?\\s*(?:am|pm)?)\\s+(.+)$")
+        );
+        const QRegularExpressionMatch leadingTimeMatch = leadingTimePattern.match(text);
+        if (leadingTimeMatch.hasMatch()) {
+            const ParsedTime time = parseTimeToken(leadingTimeMatch.captured(1));
+            const QDate date = parseExplicitDate(leadingTimeMatch.captured(2).trimmed()).isValid()
+                ? parseExplicitDate(leadingTimeMatch.captured(2).trimmed())
+                : parseRelativeDate(leadingTimeMatch.captured(2).trimmed(), reference.date());
+            return buildDateTime(date, time, zone);
+        }
+
+        return QDateTime();
+    }
+
+    static QDateTime parseNaturalDateTime(const QString &input,
+                                          const QTimeZone &zone,
+                                          const QDateTime &reference) {
+        const QString text = normalizeNaturalDateInput(input);
+        if (text.isEmpty()) {
+            return QDateTime();
+        }
+
+        const QDateTime relativeOffset = parseRelativeOffset(text, zone, reference);
+        if (relativeOffset.isValid()) {
+            return relativeOffset;
+        }
+
+        const QDateTime dateAndTime = parseDateAndOptionalTime(text, zone, reference);
+        if (dateAndTime.isValid()) {
+            return dateAndTime;
+        }
+
+        const ParsedTime timeOnly = parseTimeToken(text);
+        if (timeOnly.isValid) {
+            return buildDateTime(reference.date(), timeOnly, zone);
+        }
+
+        return QDateTime();
+    }
+
+    static QString parseNaturalDateInternal(const QString &input,
+                                            const QTimeZone &zone,
+                                            const QDateTime &reference) {
+        const QDateTime parsed = parseNaturalDateTime(input, zone, reference);
+        if (!parsed.isValid()) {
+            return QStringLiteral("Could not parse date string");
+        }
+
+        return describeDateTime(parsed.toTimeZone(zone));
     }
 
     static bool hasExplicitOffset(const QString &input) {

@@ -7,7 +7,6 @@ Kirigami.ScrollablePage {
     id: root
     title: "Epoch Converter"
 
-    property int parseRequestId: 0
     property string parsedResultText: ""
 
     function requestParse() {
@@ -17,21 +16,7 @@ Kirigami.ScrollablePage {
             return;
         }
 
-        var context = timeTool.buildParseContext(timezoneSelector.editText);
-        if (context.error) {
-            parsedResultText = context.error;
-            return;
-        }
-
-        parseRequestId += 1;
-        parsedResultText = "Parsing...";
-        parseWorker.sendMessage({
-            requestId: parseRequestId,
-            text: trimmed,
-            referenceEpochMs: context.referenceEpochMs,
-            timezoneOffsetMinutes: context.timezoneOffsetMinutes,
-            timeZoneId: timezoneSelector.editText
-        });
+        parsedResultText = timeTool.parseNaturalDate(trimmed, timezoneSelector.editText);
     }
 
     Timer {
@@ -39,32 +24,6 @@ Kirigami.ScrollablePage {
         interval: 150
         repeat: false
         onTriggered: root.requestParse()
-    }
-
-    WorkerScript {
-        id: parseWorker
-        source: "EpochParserWorker.js"
-
-        onMessage: function(message) {
-            if (message.requestId !== root.parseRequestId) {
-                return;
-            }
-
-            if (message.empty) {
-                root.parsedResultText = "";
-                return;
-            }
-
-            if (message.error) {
-                root.parsedResultText = message.error;
-                return;
-            }
-
-            root.parsedResultText = timeTool.formatParsedDate(
-                message.components || {},
-                timezoneSelector.editText
-            );
-        }
     }
 
     ColumnLayout {
@@ -114,7 +73,7 @@ Kirigami.ScrollablePage {
             id: dateInput
             Layout.fillWidth: true
             Layout.preferredHeight: 100
-            placeholderText: "Examples: today, next Wednesday, 10pm on 13th October 2023"
+            placeholderText: "Examples: today, next Wednesday, 10pm on 13 October 2023"
             onTextChanged: parseDebounce.restart()
         }
 

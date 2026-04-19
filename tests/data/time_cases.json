@@ -21,6 +21,46 @@
         "Date only: 2026-04-19",
         "Timezone: UTC"
       ]
+    },
+    {
+      "name": "parse relative weekday",
+      "method": "parseNaturalDateWithReference",
+      "args": ["next Wednesday", "UTC", "2026-04-19T09:30:00Z"],
+      "contains": [
+        "ISO 8601: 2026-04-22T00:00:00.000+00:00",
+        "Date only: 2026-04-22",
+        "Timezone: UTC"
+      ]
+    },
+    {
+      "name": "parse relative offset",
+      "method": "parseNaturalDateWithReference",
+      "args": ["in 3 hours", "UTC", "2026-04-19T09:30:00Z"],
+      "contains": [
+        "ISO 8601: 2026-04-19T12:30:00.000+00:00",
+        "Unix seconds: 1776601800",
+        "Timezone: UTC"
+      ]
+    },
+    {
+      "name": "parse time then explicit date",
+      "method": "parseNaturalDateWithReference",
+      "args": ["10pm on 13th October 2023", "UTC", "2026-04-19T09:30:00Z"],
+      "contains": [
+        "ISO 8601: 2023-10-13T22:00:00.000+00:00",
+        "Date only: 2023-10-13",
+        "Timezone: UTC"
+      ]
+    },
+    {
+      "name": "parse time only in target timezone",
+      "method": "parseNaturalDateWithReference",
+      "args": ["10pm", "Europe/London", "2026-04-19T09:30:00Z"],
+      "contains": [
+        "ISO 8601: 2026-04-19T22:00:00.000+01:00",
+        "Date only: 2026-04-19",
+        "Timezone: Europe/London"
+      ]
     }
   ]
 }

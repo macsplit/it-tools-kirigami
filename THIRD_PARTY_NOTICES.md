@@ -1,6 +1,6 @@
 # Third-Party Notices
 
-This project is primarily original code under the repository license, but it also includes a small number of bundled third-party components.
+This project is primarily original code under the repository license, but it also includes bundled third-party code where noted below.
 
 ## Bundled Components
 
@@ -14,17 +14,6 @@ This project is primarily original code under the repository license, but it als
   - `src/qrcodegen.cpp`
 - Notes:
   - The upstream MIT license notice is preserved directly in the vendored source files.
-
-### chrono-node (English locale bundle)
-
-- Purpose: Natural-language date parsing for the Epoch Converter.
-- Upstream: https://github.com/wanasit/chrono
-- License: MIT
-- Vendored files:
-  - `src/contents/ui/vendor/chrono-en.bundle.js`
-  - `third_party/chrono-node/LICENSE.txt`
-- Notes:
-  - The bundled JavaScript file includes a provenance comment pointing to the preserved license text.
 
 ## Policy For Future Vendored Code
 

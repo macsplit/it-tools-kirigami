@@ -130,6 +130,11 @@ QVariant ToolsTest::invokeBackend(const QString &toolName,
                                             args.at(1).toString(),
                                             args.at(2).toString());
         }
+        if (methodName == QStringLiteral("parseNaturalDateWithReference")) {
+            return timeTool.parseNaturalDateWithReference(args.at(0).toString(),
+                                                          args.at(1).toString(),
+                                                          args.at(2).toString());
+        }
     }
 
     if (toolName == QStringLiteral("MathTool")) {
