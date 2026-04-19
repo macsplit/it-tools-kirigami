@@ -1,0 +1,39 @@
+{
+  "kind": "backend",
+  "tool": "TextTool",
+  "cases": [
+    {
+      "name": "gmail aliases are normalized",
+      "method": "normalizeEmail",
+      "args": ["John.Smith+alerts@googlemail.com"],
+      "mapEquals": {
+        "valid": "true",
+        "normalized": "johnsmith@gmail.com",
+        "localPart": "johnsmith",
+        "domain": "gmail.com",
+        "provider": "gmail"
+      }
+    },
+    {
+      "name": "generic domains keep the local part intact",
+      "method": "normalizeEmail",
+      "args": ["Admin+Ops@Example.org"],
+      "mapEquals": {
+        "valid": "true",
+        "normalized": "Admin+Ops@example.org",
+        "localPart": "Admin+Ops",
+        "domain": "example.org",
+        "provider": "generic"
+      }
+    },
+    {
+      "name": "invalid email returns an error",
+      "method": "normalizeEmail",
+      "args": ["not-an-email"],
+      "mapEquals": {
+        "valid": "false",
+        "error": "Enter a valid email address"
+      }
+    }
+  ]
+}

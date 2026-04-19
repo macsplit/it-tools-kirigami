@@ -21,6 +21,7 @@ The application is currently in a stable and minimally viable state. The core ar
 *   Color Converter
 *   Cron Job Editor
 *   CSV to JSON Converter
+*   Email Normalizer
 *   Epoch Converter
 *   Date/Time Converter
 *   Hash Calculator
@@ -38,6 +39,7 @@ The application is currently in a stable and minimally viable state. The core ar
 *   List Converter
 *   Lorem Ipsum Generator
 *   MAC Address Generator
+*   Math Evaluator
 *   MIME Types
 *   Markdown Preview
 *   Numeronym Generator
@@ -58,6 +60,7 @@ The application is currently in a stable and minimally viable state. The core ar
 *   URL Parser
 *   UUID Generator
 *   Wifi QR Code Generator
+*   IPv4 Range Expander
 *   XML Formatter
 *   XML to JSON Converter
 
@@ -79,21 +82,21 @@ This list is based on an audit of the popular `it-tools` web application, and in
 *   [ ] Chronometer
 *   [ ] Device Information
 *   [ ] Docker Run to Docker Compose Converter
-*   [ ] Email Normalizer
+*   [x] Email Normalizer
 *   [ ] Emoji Picker
 *   [ ] Encryption (Generic)
 *   [ ] ETA Calculator
 *   [ ] Git Memo
 *   [ ] HTML WYSIWYG Editor
 *   [ ] IBAN Validator and Parser
-*   [ ] IPv4 Range Expander
+*   [x] IPv4 Range Expander
 *   [ ] IPv6 ULA Generator
 *   [ ] JSON Diff
 *   [ ] JSON to TOML
 *   [ ] JSON Viewer
 *   [ ] Keycode Info
 *   [ ] MAC Address Lookup
-*   [ ] Math Evaluator
+*   [x] Math Evaluator
 *   [ ] Meta Tag Generator
 *   [ ] OTP Code Generator and Validator
 *   [ ] Password Strength Analyzer

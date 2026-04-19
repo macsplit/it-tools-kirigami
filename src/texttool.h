@@ -5,6 +5,9 @@
 #include <QString>
 #include <QRegularExpression>
 #include <QStringList>
+#include <QUrl>
+#include <QByteArray>
+#include <QVariantMap>
 
 class TextTool : public QObject
 {
@@ -73,6 +76,66 @@ public:
         output.replace(QRegularExpression(QStringLiteral("[\\s_-]+")), QStringLiteral("-"));
         output.remove(QRegularExpression(QStringLiteral("^-+|-+$")));
         return output;
+    }
+
+    Q_INVOKABLE QVariantMap normalizeEmail(const QString &input) const {
+        QVariantMap result;
+        const QString text = input.trimmed();
+        result[QStringLiteral("valid")] = false;
+
+        const int atIndex = text.indexOf(QLatin1Char('@'));
+        if (text.isEmpty() || atIndex <= 0 || atIndex != text.lastIndexOf(QLatin1Char('@')) || atIndex == text.size() - 1) {
+            result[QStringLiteral("error")] = QStringLiteral("Enter a valid email address");
+            return result;
+        }
+
+        QString localPart = text.left(atIndex).trimmed();
+        QString domain = text.mid(atIndex + 1).trimmed().toLower();
+        if (localPart.isEmpty() || domain.isEmpty()) {
+            result[QStringLiteral("error")] = QStringLiteral("Enter a valid email address");
+            return result;
+        }
+
+        const QByteArray aceDomain = QUrl::toAce(domain);
+        if (!aceDomain.isEmpty()) {
+            domain = QString::fromLatin1(aceDomain);
+        }
+
+        static const QRegularExpression localRegex(QStringLiteral("^[A-Za-z0-9.!#$%&'*+/=?^_`{|}~-]+$"));
+        static const QRegularExpression domainRegex(QStringLiteral("^(?=.{1,253}$)([A-Za-z0-9](?:[A-Za-z0-9-]{0,61}[A-Za-z0-9])?)(\\.([A-Za-z0-9](?:[A-Za-z0-9-]{0,61}[A-Za-z0-9])?))*$"));
+
+        if (!localRegex.match(localPart).hasMatch() || !domainRegex.match(domain).hasMatch()) {
+            result[QStringLiteral("error")] = QStringLiteral("Enter a valid email address");
+            return result;
+        }
+
+        QString provider = QStringLiteral("generic");
+        QString notes;
+        if (domain == QStringLiteral("googlemail.com")) {
+            domain = QStringLiteral("gmail.com");
+            provider = QStringLiteral("gmail");
+            notes = QStringLiteral("Normalized googlemail.com to gmail.com and removed Gmail aliases.");
+        } else if (domain == QStringLiteral("gmail.com")) {
+            provider = QStringLiteral("gmail");
+            notes = QStringLiteral("Removed Gmail dot aliases and plus addressing.");
+        }
+
+        if (provider == QStringLiteral("gmail")) {
+            localPart = localPart.toLower();
+            const int plusIndex = localPart.indexOf(QLatin1Char('+'));
+            if (plusIndex >= 0) {
+                localPart = localPart.left(plusIndex);
+            }
+            localPart.remove(QLatin1Char('.'));
+        }
+
+        result[QStringLiteral("valid")] = true;
+        result[QStringLiteral("localPart")] = localPart;
+        result[QStringLiteral("domain")] = domain;
+        result[QStringLiteral("provider")] = provider;
+        result[QStringLiteral("normalized")] = localPart + QStringLiteral("@") + domain;
+        result[QStringLiteral("notes")] = notes;
+        return result;
     }
 
     Q_INVOKABLE QVariantMap textStatistics(const QString &text) const {

@@ -119,6 +119,7 @@ QVariant ToolsTest::invokeBackend(const QString &toolName,
     if (toolName == QStringLiteral("NetworkTool")) {
         if (methodName == QStringLiteral("ipv4Convert")) return networkTool.ipv4Convert(args.at(0).toString());
         if (methodName == QStringLiteral("ipv4Subnet")) return networkTool.ipv4Subnet(args.at(0).toString());
+        if (methodName == QStringLiteral("expandIpv4Range")) return networkTool.expandIpv4Range(args.at(0).toString());
     }
 
     if (toolName == QStringLiteral("TimeTool")) {
@@ -141,6 +142,7 @@ QVariant ToolsTest::invokeBackend(const QString &toolName,
         if (methodName == QStringLiteral("percentOf")) return mathTool.percentOf(args.at(0).toString(), args.at(1).toString());
         if (methodName == QStringLiteral("whatPercent")) return mathTool.whatPercent(args.at(0).toString(), args.at(1).toString());
         if (methodName == QStringLiteral("percentageChange")) return mathTool.percentageChange(args.at(0).toString(), args.at(1).toString());
+        if (methodName == QStringLiteral("evaluateExpression")) return mathTool.evaluateExpression(args.at(0).toString());
     }
 
     if (toolName == QStringLiteral("TextTool")) {
@@ -152,6 +154,7 @@ QVariant ToolsTest::invokeBackend(const QString &toolName,
         if (methodName == QStringLiteral("htmlEntitiesEncode")) return textTool.htmlEntitiesEncode(args.at(0).toString());
         if (methodName == QStringLiteral("htmlEntitiesDecode")) return textTool.htmlEntitiesDecode(args.at(0).toString());
         if (methodName == QStringLiteral("slugify")) return textTool.slugify(args.at(0).toString());
+        if (methodName == QStringLiteral("normalizeEmail")) return textTool.normalizeEmail(args.at(0).toString());
         if (methodName == QStringLiteral("textStatistics")) return textTool.textStatistics(args.at(0).toString());
         if (methodName == QStringLiteral("loremIpsum")) return textTool.loremIpsum();
         if (methodName == QStringLiteral("obfuscate")) return textTool.obfuscate(args.at(0).toString(), args.at(1).toInt(), args.at(2).toInt(), args.at(3).toBool());

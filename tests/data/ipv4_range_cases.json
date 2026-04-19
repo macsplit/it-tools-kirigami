@@ -1,0 +1,39 @@
+{
+  "kind": "backend",
+  "tool": "NetworkTool",
+  "cases": [
+    {
+      "name": "explicit ipv4 range expands into individual addresses",
+      "method": "expandIpv4Range",
+      "args": ["192.168.0.10-192.168.0.12"],
+      "mapEquals": {
+        "valid": "true",
+        "start": "192.168.0.10",
+        "end": "192.168.0.12",
+        "count": "3",
+        "items": "192.168.0.10\n192.168.0.11\n192.168.0.12"
+      }
+    },
+    {
+      "name": "cidr block expands into all addresses",
+      "method": "expandIpv4Range",
+      "args": ["10.0.0.0/30"],
+      "mapEquals": {
+        "valid": "true",
+        "start": "10.0.0.0",
+        "end": "10.0.0.3",
+        "count": "4",
+        "items": "10.0.0.0\n10.0.0.1\n10.0.0.2\n10.0.0.3"
+      }
+    },
+    {
+      "name": "oversized blocks are rejected",
+      "method": "expandIpv4Range",
+      "args": ["10.0.0.0/8"],
+      "mapEquals": {
+        "valid": "false",
+        "error": "Range too large to expand safely"
+      }
+    }
+  ]
+}

@@ -1,0 +1,24 @@
+{
+  "kind": "backend",
+  "tool": "MathTool",
+  "cases": [
+    {
+      "name": "respects operator precedence and exponentiation",
+      "method": "evaluateExpression",
+      "args": ["(2 + 3) * 4^2 - 5"],
+      "equals": "75"
+    },
+    {
+      "name": "supports unary minus and modulo",
+      "method": "evaluateExpression",
+      "args": ["-5 + 13 % 5"],
+      "equals": "-2"
+    },
+    {
+      "name": "invalid expressions return empty output",
+      "method": "evaluateExpression",
+      "args": ["2 + )"],
+      "equals": ""
+    }
+  ]
+}

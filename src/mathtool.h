@@ -4,6 +4,7 @@
 #include <QObject>
 #include <QString>
 #include <QLocale>
+#include <QChar>
 #include <cmath>
 
 class MathTool : public QObject
@@ -46,6 +47,142 @@ public:
         }
 
         return formatNumber(((toValue - fromValue) / fromValue) * 100.0, QStringLiteral("%"));
+    }
+
+    Q_INVOKABLE QString evaluateExpression(const QString &expressionText) const {
+        struct Parser {
+            QString text;
+            int index = 0;
+            bool ok = true;
+
+            void skipWhitespace() {
+                while (index < text.size() && text.at(index).isSpace()) {
+                    ++index;
+                }
+            }
+
+            bool match(QChar ch) {
+                skipWhitespace();
+                if (index < text.size() && text.at(index) == ch) {
+                    ++index;
+                    return true;
+                }
+                return false;
+            }
+
+            double parseExpression() {
+                double value = parseTerm();
+                while (ok) {
+                    skipWhitespace();
+                    if (match(QLatin1Char('+'))) {
+                        value += parseTerm();
+                    } else if (match(QLatin1Char('-'))) {
+                        value -= parseTerm();
+                    } else {
+                        break;
+                    }
+                }
+                return value;
+            }
+
+            double parseTerm() {
+                double value = parsePower();
+                while (ok) {
+                    skipWhitespace();
+                    if (match(QLatin1Char('*'))) {
+                        value *= parsePower();
+                    } else if (match(QLatin1Char('/'))) {
+                        const double divisor = parsePower();
+                        if (qFuzzyIsNull(divisor)) {
+                            ok = false;
+                            return 0.0;
+                        }
+                        value /= divisor;
+                    } else if (match(QLatin1Char('%'))) {
+                        const double divisor = parsePower();
+                        if (qFuzzyIsNull(divisor)) {
+                            ok = false;
+                            return 0.0;
+                        }
+                        value = std::fmod(value, divisor);
+                    } else {
+                        break;
+                    }
+                }
+                return value;
+            }
+
+            double parsePower() {
+                double base = parseUnary();
+                skipWhitespace();
+                if (!ok) {
+                    return 0.0;
+                }
+                if (match(QLatin1Char('^'))) {
+                    const double exponent = parsePower();
+                    base = std::pow(base, exponent);
+                }
+                return base;
+            }
+
+            double parseUnary() {
+                skipWhitespace();
+                if (match(QLatin1Char('+'))) {
+                    return parseUnary();
+                }
+                if (match(QLatin1Char('-'))) {
+                    return -parseUnary();
+                }
+                return parsePrimary();
+            }
+
+            double parsePrimary() {
+                skipWhitespace();
+                if (match(QLatin1Char('('))) {
+                    const double value = parseExpression();
+                    if (!match(QLatin1Char(')'))) {
+                        ok = false;
+                        return 0.0;
+                    }
+                    return value;
+                }
+
+                const int start = index;
+                bool hasDigits = false;
+                bool hasDot = false;
+                while (index < text.size()) {
+                    const QChar ch = text.at(index);
+                    if (ch.isDigit()) {
+                        hasDigits = true;
+                        ++index;
+                    } else if ((ch == QLatin1Char('.') || ch == QLatin1Char(',')) && !hasDot) {
+                        hasDot = true;
+                        ++index;
+                    } else {
+                        break;
+                    }
+                }
+
+                if (!hasDigits) {
+                    ok = false;
+                    return 0.0;
+                }
+
+                bool numberOk = false;
+                const double value = QLocale::c().toDouble(text.mid(start, index - start).replace(',', '.'), &numberOk);
+                ok = numberOk;
+                return value;
+            }
+        };
+
+        Parser parser{expressionText};
+        const double result = parser.parseExpression();
+        parser.skipWhitespace();
+        if (!parser.ok || parser.index != parser.text.size() || !std::isfinite(result)) {
+            return QString();
+        }
+
+        return formatNumber(result);
     }
 
 private:
