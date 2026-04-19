@@ -35,10 +35,10 @@ To build and publish the Flatpak locally:
 
 - **Crypto**: Token Generator, Hash Text, HMAC Generator, Bcrypt Password Hash
 - **Converter**: Base64 Converter, Integer Base Converter, Color Converter, JSON to YAML, JSON to XML, JSON to CSV, XML to JSON, CSV to JSON, Text to Binary, Epoch Converter, Date/Time Converter, Roman Numeral Converter, Temperature Converter, List Converter, Markdown to HTML
-- **Network**: IPv4 Converter, IPv4 Subnet Calculator, WiFi QR Code Generator, MAC Address Generator, Random Port Generator
+- **Network**: IPv4 Converter, IPv4 Subnet Calculator, WiFi QR Code Generator, MAC Address Generator, Random Port Generator, IPv4 Range Expander
 - **Web**: Basic Auth Generator, URL Encoder/Decoder, HTML Entities, JWT Parser, URL Parser, HTTP Status Codes
-- **Development**: MIME Types, UUID Generator, ULID Generator, JSON Formatter, JSON Minify, XML Formatter, SQL Prettify, Chmod Calculator, Cron Expression Parser, Percentage Calculator
-- **Text**: Case Converter, Text to NATO Alphabet, Numeronym Generator, Text to Unicode, Lorem Ipsum, Text Statistics, Slugify String, String Obfuscator
+- **Development**: MIME Types, UUID Generator, ULID Generator, JSON Formatter, JSON Minify, XML Formatter, SQL Prettify, Chmod Calculator, Cron Expression Parser, Percentage Calculator, Math Evaluator
+- **Text**: Case Converter, Email Normalizer, Text to NATO Alphabet, Numeronym Generator, Text to Unicode, Lorem Ipsum, Text Statistics, Slugify String, String Obfuscator
 
 ## Building and Running
 

@@ -82,21 +82,18 @@ This list is based on an audit of the popular `it-tools` web application, and in
 *   [ ] Chronometer
 *   [ ] Device Information
 *   [ ] Docker Run to Docker Compose Converter
-*   [x] Email Normalizer
 *   [ ] Emoji Picker
 *   [ ] Encryption (Generic)
 *   [ ] ETA Calculator
 *   [ ] Git Memo
 *   [ ] HTML WYSIWYG Editor
 *   [ ] IBAN Validator and Parser
-*   [x] IPv4 Range Expander
 *   [ ] IPv6 ULA Generator
 *   [ ] JSON Diff
 *   [ ] JSON to TOML
 *   [ ] JSON Viewer
 *   [ ] Keycode Info
 *   [ ] MAC Address Lookup
-*   [x] Math Evaluator
 *   [ ] Meta Tag Generator
 *   [ ] OTP Code Generator and Validator
 *   [ ] Password Strength Analyzer
