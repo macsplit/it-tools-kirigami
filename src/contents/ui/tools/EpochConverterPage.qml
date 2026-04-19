@@ -16,7 +16,7 @@ Kirigami.ScrollablePage {
             return;
         }
 
-        parsedResultText = timeTool.parseNaturalDate(trimmed, timezoneSelector.editText);
+        parsedResultText = timeTool.parseNaturalDateCompact(trimmed, timezoneSelector.editText);
     }
 
     Timer {
@@ -52,38 +52,38 @@ Kirigami.ScrollablePage {
             onEditTextChanged: parseDebounce.restart()
         }
 
-        Label { text: "Unix timestamp"; font.bold: true }
+        Label { text: "Timestamp to date/time"; font.bold: true }
         AppTextField {
             id: epochInput
             Layout.fillWidth: true
             placeholderText: "Seconds or milliseconds since 1970-01-01"
         }
 
-        Label { text: "Timestamp result"; font.bold: true }
         OutputArea {
             Layout.fillWidth: true
-            Layout.preferredHeight: 140
+            Layout.preferredHeight: 90
             font.family: "monospace"
             wrapMode: TextEdit.NoWrap
-            text: timeTool.formatEpoch(epochInput.text, timezoneSelector.editText)
+            text: timeTool.formatEpochCompact(epochInput.text, timezoneSelector.editText)
+            placeholderText: "Converted date/time will appear here"
         }
 
-        Label { text: "Date string"; font.bold: true }
+        Label { text: "Date/time to timestamp"; font.bold: true }
         AppTextArea {
             id: dateInput
             Layout.fillWidth: true
-            Layout.preferredHeight: 100
-            placeholderText: "Examples: today, next Wednesday, 10pm on 13 October 2023"
+            Layout.preferredHeight: 72
+            placeholderText: "Examples: now, tomorrow 10pm, 2026-04-19 18:05"
             onTextChanged: parseDebounce.restart()
         }
 
-        Label { text: "Parsed result"; font.bold: true }
         OutputArea {
             Layout.fillWidth: true
-            Layout.preferredHeight: 120
+            Layout.preferredHeight: 90
             font.family: "monospace"
             wrapMode: TextEdit.NoWrap
             text: root.parsedResultText
+            placeholderText: "Converted timestamp will appear here"
         }
     }
 }

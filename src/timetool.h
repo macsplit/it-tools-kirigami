@@ -38,6 +38,27 @@ public:
         return describeDateTime(zoned);
     }
 
+    Q_INVOKABLE QString formatEpochCompact(const QString &input, const QString &timeZoneId) const {
+        QString trimmed = input.trimmed();
+        if (trimmed.isEmpty()) return QString();
+
+        bool ok = false;
+        qint64 value = trimmed.toLongLong(&ok);
+        if (!ok) return QStringLiteral("Invalid Unix timestamp");
+
+        QTimeZone zone = resolveTimeZone(timeZoneId);
+        if (!zone.isValid()) return QStringLiteral("Invalid timezone");
+
+        bool isMilliseconds = trimmed.length() > 10;
+        QDateTime utcDateTime = isMilliseconds
+            ? QDateTime::fromMSecsSinceEpoch(value, Qt::UTC)
+            : QDateTime::fromSecsSinceEpoch(value, Qt::UTC);
+
+        if (!utcDateTime.isValid()) return QStringLiteral("Invalid Unix timestamp");
+
+        return describeEpochConversion(utcDateTime.toTimeZone(zone));
+    }
+
     Q_INVOKABLE QString parseNaturalDate(const QString &input, const QString &timeZoneId) const {
         const QTimeZone zone = resolveTimeZone(timeZoneId);
         if (!zone.isValid()) {
@@ -46,6 +67,16 @@ public:
 
         const QDateTime reference = QDateTime::currentDateTimeUtc().toTimeZone(zone);
         return parseNaturalDateInternal(input, zone, reference);
+    }
+
+    Q_INVOKABLE QString parseNaturalDateCompact(const QString &input, const QString &timeZoneId) const {
+        const QTimeZone zone = resolveTimeZone(timeZoneId);
+        if (!zone.isValid()) {
+            return QStringLiteral("Invalid timezone");
+        }
+
+        const QDateTime reference = QDateTime::currentDateTimeUtc().toTimeZone(zone);
+        return parseNaturalDateInternalCompact(input, zone, reference);
     }
 
     Q_INVOKABLE QString parseNaturalDateWithReference(const QString &input,
@@ -77,11 +108,8 @@ public:
         }
 
         const QDateTime targetReference = QDateTime::currentDateTimeUtc().toTimeZone(zone);
-        const QDateTime systemReference(targetReference.date(),
-                                        targetReference.time(),
-                                        QTimeZone::systemTimeZone());
 
-        context.insert(QStringLiteral("referenceEpochMs"), systemReference.toMSecsSinceEpoch());
+        context.insert(QStringLiteral("referenceEpochMs"), targetReference.toMSecsSinceEpoch());
         context.insert(QStringLiteral("timezoneOffsetMinutes"), zone.offsetFromUtc(targetReference) / 60);
         return context;
     }
@@ -482,6 +510,17 @@ private:
         return describeDateTime(parsed.toTimeZone(zone));
     }
 
+    static QString parseNaturalDateInternalCompact(const QString &input,
+                                                   const QTimeZone &zone,
+                                                   const QDateTime &reference) {
+        const QDateTime parsed = parseNaturalDateTime(input, zone, reference);
+        if (!parsed.isValid()) {
+            return QStringLiteral("Could not parse date string");
+        }
+
+        return describeNaturalDateConversion(parsed.toTimeZone(zone));
+    }
+
     static bool hasExplicitOffset(const QString &input) {
         static const QRegularExpression offsetPattern(
             QStringLiteral("(Z|[+-]\\d{2}:?\\d{2})$"),
@@ -625,6 +664,37 @@ private:
             .arg(utcDateTime.toMSecsSinceEpoch())
             .arg(QString::number(excelValue, 'f', 6))
             .arg(mongoObjectId.toLower());
+    }
+
+    static QString describeEpochConversion(const QDateTime &dateTime) {
+        if (!dateTime.isValid()) {
+            return QStringLiteral("Could not parse date/time");
+        }
+
+        return QStringLiteral(
+            "Date/time: %1\n"
+            "ISO 8601: %2\n"
+            "Timezone: %3"
+        )
+            .arg(dateTime.toString(QStringLiteral("yyyy-MM-dd HH:mm:ss.zzz t")))
+            .arg(dateTime.toString(Qt::ISODateWithMs))
+            .arg(describeTimeZone(dateTime.timeZone()));
+    }
+
+    static QString describeNaturalDateConversion(const QDateTime &dateTime) {
+        if (!dateTime.isValid()) {
+            return QStringLiteral("Could not parse date/time");
+        }
+
+        const QDateTime utcDateTime = dateTime.toUTC();
+        return QStringLiteral(
+            "ISO 8601: %1\n"
+            "Unix seconds: %2\n"
+            "Unix milliseconds: %3"
+        )
+            .arg(dateTime.toString(Qt::ISODateWithMs))
+            .arg(utcDateTime.toSecsSinceEpoch())
+            .arg(utcDateTime.toMSecsSinceEpoch());
     }
 
 };
