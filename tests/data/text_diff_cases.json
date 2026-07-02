@@ -1,0 +1,49 @@
+{
+  "kind": "backend",
+  "tool": "TextTool",
+  "cases": [
+    {
+      "name": "text diff reports added and removed lines",
+      "method": "textDiff",
+      "args": ["alpha\nbeta\ngamma", "alpha\nbeta changed\ngamma\ndelta", false, false],
+      "mapEquals": {
+        "added": "2",
+        "removed": "1",
+        "unchanged": "2",
+        "different": "true"
+      }
+    },
+    {
+      "name": "text diff output contains readable markers",
+      "method": "textDiff",
+      "args": ["alpha\nbeta", "alpha\nBETA", false, false],
+      "contains": [
+        "  alpha",
+        "- beta",
+        "+ BETA"
+      ]
+    },
+    {
+      "name": "ignore case removes trivial differences",
+      "method": "textDiff",
+      "args": ["alpha\nbeta", "ALPHA\nBETA", false, true],
+      "mapEquals": {
+        "added": "0",
+        "removed": "0",
+        "unchanged": "2",
+        "different": "false"
+      }
+    },
+    {
+      "name": "ignore whitespace collapses spacing differences",
+      "method": "textDiff",
+      "args": ["alpha  beta", "alpha beta", true, false],
+      "mapEquals": {
+        "added": "0",
+        "removed": "0",
+        "unchanged": "1",
+        "different": "false"
+      }
+    }
+  ]
+}

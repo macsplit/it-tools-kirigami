@@ -154,7 +154,13 @@ QVariant ToolsTest::invokeBackend(const QString &toolName,
         if (methodName == QStringLiteral("htmlEntitiesEncode")) return textTool.htmlEntitiesEncode(args.at(0).toString());
         if (methodName == QStringLiteral("htmlEntitiesDecode")) return textTool.htmlEntitiesDecode(args.at(0).toString());
         if (methodName == QStringLiteral("slugify")) return textTool.slugify(args.at(0).toString());
+        if (methodName == QStringLiteral("asciiTextDraw")) return textTool.asciiTextDraw(args.at(0).toString());
         if (methodName == QStringLiteral("normalizeEmail")) return textTool.normalizeEmail(args.at(0).toString());
+        if (methodName == QStringLiteral("textToMorse")) return textTool.textToMorse(args.at(0).toString());
+        if (methodName == QStringLiteral("morseToText")) return textTool.morseToText(args.at(0).toString());
+        if (methodName == QStringLiteral("regexAnalyze")) return textTool.regexAnalyze(args.at(0).toString(), args.at(1).toString(), args.at(2).toBool(), args.at(3).toBool(), args.at(4).toBool());
+        if (methodName == QStringLiteral("rotTransform")) return textTool.rotTransform(args.at(0).toString(), args.at(1).toString());
+        if (methodName == QStringLiteral("textDiff")) return textTool.textDiff(args.at(0).toString(), args.at(1).toString(), args.at(2).toBool(), args.at(3).toBool());
         if (methodName == QStringLiteral("textStatistics")) return textTool.textStatistics(args.at(0).toString());
         if (methodName == QStringLiteral("loremIpsum")) return textTool.loremIpsum();
         if (methodName == QStringLiteral("obfuscate")) return textTool.obfuscate(args.at(0).toString(), args.at(1).toInt(), args.at(2).toInt(), args.at(3).toBool());
@@ -199,6 +205,7 @@ QVariant ToolsTest::invokeBackend(const QString &toolName,
         if (methodName == QStringLiteral("markdownToHtml")) return conversionTool.markdownToHtml(args.at(0).toString());
         if (methodName == QStringLiteral("jsonMinify")) return conversionTool.jsonMinify(args.at(0).toString());
         if (methodName == QStringLiteral("jsonFormat")) return conversionTool.jsonFormat(args.at(0).toString(), args.at(1).toInt());
+        if (methodName == QStringLiteral("jsonDiff")) return conversionTool.jsonDiff(args.at(0).toString(), args.at(1).toString());
         if (methodName == QStringLiteral("colorFromHex")) return conversionTool.colorFromHex(args.at(0).toString());
         if (methodName == QStringLiteral("colorFromRgb")) return conversionTool.colorFromRgb(args.at(0).toString());
         if (methodName == QStringLiteral("colorFromHsl")) return conversionTool.colorFromHsl(args.at(0).toString());

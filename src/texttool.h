@@ -490,7 +490,349 @@ public:
         return output;
     }
 
+    Q_INVOKABLE QVariantMap regexAnalyze(const QString &pattern,
+                                         const QString &subject,
+                                         bool caseInsensitive,
+                                         bool multiline,
+                                         bool dotMatchesNewline) const {
+        QVariantMap result;
+        QRegularExpression::PatternOptions options = QRegularExpression::NoPatternOption;
+        if (caseInsensitive) {
+            options |= QRegularExpression::CaseInsensitiveOption;
+        }
+        if (multiline) {
+            options |= QRegularExpression::MultilineOption;
+        }
+        if (dotMatchesNewline) {
+            options |= QRegularExpression::DotMatchesEverythingOption;
+        }
+
+        const QRegularExpression regex(pattern, options);
+        result[QStringLiteral("valid")] = regex.isValid();
+        if (!regex.isValid()) {
+            result[QStringLiteral("error")] = regex.errorString();
+            return result;
+        }
+
+        QVariantList matches;
+        QRegularExpressionMatchIterator it = regex.globalMatch(subject);
+        int matchCount = 0;
+        while (it.hasNext()) {
+            const QRegularExpressionMatch match = it.next();
+            QVariantMap item;
+            item[QStringLiteral("index")] = matchCount;
+            item[QStringLiteral("text")] = match.captured(0);
+            item[QStringLiteral("start")] = match.capturedStart(0);
+            item[QStringLiteral("end")] = match.capturedEnd(0);
+
+            QVariantList captures;
+            for (int i = 1; i <= match.lastCapturedIndex(); ++i) {
+                QVariantMap capture;
+                capture[QStringLiteral("group")] = i;
+                capture[QStringLiteral("text")] = match.captured(i);
+                capture[QStringLiteral("start")] = match.capturedStart(i);
+                capture[QStringLiteral("end")] = match.capturedEnd(i);
+                captures.append(capture);
+            }
+            item[QStringLiteral("captures")] = captures;
+            matches.append(item);
+            ++matchCount;
+        }
+
+        result[QStringLiteral("valid")] = true;
+        result[QStringLiteral("hasMatch")] = matchCount > 0;
+        result[QStringLiteral("matchCount")] = matchCount;
+        result[QStringLiteral("matches")] = matches;
+
+        if (matchCount > 0) {
+            const QVariantMap first = matches.first().toMap();
+            result[QStringLiteral("firstMatch")] = first.value(QStringLiteral("text"));
+            result[QStringLiteral("firstStart")] = first.value(QStringLiteral("start"));
+            result[QStringLiteral("firstEnd")] = first.value(QStringLiteral("end"));
+        } else {
+            result[QStringLiteral("firstMatch")] = QString();
+            result[QStringLiteral("firstStart")] = -1;
+            result[QStringLiteral("firstEnd")] = -1;
+        }
+
+        return result;
+    }
+
+    Q_INVOKABLE QVariantMap textDiff(const QString &leftText,
+                                     const QString &rightText,
+                                     bool ignoreWhitespace,
+                                     bool ignoreCase) const {
+        QVariantMap result;
+
+        const QStringList leftLines = leftText.split(QRegularExpression(QStringLiteral("\\r\\n|\\r|\\n")), Qt::KeepEmptyParts);
+        const QStringList rightLines = rightText.split(QRegularExpression(QStringLiteral("\\r\\n|\\r|\\n")), Qt::KeepEmptyParts);
+
+        const QStringList leftCompare = normalizedDiffLines(leftLines, ignoreWhitespace, ignoreCase);
+        const QStringList rightCompare = normalizedDiffLines(rightLines, ignoreWhitespace, ignoreCase);
+
+        const int m = leftCompare.size();
+        const int n = rightCompare.size();
+        QVector<QVector<int>> lcs(m + 1, QVector<int>(n + 1, 0));
+
+        for (int i = m - 1; i >= 0; --i) {
+            for (int j = n - 1; j >= 0; --j) {
+                if (leftCompare.at(i) == rightCompare.at(j)) {
+                    lcs[i][j] = lcs[i + 1][j + 1] + 1;
+                } else {
+                    lcs[i][j] = std::max(lcs[i + 1][j], lcs[i][j + 1]);
+                }
+            }
+        }
+
+        QStringList lines;
+        int added = 0;
+        int removed = 0;
+        int unchanged = 0;
+        int i = 0;
+        int j = 0;
+        while (i < m && j < n) {
+            if (leftCompare.at(i) == rightCompare.at(j)) {
+                lines.append(QStringLiteral("  %1").arg(leftLines.at(i)));
+                ++unchanged;
+                ++i;
+                ++j;
+            } else if (lcs[i + 1][j] >= lcs[i][j + 1]) {
+                lines.append(QStringLiteral("- %1").arg(leftLines.at(i)));
+                ++removed;
+                ++i;
+            } else {
+                lines.append(QStringLiteral("+ %1").arg(rightLines.at(j)));
+                ++added;
+                ++j;
+            }
+        }
+
+        while (i < m) {
+            lines.append(QStringLiteral("- %1").arg(leftLines.at(i)));
+            ++removed;
+            ++i;
+        }
+
+        while (j < n) {
+            lines.append(QStringLiteral("+ %1").arg(rightLines.at(j)));
+            ++added;
+            ++j;
+        }
+
+        result[QStringLiteral("added")] = added;
+        result[QStringLiteral("removed")] = removed;
+        result[QStringLiteral("unchanged")] = unchanged;
+        result[QStringLiteral("different")] = (added + removed) > 0;
+        result[QStringLiteral("diff")] = lines.join(QLatin1Char('\n'));
+        return result;
+    }
+
+    Q_INVOKABLE QString asciiTextDraw(const QString &text) const {
+        if (text.isEmpty()) {
+            return QString();
+        }
+
+        QStringList rows;
+        for (int row = 0; row < 5; ++row) {
+            rows.append(QString());
+        }
+        const QString upper = text.toUpper();
+        for (int i = 0; i < upper.size(); ++i) {
+            const QStringList glyph = asciiGlyphFor(upper.at(i));
+            for (int row = 0; row < 5; ++row) {
+                if (!rows.at(row).isEmpty()) {
+                    rows[row] += QLatin1Char(' ');
+                }
+                rows[row] += glyph.at(row);
+            }
+        }
+        return rows.join(QLatin1Char('\n'));
+    }
+
+    Q_INVOKABLE QString textToMorse(const QString &text) const {
+        if (text.isEmpty()) {
+            return QString();
+        }
+
+        const QHash<QChar, QString> map = morseMap();
+        QStringList output;
+        output.reserve(text.size());
+        for (const QChar raw : text.toUpper()) {
+            if (raw.isSpace()) {
+                if (!output.isEmpty() && output.last() != QStringLiteral("/")) {
+                    output.append(QStringLiteral("/"));
+                }
+                continue;
+            }
+
+            const QString code = map.value(raw);
+            output.append(code.isEmpty() ? QString(raw) : code);
+        }
+        return output.join(QStringLiteral(" "));
+    }
+
+    Q_INVOKABLE QString morseToText(const QString &morse) const {
+        const QString trimmed = morse.trimmed();
+        if (trimmed.isEmpty()) {
+            return QString();
+        }
+
+        QHash<QString, QChar> reverse;
+        const QHash<QChar, QString> map = morseMap();
+        for (auto it = map.constBegin(); it != map.constEnd(); ++it) {
+            reverse.insert(it.value(), it.key());
+        }
+
+        const QStringList parts = trimmed.split(QRegularExpression(QStringLiteral("\\s+")), Qt::SkipEmptyParts);
+        QString output;
+        for (const QString &part : parts) {
+            if (part == QStringLiteral("/")) {
+                output += QLatin1Char(' ');
+            } else {
+                output += reverse.contains(part) ? reverse.value(part) : QLatin1Char('?');
+            }
+        }
+        return output;
+    }
+
+    Q_INVOKABLE QString rotTransform(const QString &text, const QString &mode) const {
+        if (text.isEmpty()) {
+            return QString();
+        }
+
+        QString output = text;
+        if (mode == QStringLiteral("rot13")) {
+            for (int i = 0; i < output.size(); ++i) {
+                const ushort code = output.at(i).unicode();
+                if (code >= 'a' && code <= 'z') {
+                    output[i] = QChar(((code - 'a' + 13) % 26) + 'a');
+                } else if (code >= 'A' && code <= 'Z') {
+                    output[i] = QChar(((code - 'A' + 13) % 26) + 'A');
+                }
+            }
+            return output;
+        }
+
+        if (mode == QStringLiteral("rot47")) {
+            for (int i = 0; i < output.size(); ++i) {
+                const ushort code = output.at(i).unicode();
+                if (code >= 33 && code <= 126) {
+                    output[i] = QChar(33 + ((code - 33 + 47) % 94));
+                }
+            }
+            return output;
+        }
+
+        return QString();
+    }
+
 private:
+    static QStringList normalizedDiffLines(const QStringList &lines, bool ignoreWhitespace, bool ignoreCase) {
+        QStringList normalized;
+        normalized.reserve(lines.size());
+        for (QString line : lines) {
+            if (ignoreWhitespace) {
+                line = line.simplified();
+            }
+            if (ignoreCase) {
+                line = line.toLower();
+            }
+            normalized.append(line);
+        }
+        return normalized;
+    }
+
+    static QHash<QChar, QString> morseMap() {
+        return {
+            {QLatin1Char('A'), QStringLiteral(".-")},
+            {QLatin1Char('B'), QStringLiteral("-...")},
+            {QLatin1Char('C'), QStringLiteral("-.-.")},
+            {QLatin1Char('D'), QStringLiteral("-..")},
+            {QLatin1Char('E'), QStringLiteral(".")},
+            {QLatin1Char('F'), QStringLiteral("..-.")},
+            {QLatin1Char('G'), QStringLiteral("--.")},
+            {QLatin1Char('H'), QStringLiteral("....")},
+            {QLatin1Char('I'), QStringLiteral("..")},
+            {QLatin1Char('J'), QStringLiteral(".---")},
+            {QLatin1Char('K'), QStringLiteral("-.-")},
+            {QLatin1Char('L'), QStringLiteral(".-..")},
+            {QLatin1Char('M'), QStringLiteral("--")},
+            {QLatin1Char('N'), QStringLiteral("-.")},
+            {QLatin1Char('O'), QStringLiteral("---")},
+            {QLatin1Char('P'), QStringLiteral(".--.")},
+            {QLatin1Char('Q'), QStringLiteral("--.-")},
+            {QLatin1Char('R'), QStringLiteral(".-.")},
+            {QLatin1Char('S'), QStringLiteral("...")},
+            {QLatin1Char('T'), QStringLiteral("-")},
+            {QLatin1Char('U'), QStringLiteral("..-")},
+            {QLatin1Char('V'), QStringLiteral("...-")},
+            {QLatin1Char('W'), QStringLiteral(".--")},
+            {QLatin1Char('X'), QStringLiteral("-..-")},
+            {QLatin1Char('Y'), QStringLiteral("-.--")},
+            {QLatin1Char('Z'), QStringLiteral("--..")},
+            {QLatin1Char('0'), QStringLiteral("-----")},
+            {QLatin1Char('1'), QStringLiteral(".----")},
+            {QLatin1Char('2'), QStringLiteral("..---")},
+            {QLatin1Char('3'), QStringLiteral("...--")},
+            {QLatin1Char('4'), QStringLiteral("....-")},
+            {QLatin1Char('5'), QStringLiteral(".....")},
+            {QLatin1Char('6'), QStringLiteral("-....")},
+            {QLatin1Char('7'), QStringLiteral("--...")},
+            {QLatin1Char('8'), QStringLiteral("---..")},
+            {QLatin1Char('9'), QStringLiteral("----.")},
+            {QLatin1Char('.'), QStringLiteral(".-.-.-")},
+            {QLatin1Char(','), QStringLiteral("--..--")},
+            {QLatin1Char('?'), QStringLiteral("..--..")},
+            {QLatin1Char('!'), QStringLiteral("-.-.--")},
+            {QLatin1Char('-'), QStringLiteral("-....-")},
+            {QLatin1Char('/'), QStringLiteral("-..-.")},
+            {QLatin1Char('@'), QStringLiteral(".--.-.")}
+        };
+    }
+
+    static QStringList asciiGlyphFor(QChar ch) {
+        static const QHash<QChar, QStringList> glyphs = {
+            {QLatin1Char('A'), {QStringLiteral(" ### "), QStringLiteral("#   #"), QStringLiteral("#####"), QStringLiteral("#   #"), QStringLiteral("#   #")}},
+            {QLatin1Char('B'), {QStringLiteral("#### "), QStringLiteral("#   #"), QStringLiteral("#### "), QStringLiteral("#   #"), QStringLiteral("#### ")}},
+            {QLatin1Char('C'), {QStringLiteral(" ####"), QStringLiteral("#    "), QStringLiteral("#    "), QStringLiteral("#    "), QStringLiteral(" ####")}},
+            {QLatin1Char('D'), {QStringLiteral("#### "), QStringLiteral("#   #"), QStringLiteral("#   #"), QStringLiteral("#   #"), QStringLiteral("#### ")}},
+            {QLatin1Char('E'), {QStringLiteral("#####"), QStringLiteral("#    "), QStringLiteral("#####"), QStringLiteral("#    "), QStringLiteral("#####")}},
+            {QLatin1Char('F'), {QStringLiteral("#####"), QStringLiteral("#    "), QStringLiteral("#####"), QStringLiteral("#    "), QStringLiteral("#    ")}},
+            {QLatin1Char('G'), {QStringLiteral(" ####"), QStringLiteral("#    "), QStringLiteral("# ###"), QStringLiteral("#   #"), QStringLiteral(" ####")}},
+            {QLatin1Char('H'), {QStringLiteral("#   #"), QStringLiteral("#   #"), QStringLiteral("#####"), QStringLiteral("#   #"), QStringLiteral("#   #")}},
+            {QLatin1Char('I'), {QStringLiteral("#####"), QStringLiteral("  #  "), QStringLiteral("  #  "), QStringLiteral("  #  "), QStringLiteral("#####")}},
+            {QLatin1Char('J'), {QStringLiteral("#####"), QStringLiteral("   # "), QStringLiteral("   # "), QStringLiteral("#  # "), QStringLiteral(" ##  ")}},
+            {QLatin1Char('K'), {QStringLiteral("#   #"), QStringLiteral("#  # "), QStringLiteral("###  "), QStringLiteral("#  # "), QStringLiteral("#   #")}},
+            {QLatin1Char('L'), {QStringLiteral("#    "), QStringLiteral("#    "), QStringLiteral("#    "), QStringLiteral("#    "), QStringLiteral("#####")}},
+            {QLatin1Char('M'), {QStringLiteral("#   #"), QStringLiteral("## ##"), QStringLiteral("# # #"), QStringLiteral("#   #"), QStringLiteral("#   #")}},
+            {QLatin1Char('N'), {QStringLiteral("#   #"), QStringLiteral("##  #"), QStringLiteral("# # #"), QStringLiteral("#  ##"), QStringLiteral("#   #")}},
+            {QLatin1Char('O'), {QStringLiteral(" ### "), QStringLiteral("#   #"), QStringLiteral("#   #"), QStringLiteral("#   #"), QStringLiteral(" ### ")}},
+            {QLatin1Char('P'), {QStringLiteral("#### "), QStringLiteral("#   #"), QStringLiteral("#### "), QStringLiteral("#    "), QStringLiteral("#    ")}},
+            {QLatin1Char('Q'), {QStringLiteral(" ### "), QStringLiteral("#   #"), QStringLiteral("#   #"), QStringLiteral("#  ##"), QStringLiteral(" ####")}},
+            {QLatin1Char('R'), {QStringLiteral("#### "), QStringLiteral("#   #"), QStringLiteral("#### "), QStringLiteral("#  # "), QStringLiteral("#   #")}},
+            {QLatin1Char('S'), {QStringLiteral(" ####"), QStringLiteral("#    "), QStringLiteral(" ### "), QStringLiteral("    #"), QStringLiteral("#### ")}},
+            {QLatin1Char('T'), {QStringLiteral("#####"), QStringLiteral("  #  "), QStringLiteral("  #  "), QStringLiteral("  #  "), QStringLiteral("  #  ")}},
+            {QLatin1Char('U'), {QStringLiteral("#   #"), QStringLiteral("#   #"), QStringLiteral("#   #"), QStringLiteral("#   #"), QStringLiteral(" ### ")}},
+            {QLatin1Char('V'), {QStringLiteral("#   #"), QStringLiteral("#   #"), QStringLiteral("#   #"), QStringLiteral(" # # "), QStringLiteral("  #  ")}},
+            {QLatin1Char('W'), {QStringLiteral("#   #"), QStringLiteral("#   #"), QStringLiteral("# # #"), QStringLiteral("## ##"), QStringLiteral("#   #")}},
+            {QLatin1Char('X'), {QStringLiteral("#   #"), QStringLiteral(" # # "), QStringLiteral("  #  "), QStringLiteral(" # # "), QStringLiteral("#   #")}},
+            {QLatin1Char('Y'), {QStringLiteral("#   #"), QStringLiteral(" # # "), QStringLiteral("  #  "), QStringLiteral("  #  "), QStringLiteral("  #  ")}},
+            {QLatin1Char('Z'), {QStringLiteral("#####"), QStringLiteral("   # "), QStringLiteral("  #  "), QStringLiteral(" #   "), QStringLiteral("#####")}},
+            {QLatin1Char('0'), {QStringLiteral(" ### "), QStringLiteral("#  ##"), QStringLiteral("# # #"), QStringLiteral("##  #"), QStringLiteral(" ### ")}},
+            {QLatin1Char('1'), {QStringLiteral("  #  "), QStringLiteral(" ##  "), QStringLiteral("  #  "), QStringLiteral("  #  "), QStringLiteral(" ### ")}},
+            {QLatin1Char('2'), {QStringLiteral(" ### "), QStringLiteral("#   #"), QStringLiteral("   # "), QStringLiteral("  #  "), QStringLiteral("#####")}},
+            {QLatin1Char('3'), {QStringLiteral("#### "), QStringLiteral("    #"), QStringLiteral(" ### "), QStringLiteral("    #"), QStringLiteral("#### ")}},
+            {QLatin1Char('4'), {QStringLiteral("#   #"), QStringLiteral("#   #"), QStringLiteral("#####"), QStringLiteral("    #"), QStringLiteral("    #")}},
+            {QLatin1Char('5'), {QStringLiteral("#####"), QStringLiteral("#    "), QStringLiteral("#### "), QStringLiteral("    #"), QStringLiteral("#### ")}},
+            {QLatin1Char('6'), {QStringLiteral(" ### "), QStringLiteral("#    "), QStringLiteral("#### "), QStringLiteral("#   #"), QStringLiteral(" ### ")}},
+            {QLatin1Char('7'), {QStringLiteral("#####"), QStringLiteral("    #"), QStringLiteral("   # "), QStringLiteral("  #  "), QStringLiteral(" #   ")}},
+            {QLatin1Char('8'), {QStringLiteral(" ### "), QStringLiteral("#   #"), QStringLiteral(" ### "), QStringLiteral("#   #"), QStringLiteral(" ### ")}},
+            {QLatin1Char('9'), {QStringLiteral(" ### "), QStringLiteral("#   #"), QStringLiteral(" ####"), QStringLiteral("    #"), QStringLiteral(" ### ")}},
+            {QLatin1Char(' '), {QStringLiteral("     "), QStringLiteral("     "), QStringLiteral("     "), QStringLiteral("     "), QStringLiteral("     ")}}
+        };
+        return glyphs.value(ch, {QStringLiteral("?????"), QStringLiteral("?????"), QStringLiteral("?????"), QStringLiteral("?????"), QStringLiteral("?????")});
+    }
+
     static QStringList extractWords(const QString &segment) {
         QStringList words;
         const QStringList parts = segment.split(QRegularExpression(QStringLiteral("[\\s_-]+")), Qt::SkipEmptyParts);

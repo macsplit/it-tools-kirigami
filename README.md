@@ -38,13 +38,13 @@ To build and publish the Flatpak locally:
 - **Network**: IPv4 Converter, IPv4 Subnet Calculator, WiFi QR Code Generator, MAC Address Generator, Random Port Generator, IPv4 Range Expander
 - **Web**: Basic Auth Generator, URL Encoder/Decoder, HTML Entities, JWT Parser, URL Parser, HTTP Status Codes
 - **Development**: MIME Types, UUID Generator, ULID Generator, JSON Formatter, JSON Minify, XML Formatter, SQL Keyword Formatter, Chmod Calculator, 5-Field Cron Helper, Percentage Calculator, Math Evaluator
-- **Text**: Case Converter, Gmail-Aware Email Normalizer, Text to NATO Alphabet, Numeronym Generator, Text to Unicode, Lorem Ipsum, Text Statistics, Slugify String, String Obfuscator
+- **Text**: ASCII Text Drawer, Case Converter, Gmail-Aware Email Normalizer, Morse Code Converter, Regex Reference, Regex Tester, ROT13 / ROT47, Text Diff, Text to NATO Alphabet, Numeronym Generator, Text to Unicode, Lorem Ipsum, Text Statistics, Slugify String, String Obfuscator
 
 ## Current Status
 
-- The app currently ships 54 tools.
+- The app currently ships 61 tools.
 - YAML and TOML conversion now use vendored source parsers/formatters rather than host-installed libraries.
-- The next correctness-focused work is tightening tools whose behavior remains narrower than many users may expect, especially email normalization.
+- The roadmap/code parity cleanup is complete, so the next work is primarily new in-scope tools and deeper text-processing functionality.
 
 ## Building and Running
 

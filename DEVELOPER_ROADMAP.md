@@ -16,6 +16,7 @@ The application is currently in a stable and minimally viable state. The core ar
 *   Base Converter
 *   Basic Auth Generator
 *   Bcrypt Password Hash
+*   ASCII Text Drawer
 *   Case Converter
 *   Chmod Calculator
 *   Color Converter
@@ -31,6 +32,7 @@ The application is currently in a stable and minimally viable state. The core ar
 *   IPv4 Converter
 *   IPv4 Subnet Calculator
 *   JSON Formatter
+*   JSON Diff
 *   JSON Minify
 *   JSON to CSV Converter
 *   JSON to TOML Converter
@@ -43,14 +45,19 @@ The application is currently in a stable and minimally viable state. The core ar
 *   Math Evaluator
 *   MIME Types
 *   Markdown Preview
+*   Morse Code Converter
 *   Numeronym Generator
 *   Percentage Calculator
 *   Port Generator
 *   Roman Numeral Converter
+*   ROT13/ROT47 Encoder/Decoder
+*   Regex Reference
+*   Regex Tester
 *   Slugify
 *   SQL Keyword Formatter
 *   String Obfuscator
 *   Temperature Converter
+*   Text Diff
 *   Text Statistics
 *   Text to Binary Converter
 *   Text to NATO Alphabet
@@ -85,38 +92,49 @@ The current roadmap/code parity audit is complete. The shipped tool names and do
 
 ### New Tools to be Added
 
-This list is based on an audit of the popular `it-tools` web application, and includes tools that are not yet implemented in **Tools**.
+This list is based on an audit of the popular `it-tools` web application, but it is intentionally filtered by the scope of **Tools**.
 
-*   [ ] ASCII Text Drawer
-*   [ ] Base64 File Converter
-*   [ ] Benchmark Builder
+**Scope boundary:** prioritize single-operation, offline, copy/paste-friendly tools, especially text processing, format conversion, parsing, generation, and inspection. Small exceptions are acceptable when they still fit the same lightweight utility model, but hardware-driven interfaces, file-centric workflows, and editor-like subsystems are out of scope.
+
+### Removed From Scope
+
+These items are not planned for **Tools** because they fall outside that boundary:
+
+*   [x] Base64 File Converter
+*   [x] Benchmark Builder
+*   [x] Camera Recorder
+*   [x] Chronometer
+*   [x] Device Information
+*   [x] HTML WYSIWYG Editor
+*   [x] Keycode Info
+*   [x] PDF Signature Checker
+
+### In-Scope Additions
+
+The remaining items are still candidates for future implementation:
+
+*   [x] ASCII Text Drawer
 *   [ ] BIP39 Generator
-*   [ ] Camera Recorder
-*   [ ] Chronometer
-*   [ ] Device Information
 *   [ ] Docker Run to Docker Compose Converter
 *   [ ] Emoji Picker
 *   [ ] Encryption (Generic)
 *   [ ] ETA Calculator
-*   [ ] Git Memo
-*   [ ] HTML WYSIWYG Editor
+*   [ ] Git Reference
 *   [ ] IBAN Validator and Parser
 *   [ ] IPv6 ULA Generator
-*   [ ] JSON Diff
+*   [x] JSON Diff
 *   [ ] JSON Viewer
-*   [ ] Keycode Info
 *   [ ] MAC Address Lookup
 *   [ ] Meta Tag Generator
 *   [ ] OTP Code Generator and Validator
 *   [ ] Password Strength Analyzer
-*   [ ] PDF Signature Checker
 *   [ ] Phone Parser and Formatter
-*   [ ] Regex Memo
-*   [ ] Regex Tester
+*   [x] Regex Reference
+*   [x] Regex Tester
 *   [ ] RSA Key Pair Generator
 *   [ ] Safelink Decoder
 *   [ ] SVG Placeholder Generator
-*   [ ] Text Diff
+*   [x] Text Diff
 *   [ ] TOML to YAML
 *   [ ] User Agent Parser
 *   [ ] YAML to TOML
@@ -126,9 +144,9 @@ This list is based on an audit of the popular `it-tools` web application, and in
 
 This is a list of potential new tools that are not present in `it-tools`, but would be a good fit for **Tools**.
 
-*   [ ] Morse Code Converter
+*   [x] Morse Code Converter
 *   [ ] Binary/Hex/Octal Converter
-*   [ ] ROT13/ROT47 Encoder/Decoder
+*   [x] ROT13/ROT47 Encoder/Decoder
 *   [ ] Leet Speak Converter
 *   [ ] Reverse String
 *   [ ] Word/Line Count

@@ -1,0 +1,48 @@
+{
+  "kind": "backend",
+  "tool": "ConversionTool",
+  "cases": [
+    {
+      "name": "reports changed added and removed paths",
+      "method": "jsonDiff",
+      "args": [
+        "{\"name\":\"Ada\",\"roles\":[\"admin\",\"editor\"],\"active\":true}",
+        "{\"name\":\"Ada Lovelace\",\"roles\":[\"admin\"],\"active\":true,\"team\":\"platform\"}"
+      ],
+      "contains": [
+        "CHANGED $.name: \"Ada\" -> \"Ada Lovelace\"",
+        "REMOVED $.roles[1]: \"editor\"",
+        "ADDED $.team: \"platform\""
+      ]
+    },
+    {
+      "name": "reports type changes",
+      "method": "jsonDiff",
+      "args": [
+        "{\"value\":1}",
+        "{\"value\":[1]}"
+      ],
+      "contains": [
+        "TYPE $.value: number -> array"
+      ]
+    },
+    {
+      "name": "identical json reports no differences",
+      "method": "jsonDiff",
+      "args": [
+        "{\"a\":1,\"b\":[2,3]}",
+        "{\"a\":1,\"b\":[2,3]}"
+      ],
+      "equals": "No differences"
+    },
+    {
+      "name": "invalid left json returns explicit error",
+      "method": "jsonDiff",
+      "args": [
+        "{ invalid",
+        "{\"ok\":true}"
+      ],
+      "matches": "^Invalid left JSON: .+"
+    }
+  ]
+}

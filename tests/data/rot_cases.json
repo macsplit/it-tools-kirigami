@@ -1,0 +1,24 @@
+{
+  "kind": "backend",
+  "tool": "TextTool",
+  "cases": [
+    {
+      "name": "rot13 transforms letters",
+      "method": "rotTransform",
+      "args": ["Hello", "rot13"],
+      "equals": "Uryyb"
+    },
+    {
+      "name": "rot47 transforms printable ascii",
+      "method": "rotTransform",
+      "args": ["Hello!", "rot47"],
+      "equals": "w6==@P"
+    },
+    {
+      "name": "rot13 is reversible",
+      "method": "rotTransform",
+      "args": ["Uryyb", "rot13"],
+      "equals": "Hello"
+    }
+  ]
+}

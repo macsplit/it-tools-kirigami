@@ -264,6 +264,30 @@ public:
         return QString::fromUtf8(formatted).replace(QStringLiteral("    "), replacement);
     }
 
+    Q_INVOKABLE QString jsonDiff(const QString &leftJson, const QString &rightJson) {
+        if (leftJson.trimmed().isEmpty() || rightJson.trimmed().isEmpty()) {
+            return QStringLiteral("Both JSON inputs are required");
+        }
+
+        QJsonParseError leftError;
+        QJsonParseError rightError;
+        const QJsonDocument leftDoc = QJsonDocument::fromJson(leftJson.toUtf8(), &leftError);
+        const QJsonDocument rightDoc = QJsonDocument::fromJson(rightJson.toUtf8(), &rightError);
+        if (leftError.error != QJsonParseError::NoError) {
+            return QStringLiteral("Invalid left JSON: ") + leftError.errorString();
+        }
+        if (rightError.error != QJsonParseError::NoError) {
+            return QStringLiteral("Invalid right JSON: ") + rightError.errorString();
+        }
+
+        QStringList lines;
+        compareJsonValues(documentRootValue(leftDoc), documentRootValue(rightDoc), QStringLiteral("$"), lines);
+        if (lines.isEmpty()) {
+            return QStringLiteral("No differences");
+        }
+        return lines.join(QLatin1Char('\n'));
+    }
+
     Q_INVOKABLE QVariantMap colorFromHex(const QString &hexText) {
         const QString hex = hexText.trimmed().toUpper();
         if (!QRegExp("^#[0-9A-F]{6}$").exactMatch(hex)) return QVariantMap();
@@ -379,6 +403,99 @@ private:
 
     static QString variantToJsonText(const QVariant &value) {
         return jsonValueToString(QJsonValue::fromVariant(value)) + QStringLiteral("\n");
+    }
+
+    static QJsonValue documentRootValue(const QJsonDocument &document) {
+        if (document.isArray()) {
+            return document.array();
+        }
+        return document.object();
+    }
+
+    static QString jsonTypeName(const QJsonValue &value) {
+        switch (value.type()) {
+        case QJsonValue::Null:
+            return QStringLiteral("null");
+        case QJsonValue::Bool:
+            return QStringLiteral("boolean");
+        case QJsonValue::Double:
+            return QStringLiteral("number");
+        case QJsonValue::String:
+            return QStringLiteral("string");
+        case QJsonValue::Array:
+            return QStringLiteral("array");
+        case QJsonValue::Object:
+            return QStringLiteral("object");
+        case QJsonValue::Undefined:
+        default:
+            return QStringLiteral("undefined");
+        }
+    }
+
+    static QString jsonValueSummary(const QJsonValue &value) {
+        if (value.isObject()) return QStringLiteral("{...}");
+        if (value.isArray()) return QStringLiteral("[...]");
+        if (value.isString()) return QStringLiteral("\"%1\"").arg(value.toString());
+        if (value.isBool()) return value.toBool() ? QStringLiteral("true") : QStringLiteral("false");
+        if (value.isDouble()) return QString::number(value.toDouble(), 'g', 15);
+        if (value.isNull()) return QStringLiteral("null");
+        return QStringLiteral("undefined");
+    }
+
+    static void compareJsonValues(const QJsonValue &left,
+                                  const QJsonValue &right,
+                                  const QString &path,
+                                  QStringList &lines) {
+        if (left.type() != right.type()) {
+            lines.append(QStringLiteral("TYPE %1: %2 -> %3").arg(path, jsonTypeName(left), jsonTypeName(right)));
+            return;
+        }
+
+        if (left.isObject()) {
+            const QJsonObject leftObject = left.toObject();
+            const QJsonObject rightObject = right.toObject();
+            QStringList keys = leftObject.keys();
+            for (const QString &key : rightObject.keys()) {
+                if (!keys.contains(key)) {
+                    keys.append(key);
+                }
+            }
+            keys.sort();
+
+            for (const QString &key : keys) {
+                const QString childPath = path + QStringLiteral(".") + key;
+                const bool inLeft = leftObject.contains(key);
+                const bool inRight = rightObject.contains(key);
+                if (!inLeft) {
+                    lines.append(QStringLiteral("ADDED %1: %2").arg(childPath, jsonValueSummary(rightObject.value(key))));
+                } else if (!inRight) {
+                    lines.append(QStringLiteral("REMOVED %1: %2").arg(childPath, jsonValueSummary(leftObject.value(key))));
+                } else {
+                    compareJsonValues(leftObject.value(key), rightObject.value(key), childPath, lines);
+                }
+            }
+            return;
+        }
+
+        if (left.isArray()) {
+            const QJsonArray leftArray = left.toArray();
+            const QJsonArray rightArray = right.toArray();
+            const int commonSize = std::min(leftArray.size(), rightArray.size());
+            for (int i = 0; i < commonSize; ++i) {
+                compareJsonValues(leftArray.at(i), rightArray.at(i), QStringLiteral("%1[%2]").arg(path).arg(i), lines);
+            }
+            for (int i = commonSize; i < leftArray.size(); ++i) {
+                lines.append(QStringLiteral("REMOVED %1[%2]: %3").arg(path).arg(i).arg(jsonValueSummary(leftArray.at(i))));
+            }
+            for (int i = commonSize; i < rightArray.size(); ++i) {
+                lines.append(QStringLiteral("ADDED %1[%2]: %3").arg(path).arg(i).arg(jsonValueSummary(rightArray.at(i))));
+            }
+            return;
+        }
+
+        if (left != right) {
+            lines.append(QStringLiteral("CHANGED %1: %2 -> %3").arg(path, jsonValueSummary(left), jsonValueSummary(right)));
+        }
     }
 
     static YAML::Node variantToYamlNode(const QVariant &value) {

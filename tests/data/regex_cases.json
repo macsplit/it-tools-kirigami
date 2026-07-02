@@ -1,0 +1,38 @@
+{
+  "kind": "backend",
+  "tool": "TextTool",
+  "cases": [
+    {
+      "name": "regex tester reports captures and count",
+      "method": "regexAnalyze",
+      "args": ["(Ada|Grace)\\s+(Lovelace|Hopper)", "Ada Lovelace\nGrace Hopper\nAlan Turing", false, true, false],
+      "mapEquals": {
+        "valid": "true",
+        "hasMatch": "true",
+        "matchCount": "2",
+        "firstMatch": "Ada Lovelace",
+        "firstStart": "0",
+        "firstEnd": "12"
+      }
+    },
+    {
+      "name": "invalid regex reports error",
+      "method": "regexAnalyze",
+      "args": ["(", "text", false, false, false],
+      "mapEquals": {
+        "valid": "false"
+      }
+    },
+    {
+      "name": "case insensitive mode works",
+      "method": "regexAnalyze",
+      "args": ["ada", "ADA", true, false, false],
+      "mapEquals": {
+        "valid": "true",
+        "hasMatch": "true",
+        "matchCount": "1",
+        "firstMatch": "ADA"
+      }
+    }
+  ]
+}

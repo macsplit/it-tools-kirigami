@@ -1,0 +1,16 @@
+{
+  "kind": "backend",
+  "tool": "TextTool",
+  "cases": [
+    {
+      "name": "ascii drawer renders letters and digits",
+      "method": "asciiTextDraw",
+      "args": ["A1"],
+      "contains": [
+        " ### ",
+        "#   #",
+        "#####"
+      ]
+    }
+  ]
+}
