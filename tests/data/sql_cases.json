@@ -1,0 +1,23 @@
+{
+  "kind": "backend",
+  "tool": "ConversionTool",
+  "cases": [
+    {
+      "name": "formats keywords onto separate lines",
+      "method": "formatSql",
+      "args": ["select field1,field2 from my_table where id = 1 and active = 1"],
+      "contains": [
+        "SELECT field1,field2",
+        "\nFROM my_table",
+        "\nWHERE id = 1",
+        "\nAND active = 1"
+      ]
+    },
+    {
+      "name": "empty sql stays empty",
+      "method": "formatSql",
+      "args": [""],
+      "equals": ""
+    }
+  ]
+}

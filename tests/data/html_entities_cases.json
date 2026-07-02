@@ -13,6 +13,24 @@
       "method": "htmlEntitiesDecode",
       "args": ["&lt;a&amp;b&gt;"],
       "equals": "<a&b>"
+    },
+    {
+      "name": "encode common named entities and non ascii",
+      "method": "htmlEntitiesEncode",
+      "args": ["© € —"],
+      "equals": "&copy; &euro; &mdash;"
+    },
+    {
+      "name": "decode common named entities",
+      "method": "htmlEntitiesDecode",
+      "args": ["Tom &amp; Jerry &mdash; 10&nbsp;&euro;"],
+      "equals": "Tom & Jerry — 10 €"
+    },
+    {
+      "name": "decode numeric entities",
+      "method": "htmlEntitiesDecode",
+      "args": ["&#169; &#x20AC; &#39;"],
+      "equals": "© € '"
     }
   ]
 }

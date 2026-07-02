@@ -13,6 +13,18 @@
       "method": "nextOccurrences",
       "args": ["*/15 * * * *", 3],
       "contains": [":"]
+    },
+    {
+      "name": "invalid expression reports invalid",
+      "method": "describe",
+      "args": ["0 0 * *"],
+      "equals": "Invalid expression"
+    },
+    {
+      "name": "range and list subset yields occurrences",
+      "method": "nextOccurrences",
+      "args": ["0 9-17 * * 1,3,5", 2],
+      "contains": [":"]
     }
   ]
 }

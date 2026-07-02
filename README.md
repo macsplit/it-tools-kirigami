@@ -34,17 +34,17 @@ To build and publish the Flatpak locally:
 ## Tools Included
 
 - **Crypto**: Token Generator, Hash Text, HMAC Generator, Bcrypt Password Hash
-- **Converter**: Base64 Converter, Integer Base Converter, Color Converter, JSON to YAML, YAML to JSON, JSON to XML, JSON to CSV, JSON to TOML, XML to JSON, CSV to JSON, TOML to JSON, Text to Binary, Epoch Converter, Date/Time Converter, Roman Numeral Converter, Temperature Converter, List Converter, Markdown to HTML
+- **Converter**: Base64 Converter, Integer Base Converter, Color Converter, JSON to YAML, YAML to JSON, JSON to XML Mapping, JSON to CSV, JSON to TOML, XML to JSON Mapping, CSV to JSON, TOML to JSON, Text to Binary, Epoch Converter, Date/Time Converter, Roman Numeral Converter, Temperature Converter, List Converter, Markdown to HTML
 - **Network**: IPv4 Converter, IPv4 Subnet Calculator, WiFi QR Code Generator, MAC Address Generator, Random Port Generator, IPv4 Range Expander
 - **Web**: Basic Auth Generator, URL Encoder/Decoder, HTML Entities, JWT Parser, URL Parser, HTTP Status Codes
-- **Development**: MIME Types, UUID Generator, ULID Generator, JSON Formatter, JSON Minify, XML Formatter, SQL Prettify, Chmod Calculator, Cron Expression Parser, Percentage Calculator, Math Evaluator
-- **Text**: Case Converter, Email Normalizer, Text to NATO Alphabet, Numeronym Generator, Text to Unicode, Lorem Ipsum, Text Statistics, Slugify String, String Obfuscator
+- **Development**: MIME Types, UUID Generator, ULID Generator, JSON Formatter, JSON Minify, XML Formatter, SQL Keyword Formatter, Chmod Calculator, 5-Field Cron Helper, Percentage Calculator, Math Evaluator
+- **Text**: Case Converter, Gmail-Aware Email Normalizer, Text to NATO Alphabet, Numeronym Generator, Text to Unicode, Lorem Ipsum, Text Statistics, Slugify String, String Obfuscator
 
 ## Current Status
 
 - The app currently ships 54 tools.
 - YAML and TOML conversion now use vendored source parsers/formatters rather than host-installed libraries.
-- The next correctness-focused work is tightening tools whose names imply broader format support than they currently deliver, especially SQL formatting, cron parsing, XML/JSON conversion, CSV conversion, HTML entities, and email normalization.
+- The next correctness-focused work is tightening tools whose behavior remains narrower than many users may expect, especially email normalization.
 
 ## Building and Running
 
@@ -58,11 +58,9 @@ To build and publish the Flatpak locally:
 ### Build Steps
 
 ```bash
-mkdir build
-cd build
-cmake ..
-cmake --build .
-./app.pastetools.Tools
+cmake -S . -B build
+cmake --build build
+./build/bin/app.pastetools.Tools
 ```
 
 ## Testing
@@ -70,9 +68,10 @@ cmake --build .
 The project includes automated backend and QML smoke tests.
 
 ```bash
+cmake -S . -B build -DBUILD_TESTING=ON
 cmake --build build --target tools_tests
-./bin/tools_tests
-ctest --output-on-failure
+./build/bin/tools_tests
+ctest --test-dir build --output-on-failure
 ```
 
 ## Contributing

@@ -5,7 +5,7 @@ import org.kde.kirigami 2.19 as Kirigami
 
 Kirigami.ScrollablePage {
     id: root
-    title: "Cron Expression Parser"
+    title: "5-Field Cron Helper"
 
     Timer {
         id: debounceTimer
@@ -38,6 +38,13 @@ Kirigami.ScrollablePage {
             font.pixelSize: 24
             horizontalAlignment: Text.AlignHCenter
             onTextChanged: debounceTimer.restart()
+        }
+
+        Label {
+            Layout.fillWidth: true
+            wrapMode: Text.WordWrap
+            text: "Supports standard 5-field cron expressions with simple numbers, ranges, lists, and step values. It does not implement extended cron syntax."
+            color: Kirigami.Theme.disabledTextColor
         }
 
         Label {

@@ -4,7 +4,7 @@ import QtQuick.Layouts 1.15
 import org.kde.kirigami 2.19 as Kirigami
 
 Kirigami.ScrollablePage {
-    title: "Email Normalizer"
+    title: "Gmail-Aware Email Normalizer"
 
     property var emailData: textTool.normalizeEmail(emailInput.text)
 
@@ -22,6 +22,13 @@ Kirigami.ScrollablePage {
             Layout.fillWidth: true
             text: "John.Smith+alerts@googlemail.com"
             placeholderText: "name@example.com"
+        }
+
+        Label {
+            Layout.fillWidth: true
+            wrapMode: Text.WordWrap
+            text: "Validates general email structure, lowercases the domain, and applies alias cleanup only for Gmail and Googlemail addresses."
+            color: Kirigami.Theme.disabledTextColor
         }
 
         Kirigami.FormLayout {

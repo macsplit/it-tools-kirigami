@@ -4,7 +4,7 @@ import QtQuick.Layouts 1.15
 import org.kde.kirigami 2.19 as Kirigami
 
 Kirigami.ScrollablePage {
-    title: "SQL Prettify"
+    title: "SQL Keyword Formatter"
 
     ColumnLayout {
         width: parent.width
@@ -20,7 +20,7 @@ Kirigami.ScrollablePage {
             text: "select field1,field2,field3 from my_table where my_condition;"
         }
 
-        Label { text: "Prettified version:"; font.bold: true }
+        Label { text: "Formatted output:"; font.bold: true }
         OutputArea {
             id: sqlOutput
             readOnly: true

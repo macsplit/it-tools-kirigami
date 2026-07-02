@@ -13,6 +13,34 @@
       "method": "csvToJson",
       "args": ["name,quote\nAlice,\"hello, world\""],
       "contains": ["\"quote\": \"hello, world\""]
+    },
+    {
+      "name": "quoted csv newline stays in one field",
+      "method": "csvToJson",
+      "args": ["id,notes\n1,\"line one\nline two\""],
+      "contains": ["\"notes\": \"line one\\nline two\""]
+    },
+    {
+      "name": "escaped quotes decode correctly",
+      "method": "csvToJson",
+      "args": ["name,quote\nAlice,\"say \"\"hi\"\"\""],
+      "contains": ["\"quote\": \"say \\\"hi\\\"\""]
+    },
+    {
+      "name": "unterminated quoted field is rejected",
+      "method": "csvToJson",
+      "args": ["name,quote\nAlice,\"broken"],
+      "equals": "Invalid CSV: unterminated quoted field"
+    },
+    {
+      "name": "json to csv quotes multiline and collects all headers",
+      "method": "jsonToCsv",
+      "args": ["[{\"id\":1,\"notes\":\"line one\\nline two\"},{\"name\":\"Ada\",\"notes\":\"say \\\"hi\\\"\"}]"],
+      "contains": [
+        "id,notes,name",
+        "\"line one\nline two\"",
+        "\"say \"\"hi\"\"\""
+      ]
     }
   ]
 }

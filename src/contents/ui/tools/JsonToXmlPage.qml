@@ -4,7 +4,7 @@ import QtQuick.Layouts 1.15
 import org.kde.kirigami 2.19 as Kirigami
 
 Kirigami.ScrollablePage {
-    title: "JSON to XML"
+    title: "JSON to XML Mapping"
 
     ColumnLayout {
         width: parent.width
@@ -17,7 +17,14 @@ Kirigami.ScrollablePage {
             Layout.fillWidth: true
             Layout.preferredHeight: 200
             font.family: "monospace"
-            text: '{"hello": "world", "list": [1, 2, 3]}'
+            text: '{"hello": "world", "list": [1, 2, 3], "user": {"name": "Ada"}}'
+        }
+
+        Label {
+            Layout.fillWidth: true
+            wrapMode: Text.WordWrap
+            text: "Uses the app's simple mapping contract: objects become elements, arrays become repeated <item> children, and scalar values become text nodes under their parent element."
+            color: Kirigami.Theme.disabledTextColor
         }
 
         Label { text: "Converted XML:"; font.bold: true }

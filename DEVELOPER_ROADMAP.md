@@ -19,9 +19,9 @@ The application is currently in a stable and minimally viable state. The core ar
 *   Case Converter
 *   Chmod Calculator
 *   Color Converter
-*   Cron Job Editor
+*   5-Field Cron Helper
 *   CSV to JSON Converter
-*   Email Normalizer
+*   Gmail-Aware Email Normalizer
 *   Epoch Converter
 *   Date/Time Converter
 *   Hash Calculator
@@ -34,7 +34,7 @@ The application is currently in a stable and minimally viable state. The core ar
 *   JSON Minify
 *   JSON to CSV Converter
 *   JSON to TOML Converter
-*   JSON to XML Converter
+*   JSON to XML Mapping
 *   JSON to YAML Converter
 *   JWT Decoder
 *   List Converter
@@ -48,7 +48,7 @@ The application is currently in a stable and minimally viable state. The core ar
 *   Port Generator
 *   Roman Numeral Converter
 *   Slugify
-*   SQL Formatter
+*   SQL Keyword Formatter
 *   String Obfuscator
 *   Temperature Converter
 *   Text Statistics
@@ -64,7 +64,7 @@ The application is currently in a stable and minimally viable state. The core ar
 *   Wifi QR Code Generator
 *   IPv4 Range Expander
 *   XML Formatter
-*   XML to JSON Converter
+*   XML to JSON Mapping
 *   YAML to JSON Converter
 
 ## Future Development
@@ -81,24 +81,7 @@ Tool discovery by name and metadata is already in place in the current applicati
 
 ### Current Correctness Audit
 
-The following tools work, but their current implementations are narrower than their names suggest. These should either be made more spec-complete or renamed/constrained to match reality.
-
-*   `SQL Prettify`: currently a keyword-based formatter, not a real SQL parser/formatter.
-*   `Cron Expression Parser`: currently handles a limited 5-field cron subset with simple matching rules.
-*   `XML to JSON` / `JSON to XML`: currently use a custom, lossy mapping convention rather than a general round-trip model.
-*   `CSV to JSON` / `JSON to CSV`: currently support a simple comma-separated model, not broader CSV dialect handling.
-*   `HTML Entities`: currently handles only a very small named-entity subset.
-*   `Email Normalizer`: currently has meaningful provider-specific normalization only for Gmail/Googlemail.
-
-### Next Fixes
-
-This is the current order of work to tighten the tools above:
-
-1. Replace the SQL keyword formatter with a real SQL formatter/parser or narrow the tool name.
-2. Replace the cron implementation with a fuller parser/evaluator or rename it to reflect the supported subset.
-3. Decide and document the exact XML/JSON mapping contract, then either harden it or narrow the naming.
-4. Replace the simple CSV handling with a real CSV parser/writer that handles quoted fields and embedded newlines reliably.
-5. Expand HTML entity coverage and decide whether email normalization should remain Gmail-focused or become explicitly multi-provider.
+The current roadmap/code parity audit is complete. The shipped tool names and documentation now match the actual implemented scope closely enough that future work can focus on net-new tools and deeper functionality rather than scope mismatches.
 
 ### New Tools to be Added
 

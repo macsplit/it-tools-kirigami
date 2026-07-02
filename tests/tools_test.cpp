@@ -195,6 +195,7 @@ QVariant ToolsTest::invokeBackend(const QString &toolName,
         if (methodName == QStringLiteral("csvToJson")) return conversionTool.csvToJson(args.at(0).toString());
         if (methodName == QStringLiteral("tomlToJson")) return conversionTool.tomlToJson(args.at(0).toString());
         if (methodName == QStringLiteral("xmlToJson")) return conversionTool.xmlToJson(args.at(0).toString());
+        if (methodName == QStringLiteral("formatSql")) return conversionTool.formatSql(args.at(0).toString());
         if (methodName == QStringLiteral("markdownToHtml")) return conversionTool.markdownToHtml(args.at(0).toString());
         if (methodName == QStringLiteral("jsonMinify")) return conversionTool.jsonMinify(args.at(0).toString());
         if (methodName == QStringLiteral("jsonFormat")) return conversionTool.jsonFormat(args.at(0).toString(), args.at(1).toInt());

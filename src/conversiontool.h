@@ -143,45 +143,60 @@ public:
         if (list.isEmpty()) return "";
 
         QStringList headers;
-        if (list[0].type() == QVariant::Map) {
-            headers = list[0].toMap().keys();
-        } else {
-            return "JSON must be an array of objects";
-        }
-
-        QString res = headers.join(",") + "\n";
         for (const QVariant &item : list) {
-            if (item.type() == QVariant::Map) {
-                QVariantMap map = item.toMap();
-                QStringList row;
-                for (const QString &h : headers) {
-                    QString val = map[h].toString();
-                    if (val.contains(",") || val.contains("\"") || val.contains("\n")) {
-                        val = "\"" + val.replace("\"", "\"\"") + "\"";
-                    }
-                    row.append(val);
+            if (item.type() != QVariant::Map) {
+                return "JSON must be an array of objects";
+            }
+
+            const QVariantMap map = item.toMap();
+            for (auto it = map.begin(); it != map.end(); ++it) {
+                if (!headers.contains(it.key())) {
+                    headers.append(it.key());
                 }
-                res += row.join(",") + "\n";
             }
         }
-        return res.trimmed();
+
+        QStringList lines;
+        lines.reserve(list.size() + 1);
+        QStringList encodedHeaders;
+        encodedHeaders.reserve(headers.size());
+        for (const QString &header : headers) {
+            encodedHeaders.append(escapeCsvField(header));
+        }
+        lines.append(encodedHeaders.join(QLatin1Char(',')));
+
+        for (const QVariant &item : list) {
+            const QVariantMap map = item.toMap();
+            QStringList row;
+            row.reserve(headers.size());
+            for (const QString &h : headers) {
+                row.append(escapeCsvField(csvCellText(map.value(h))));
+            }
+            lines.append(row.join(QLatin1Char(',')));
+        }
+        return lines.join(QLatin1Char('\n'));
     }
 
     Q_INVOKABLE QString csvToJson(const QString &csvStr) {
         if (csvStr.trimmed().isEmpty()) return "";
 
-        const QStringList lines = csvStr.trimmed().split(QRegExp("\\r\\n|\\r|\\n"), Qt::SkipEmptyParts);
-        if (lines.isEmpty()) return "";
-        if (lines.size() < 2) return "[]";
+        QString parseError;
+        const QList<QStringList> records = parseCsvRecords(csvStr, &parseError);
+        if (!parseError.isEmpty()) return parseError;
+        if (records.isEmpty()) return "";
+        if (records.size() < 2) return "[]";
 
-        const QStringList headers = splitCsvLine(lines[0]);
+        QStringList headers = records.first();
+        for (QString &header : headers) {
+            header = header.trimmed();
+        }
         QVariantList results;
 
-        for (int i = 1; i < lines.size(); ++i) {
-            const QStringList values = splitCsvLine(lines[i]);
+        for (int i = 1; i < records.size(); ++i) {
+            const QStringList values = records.at(i);
             QVariantMap row;
             for (int j = 0; j < headers.size(); ++j) {
-                row[headers[j].trimmed()] = j < values.size() ? values[j].trimmed() : QString();
+                row[headers[j]] = j < values.size() ? values[j] : QString();
             }
             results.append(row);
         }
@@ -652,30 +667,91 @@ private:
         return result;
     }
 
-    static QStringList splitCsvLine(const QString &line) {
-        QStringList values;
-        QString current;
-        bool inQuotes = false;
+    static QString csvCellText(const QVariant &value) {
+        if (!value.isValid() || value.isNull()) {
+            return QString();
+        }
+        if (value.type() == QVariant::Map || value.type() == QVariant::List) {
+            return QString::fromUtf8(QJsonDocument::fromVariant(value).toJson(QJsonDocument::Compact));
+        }
+        return value.toString();
+    }
 
-        for (int i = 0; i < line.size(); ++i) {
-            const QChar ch = line.at(i);
-            if (ch == QLatin1Char('"')) {
-                if (inQuotes && i + 1 < line.size() && line.at(i + 1) == QLatin1Char('"')) {
-                    current += QLatin1Char('"');
-                    ++i;
+    static QString escapeCsvField(QString value) {
+        const bool needsQuotes = value.contains(QLatin1Char(','))
+            || value.contains(QLatin1Char('"'))
+            || value.contains(QLatin1Char('\n'))
+            || value.contains(QLatin1Char('\r'));
+        value.replace(QStringLiteral("\""), QStringLiteral("\"\""));
+        return needsQuotes ? QStringLiteral("\"%1\"").arg(value) : value;
+    }
+
+    static QList<QStringList> parseCsvRecords(const QString &text, QString *errorMessage) {
+        QList<QStringList> records;
+        QStringList row;
+        QString field;
+        bool inQuotes = false;
+        bool justClosedQuote = false;
+
+        for (int i = 0; i < text.size(); ++i) {
+            const QChar ch = text.at(i);
+            if (inQuotes) {
+                if (ch == QLatin1Char('"')) {
+                    if (i + 1 < text.size() && text.at(i + 1) == QLatin1Char('"')) {
+                        field += QLatin1Char('"');
+                        ++i;
+                    } else {
+                        inQuotes = false;
+                        justClosedQuote = true;
+                    }
                 } else {
-                    inQuotes = !inQuotes;
+                    field += ch;
                 }
-            } else if (ch == QLatin1Char(',') && !inQuotes) {
-                values.append(current);
-                current.clear();
+                continue;
+            }
+
+            if (ch == QLatin1Char('"')) {
+                if (!field.isEmpty()) {
+                    if (errorMessage) *errorMessage = QStringLiteral("Invalid CSV: unexpected quote in unquoted field");
+                    return {};
+                }
+                inQuotes = true;
+                justClosedQuote = false;
+            } else if (ch == QLatin1Char(',')) {
+                row.append(field);
+                field.clear();
+                justClosedQuote = false;
+            } else if (ch == QLatin1Char('\r') || ch == QLatin1Char('\n')) {
+                row.append(field);
+                field.clear();
+                records.append(row);
+                row.clear();
+                justClosedQuote = false;
+                if (ch == QLatin1Char('\r') && i + 1 < text.size() && text.at(i + 1) == QLatin1Char('\n')) {
+                    ++i;
+                }
             } else {
-                current += ch;
+                if (justClosedQuote && !ch.isSpace()) {
+                    if (errorMessage) *errorMessage = QStringLiteral("Invalid CSV: unexpected characters after closing quote");
+                    return {};
+                }
+                if (!justClosedQuote) {
+                    field += ch;
+                }
             }
         }
 
-        values.append(current);
-        return values;
+        if (inQuotes) {
+            if (errorMessage) *errorMessage = QStringLiteral("Invalid CSV: unterminated quoted field");
+            return {};
+        }
+
+        if (!field.isEmpty() || !row.isEmpty() || text.endsWith(QLatin1Char(','))) {
+            row.append(field);
+            records.append(row);
+        }
+
+        return records;
     }
 };
 

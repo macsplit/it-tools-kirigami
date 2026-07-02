@@ -5,6 +5,7 @@
 #include <QString>
 #include <QRegularExpression>
 #include <QStringList>
+#include <QHash>
 #include <QUrl>
 #include <QByteArray>
 #include <QVariantMap>
@@ -50,23 +51,107 @@ public:
     }
 
     Q_INVOKABLE QString htmlEntitiesEncode(const QString &text) const {
-        QString output = text;
-        output.replace(QStringLiteral("&"), QStringLiteral("&amp;"));
-        output.replace(QStringLiteral("<"), QStringLiteral("&lt;"));
-        output.replace(QStringLiteral(">"), QStringLiteral("&gt;"));
-        output.replace(QStringLiteral("\""), QStringLiteral("&quot;"));
-        output.replace(QStringLiteral("'"), QStringLiteral("&#39;"));
+        const QHash<QChar, QString> namedEntities = {
+            {QLatin1Char('&'), QStringLiteral("&amp;")},
+            {QLatin1Char('<'), QStringLiteral("&lt;")},
+            {QLatin1Char('>'), QStringLiteral("&gt;")},
+            {QLatin1Char('"'), QStringLiteral("&quot;")},
+            {QLatin1Char('\''), QStringLiteral("&#39;")},
+            {QChar(0x00A0), QStringLiteral("&nbsp;")},
+            {QChar(0x00A9), QStringLiteral("&copy;")},
+            {QChar(0x00AE), QStringLiteral("&reg;")},
+            {QChar(0x00B0), QStringLiteral("&deg;")},
+            {QChar(0x00B7), QStringLiteral("&middot;")},
+            {QChar(0x00D7), QStringLiteral("&times;")},
+            {QChar(0x00F7), QStringLiteral("&divide;")},
+            {QChar(0x2013), QStringLiteral("&ndash;")},
+            {QChar(0x2014), QStringLiteral("&mdash;")},
+            {QChar(0x2018), QStringLiteral("&lsquo;")},
+            {QChar(0x2019), QStringLiteral("&rsquo;")},
+            {QChar(0x201C), QStringLiteral("&ldquo;")},
+            {QChar(0x201D), QStringLiteral("&rdquo;")},
+            {QChar(0x2022), QStringLiteral("&bull;")},
+            {QChar(0x2026), QStringLiteral("&hellip;")},
+            {QChar(0x20AC), QStringLiteral("&euro;")},
+            {QChar(0x2122), QStringLiteral("&trade;")}
+        };
+
+        QString output;
+        output.reserve(text.size() * 2);
+        for (const QChar ch : text) {
+            const QString named = namedEntities.value(ch);
+            if (!named.isEmpty()) {
+                output += named;
+            } else if (ch.unicode() < 32 && ch != QLatin1Char('\n') && ch != QLatin1Char('\r') && ch != QLatin1Char('\t')) {
+                output += QStringLiteral("&#x%1;").arg(ch.unicode(), 0, 16).toUpper();
+            } else if (ch.unicode() > 127) {
+                output += QStringLiteral("&#x%1;").arg(ch.unicode(), 0, 16).toUpper();
+            } else {
+                output += ch;
+            }
+        }
         return output;
     }
 
     Q_INVOKABLE QString htmlEntitiesDecode(const QString &text) const {
-        QString output = text;
-        output.replace(QStringLiteral("&amp;"), QStringLiteral("&"));
-        output.replace(QStringLiteral("&lt;"), QStringLiteral("<"));
-        output.replace(QStringLiteral("&gt;"), QStringLiteral(">"));
-        output.replace(QStringLiteral("&quot;"), QStringLiteral("\""));
-        output.replace(QStringLiteral("&#39;"), QStringLiteral("'"));
-        output.replace(QStringLiteral("&apos;"), QStringLiteral("'"));
+        static const QHash<QString, QChar> namedEntities = {
+            {QStringLiteral("amp"), QLatin1Char('&')},
+            {QStringLiteral("lt"), QLatin1Char('<')},
+            {QStringLiteral("gt"), QLatin1Char('>')},
+            {QStringLiteral("quot"), QLatin1Char('"')},
+            {QStringLiteral("apos"), QLatin1Char('\'')},
+            {QStringLiteral("nbsp"), QChar(0x00A0)},
+            {QStringLiteral("copy"), QChar(0x00A9)},
+            {QStringLiteral("reg"), QChar(0x00AE)},
+            {QStringLiteral("deg"), QChar(0x00B0)},
+            {QStringLiteral("middot"), QChar(0x00B7)},
+            {QStringLiteral("times"), QChar(0x00D7)},
+            {QStringLiteral("divide"), QChar(0x00F7)},
+            {QStringLiteral("ndash"), QChar(0x2013)},
+            {QStringLiteral("mdash"), QChar(0x2014)},
+            {QStringLiteral("lsquo"), QChar(0x2018)},
+            {QStringLiteral("rsquo"), QChar(0x2019)},
+            {QStringLiteral("ldquo"), QChar(0x201C)},
+            {QStringLiteral("rdquo"), QChar(0x201D)},
+            {QStringLiteral("bull"), QChar(0x2022)},
+            {QStringLiteral("hellip"), QChar(0x2026)},
+            {QStringLiteral("euro"), QChar(0x20AC)},
+            {QStringLiteral("trade"), QChar(0x2122)}
+        };
+
+        QString output;
+        output.reserve(text.size());
+        static const QRegularExpression entityPattern(QStringLiteral("&(#x[0-9A-Fa-f]+|#\\d+|[A-Za-z][A-Za-z0-9]+);"));
+        int lastIndex = 0;
+        QRegularExpressionMatchIterator it = entityPattern.globalMatch(text);
+        while (it.hasNext()) {
+            const QRegularExpressionMatch match = it.next();
+            output += text.mid(lastIndex, match.capturedStart() - lastIndex);
+
+            const QString entity = match.captured(1);
+            QString replacement = match.captured(0);
+            if (entity.startsWith(QStringLiteral("#x"), Qt::CaseInsensitive)) {
+                bool ok = false;
+                const uint codePoint = entity.mid(2).toUInt(&ok, 16);
+                if (ok && codePoint <= 0x10FFFF) {
+                    replacement = QString::fromUcs4(&codePoint, 1);
+                }
+            } else if (entity.startsWith(QLatin1Char('#'))) {
+                bool ok = false;
+                const uint codePoint = entity.mid(1).toUInt(&ok, 10);
+                if (ok && codePoint <= 0x10FFFF) {
+                    replacement = QString::fromUcs4(&codePoint, 1);
+                }
+            } else if (namedEntities.contains(entity)) {
+                replacement = namedEntities.value(entity);
+            } else if (entity == QStringLiteral("#39")) {
+                replacement = QStringLiteral("'");
+            }
+
+            output += replacement;
+            lastIndex = match.capturedEnd();
+        }
+        output += text.mid(lastIndex);
         return output;
     }
 

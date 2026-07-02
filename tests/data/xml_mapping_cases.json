@@ -1,0 +1,44 @@
+{
+  "kind": "backend",
+  "tool": "ConversionTool",
+  "cases": [
+    {
+      "name": "xml attributes and text map to reserved keys",
+      "method": "xmlToJson",
+      "args": ["<note id=\"7\">hello</note>"],
+      "contains": [
+        "\"@id\": \"7\"",
+        "\"#text\": \"hello\""
+      ]
+    },
+    {
+      "name": "repeated xml children become arrays",
+      "method": "xmlToJson",
+      "args": ["<root><item><name>A</name></item><item><name>B</name></item></root>"],
+      "contains": [
+        "\"item\": [",
+        "\"#text\": \"A\"",
+        "\"#text\": \"B\""
+      ]
+    },
+    {
+      "name": "json arrays become repeated item elements",
+      "method": "jsonToXml",
+      "args": ["{\"tags\": [\"a\", \"b\"]}"],
+      "contains": [
+        "<tags>",
+        "<item>a</item>",
+        "<item>b</item>"
+      ]
+    },
+    {
+      "name": "json objects become nested elements",
+      "method": "jsonToXml",
+      "args": ["{\"user\": {\"name\": \"Ada\"}}"],
+      "contains": [
+        "<user>",
+        "<name>Ada</name>"
+      ]
+    }
+  ]
+}
